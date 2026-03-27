@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛡️ Toxicity Monitor - Deep Learning Sentiment & Hate Speech Analyzer
 
-## Getting Started
+Toxicity Monitor is a comprehensive, multi-modal web application built to analyze and classify digital interactions (text and audio) for toxic behavior, hate speech, and negative sentiment. Powered by completely localized Machine Learning architectures, the application provides instantaneous, private, and highly accurate toxicity scoring.
 
-First, run the development server:
+## 🌟 Key Features
 
+### 1. 💬 YouTube Conversation Scanner
+Paste any YouTube Video URL to perform a deep-scan on its active comment section. 
+- **Dynamic Sampling:** Users can specifically select the sample size (ranging from 5 to 100 comments) to parse via an interactive slider.
+- **On-Device NLP Classification:** Powered by `@xenova/transformers`, the Next.js backend natively tokenizes and scores each individual comment through a pre-trained Toxicity model, resulting in a system-wide "Toxicity Confidence Score".
+- **Visual Stream:** Safely flagged and distinctly color-coded comment streams allow moderators to instantly pinpoint and identify abusive text.
+
+### 2. 🎙️ Audio Transcription & Toxicity Detection
+A robust Python AI server serves as the backbone for translating voice memos into classified sentiment.
+- **OpenAI Whisper Integration:** Upload any audio file (`.mp3`, `.wav`, `.m4a`) to have the Python server rapidly decode and transcribe the spoken words using OpenAI's Whisper engine.
+- **DistilBERT Classification:** The transcribed text is immediately pipelined into a pre-trained `DistilBERT` sequence classification model (fine-tuned on the massive *Civil Comments* dataset).
+- **Persistent "Warm Memory" Architecture:** The massive PyTorch ML models are bound directly to the active RAM of the local Flask API server upon boot. This completely bypasses traditional cold-start delays, enabling blazing-fast sub-second analysis for every uploaded file!
+
+## ⚙️ Tech Stack & Architecture
+- **Frontend / Core Backend:** Next.js (App Router), React, TypeScript
+- **Styling:** CSS Modules, Glassmorphism UI, Responsive Design
+- **Text Machine Learning:** JavaScript Xenova Transformers (`toxic-bert` pipeline)
+- **Audio Machine Learning Server:** Python, Flask, PyTorch, OpenAI Whisper, HuggingFace (`DistilBERT`)
+- **Audio Decoding Engine:** Native FFmpeg OS injection 
+
+## 🚀 Getting Started
+
+### 1. Launching the Next.js Frontend
+Navigate to the `toxicity-monitor` directory and run:
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Open [http://localhost:3000](http://localhost:3000)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2. Launching the Python ML Server
+Open a second, separate terminal window in the `toxicity-monitor` folder:
+```bash
+pip install -r requirements.txt
+python audio_server.py
+```
+Wait for the initial weights to download from HuggingFace. Once it prints `✅ Python API Server is LIVE on port 5000!`, the Audio Upload feature on your web app will be fully unlocked and ready for use.
