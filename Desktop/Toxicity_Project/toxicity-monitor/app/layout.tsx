@@ -13,16 +13,20 @@ export const metadata: Metadata = {
   description: "AI-powered dashboard to detect toxic and hateful content in real-time across text, YouTube comments, and audio recordings.",
 };
 
+import { ThemeProvider } from "./components/ThemeProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <Navbar />
-        {children}
+        <ThemeProvider>
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ToxicityCharts from "./components/ToxicityCharts";
 
 // --- Minimal Enterprise SVGs ---
 const ShieldIcon = () => (
@@ -247,6 +248,8 @@ export default function Home() {
                     <button className="btn-secondary" onClick={() => setData(null)}>Start New Session</button>
                   </div>
 
+
+
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 2.5fr", gap: "2rem", alignItems: "start" }}>
                     <div className="enterprise-card" style={{ display: "flex", flexDirection: "column", gap: "2rem", padding: "2.5rem 2rem" }}>
                       <div>
@@ -288,6 +291,30 @@ export default function Home() {
                             </div>
                           ))}
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: "2rem" }}>
+                    <ToxicityCharts comments={data.comments} />
+                  </div>
+
+                  <div className="enterprise-card" style={{ marginTop: "2rem", padding: "2rem", borderTop: "4px solid var(--border-subtle)" }}>
+                    <h3 style={{ fontSize: "0.9rem", fontWeight: "600", marginBottom: "1.5rem", color: "var(--text-primary)" }}>Data Visualization Guide</h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
+                      <div>
+                        <h4 style={{ fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Toxicity Distribution</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          This histogram segments the analyzed comments into specific toxicity probability brackets. 
+                          <strong> 0-40%</strong> indicates high-confidence safe content, while <strong>80-100%</strong> marks high-probability violations that require immediate attention.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Analysis Trendline</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          This area chart visualizes the "toxicity heat" across the chronological sequence of comments. 
+                          Sharp peaks represent aggressive clusters within the conversation, helping you pinpoint where discussions turned hostile.
+                        </p>
                       </div>
                     </div>
                   </div>
