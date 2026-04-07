@@ -301,19 +301,29 @@ export default function Home() {
 
                   <div className="enterprise-card" style={{ marginTop: "2rem", padding: "2rem", borderTop: "4px solid var(--border-subtle)" }}>
                     <h3 style={{ fontSize: "0.9rem", fontWeight: "600", marginBottom: "1.5rem", color: "var(--text-primary)" }}>Data Visualization Guide</h3>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2.5rem" }}>
                       <div>
-                        <h4 style={{ fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Toxicity Distribution</h4>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Composition (Donut)</h4>
                         <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
-                          This histogram segments the analyzed comments into specific toxicity probability brackets. 
-                          <strong> 0-40%</strong> indicates high-confidence safe content, while <strong>80-100%</strong> marks high-probability violations that require immediate attention.
+                          Quickly see the ratio of <strong>Safe</strong> vs <strong>Flagged</strong> content. Ideal for high-level moderation oversight.
                         </p>
                       </div>
                       <div>
-                        <h4 style={{ fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Analysis Trendline</h4>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Risk Meter (Radial)</h4>
                         <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
-                          This area chart visualizes the "toxicity heat" across the chronological sequence of comments. 
-                          Sharp peaks represent aggressive clusters within the conversation, helping you pinpoint where discussions turned hostile.
+                          The "mean toxicity" level. A standardized probability score for the entire session at a glance.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Distribution (Bar)</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          Segments content into hazard brackets. <strong>0-40%</strong> is safe; <strong>80-100%</strong> requires immediate attention.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Timeline (Area)</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          Follow the conversation's "heat." Peaks represent aggressive clusters where discussions turned hostile.
                         </p>
                       </div>
                     </div>
@@ -352,6 +362,42 @@ export default function Home() {
                         <div style={{ fontSize: "2.5rem", fontWeight: "700", color: "var(--text-primary)", fontFamily: "monospace", letterSpacing: "-1px" }}>
                           {(audioResult.toxicity_score * 100).toFixed(1)}<span style={{ fontSize: "1.25rem", color: "var(--text-muted)" }}>%</span>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {audioResult.segments && (
+                    <div style={{ marginTop: "2rem" }}>
+                      <ToxicityCharts comments={audioResult.segments} />
+                    </div>
+                  )}
+
+                  <div className="enterprise-card" style={{ marginTop: "2rem", padding: "2rem", borderTop: "4px solid var(--border-subtle)" }}>
+                    <h3 style={{ fontSize: "0.9rem", fontWeight: "600", marginBottom: "1.5rem", color: "var(--text-primary)" }}>Audio Visualization Guide</h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2.5rem" }}>
+                      <div>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Composition (Donut)</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          Breakdown of <strong>Safe Speech</strong> vs <strong>Detected Violations</strong> across transcript segments.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Overall Risk</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          Mean probability of toxicity for the entire duration of the audio clip.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Segment Distribution</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          Visualizes how many individual time blocks fall into each safety bracket.
+                        </p>
+                      </div>
+                      <div>
+                        <h4 style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "1px", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Toxicity Timeline</h4>
+                        <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                          Identify exactly when hostile language occurred relative to the audio start time.
+                        </p>
                       </div>
                     </div>
                   </div>

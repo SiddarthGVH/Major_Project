@@ -64,26 +64,41 @@ def analyze():
     file.save(temp_path)
     
     try:
-        # 1. Transcribe Instantly
+        # 1. Transcribe with Segments
         result = whisper_model.transcribe(temp_path)
-        text = result['text']
+        full_text = result['text']
+        raw_segments = result.get('segments', [])
         
-        # 2. Predict Toxicity Instantly
-        inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True)
-        with torch.no_grad():
-            outputs = bert_model(**inputs)
-            probs = F.softmax(outputs.logits, dim=1).cpu().numpy()[0]
-            
-        prediction = "TOXIC" if probs[1] >= 0.5 else "NOT TOXIC"
+        # 2. Predict Toxicity for segments and full text
+        def get_toxicity(t):
+            inputs = tokenizer(t, return_tensors="pt", truncation=True, padding=True)
+            with torch.no_grad():
+                outputs = bert_model(**inputs)
+                p = F.softmax(outputs.logits, dim=1).cpu().numpy()[0]
+            return float(p[1]), "TOXIC" if p[1] >= 0.5 else "NOT TOXIC"
+
+        full_score, full_prediction = get_toxicity(full_text)
         
+        # Process individual segments for visualization
+        processed_segments = []
+        for s in raw_segments:
+            score, _ = get_toxicity(s['text'])
+            processed_segments.append({
+                "text": s['text'],
+                "start": s['start'],
+                "end": s['end'],
+                "score": score,
+                "isToxic": score >= 0.5
+            })
+
         # 3. Clean up
         os.remove(temp_path)
         
         return jsonify({
-            "transcription": text,
-            "prediction": prediction,
-            "toxicity_score": float(probs[1]),
-            "non_toxic_score": float(probs[0])
+            "transcription": full_text,
+            "prediction": full_prediction,
+            "toxicity_score": full_score,
+            "segments": processed_segments
         })
     except Exception as e:
         if os.path.exists(temp_path):
