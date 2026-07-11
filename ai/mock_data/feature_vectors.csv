@@ -1,0 +1,6 @@
+lead_id,company,company_band,source,source_score,engagement_score,engagement_level,reply_rate,reply_level,recency_days
+L001,Bright Future University,Large,LinkedIn,70,40,MEDIUM,100.0,FAST,6
+L002,TechNova Solutions,Medium,Website,85,15,LOW,100.0,FAST,5
+L003,GreenLeaf Hospitality,Small,Cold Email,40,5,LOW,0.0,NO RESPONSE,9
+L004,Apex Manufacturing,Enterprise,Referral,100,0,LOW,0.0,NO RESPONSE,999
+L005,CloudEdge Startup,Small,Webinar,75,0,LOW,100.0,FAST,999
