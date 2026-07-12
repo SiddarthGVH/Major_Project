@@ -1,0 +1,248 @@
+'use client';
+
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Search, 
+  Bell, 
+  Plus, 
+  Menu, 
+  FileText,
+  TrendingUp,
+  User,
+  ShieldAlert,
+  Settings,
+  LogOut
+} from 'lucide-react';
+
+interface HeaderProps {
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+  onNewReportClick: () => void;
+}
+
+export default function Header({ collapsed, setCollapsed, onNewReportClick }: HeaderProps) {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  
+  const notifRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const notifications = [
+    { id: 1, text: "Sarah Johnson won the 'Acme Enterprise' deal!", type: "won", time: "10m ago" },
+    { id: 2, text: "Gmail sync completed: 24 new threads pulled.", type: "sync", time: "1h ago" },
+    { id: 3, text: "High-value lead 'Global Tech' has been idle for 5 days.", type: "warning", time: "3h ago" },
+    { id: 4, text: "New report 'Q3 Sales Forecast' ready for review.", type: "report", time: "5h ago" },
+  ];
+
+  const searchResults = [
+    { title: "Alex Johnson (User)", type: "Team", link: "#" },
+    { title: "Acme Corp (Company)", type: "Companies", link: "#" },
+    { title: "Enterprise SaaS Upgrade (Deal)", type: "Deals", link: "#" },
+    { title: "Q3 Strategy Planning (Task)", type: "Tasks", link: "#" },
+  ].filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  return (
+    <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm/5 text-slate-650">
+      {/* Search & Collapse Toggle */}
+      <div className="flex items-center space-x-4 flex-1 max-w-md">
+        <button 
+          onClick={() => setCollapsed(!collapsed)} 
+          className="text-slate-400 hover:text-brand-text transition-colors p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer"
+          aria-label="Toggle Sidebar"
+        >
+          <Menu className="h-4.5 w-4.5" strokeWidth={1.75} />
+        </button>
+
+        {/* Polished Search Bar - Light Themed */}
+        <div className="relative w-full">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">
+            <Search className="h-4 w-4" strokeWidth={1.75} />
+          </div>
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search leads, contacts, companies, deals..."
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setShowSearchResults(e.target.value.length > 0);
+            }}
+            onFocus={() => {
+              if (searchQuery.length > 0) setShowSearchResults(true);
+            }}
+            className="w-full pl-9 pr-12 py-1.5 border border-slate-200/80 rounded-lg text-xs text-brand-text bg-slate-50/50 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/15 focus:border-brand-accent transition-all duration-200 shadow-sm/5"
+          />
+          <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+            <kbd className="text-[9px] font-sans font-bold text-slate-400 bg-slate-100 border border-slate-205 px-1.5 py-0.5 rounded shadow-sm/5">
+              ⌘K
+            </kbd>
+          </div>
+
+          {/* Search Dropdown Panel - Light Themed */}
+          {showSearchResults && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200/80 rounded-lg shadow-lg overflow-hidden z-50 animate-in fade-in duration-200">
+              <div className="px-3 py-2 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Quick Results</span>
+                <button 
+                  onClick={() => setShowSearchResults(false)} 
+                  className="text-slate-450 hover:text-brand-text text-[9px] uppercase font-bold"
+                >
+                  Clear
+                </button>
+              </div>
+              <div className="py-1">
+                {searchResults.length > 0 ? (
+                  searchResults.map((item, idx) => (
+                    <a
+                      key={idx}
+                      href={item.link}
+                      onClick={() => setShowSearchResults(false)}
+                      className="flex items-center justify-between px-4 py-2 hover:bg-slate-50 text-xs text-brand-text transition-colors"
+                    >
+                      <span className="font-semibold">{item.title}</span>
+                      <span className="text-[9px] font-bold text-brand-accent bg-brand-accent/5 px-2 py-0.5 rounded border border-brand-accent/20">
+                        {item.type}
+                      </span>
+                    </a>
+                  ))
+                ) : (
+                  <div className="px-4 py-3 text-center text-xs text-slate-400">
+                    No results matching &ldquo;{searchQuery}&rdquo;
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Top Bar Actions Cluster - Light Themed */}
+      <div className="flex items-center space-x-3.5">
+        {/* + New Report CTA in Electric Purple */}
+        <button
+          onClick={onNewReportClick}
+          className="inline-flex items-center space-x-1 px-3.5 py-1.5 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-lg text-xs font-bold shadow-sm/10 hover:shadow-sm transition-all duration-200 cursor-pointer"
+        >
+          <Plus className="h-3.5 w-3.5" strokeWidth={2} />
+          <span>New Report</span>
+        </button>
+
+        {/* Notifications Trigger */}
+        <div className="relative" ref={notifRef}>
+          <button
+            onClick={() => setShowNotifications(!showNotifications)}
+            className="p-1.5 text-slate-400 hover:text-brand-text rounded-lg hover:bg-slate-50 transition-all cursor-pointer relative"
+            aria-label="View notifications"
+          >
+            <Bell className="h-4.5 w-4.5" strokeWidth={1.75} />
+            <span className="absolute top-1 right-1 h-3.5 w-3.5 bg-brand-accent text-[9px] font-bold text-white rounded-full flex items-center justify-center border border-white">
+              4
+            </span>
+          </button>
+
+          {showNotifications && (
+            <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200/80 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="px-4 py-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <span className="font-bold text-brand-text text-xs">Notifications</span>
+                <span className="text-[9px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full font-bold">
+                  4 New
+                </span>
+              </div>
+              <div className="divide-y divide-slate-50 max-h-72 overflow-y-auto">
+                {notifications.map((n) => (
+                  <div key={n.id} className="p-3 hover:bg-slate-50/50 transition-colors flex items-start space-x-2.5 text-[11px]">
+                    <div className="mt-0.5">
+                      {n.type === 'won' && <TrendingUp className="h-3.5 w-3.5 text-emerald-600" strokeWidth={1.75} />}
+                      {n.type === 'warning' && <ShieldAlert className="h-3.5 w-3.5 text-rose-500" strokeWidth={1.75} />}
+                      {n.type === 'report' && <FileText className="h-3.5 w-3.5 text-brand-accent" strokeWidth={1.75} />}
+                      {!['won', 'warning', 'report'].includes(n.type) && <Bell className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-slate-600 leading-relaxed">{n.text}</p>
+                      <span className="text-[9px] text-slate-400 mt-0.5 block">{n.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="p-2 border-t border-slate-100 bg-slate-50 text-center">
+                <button className="text-[10px] font-bold text-brand-accent hover:text-brand-accent-hover transition-colors w-full py-1">
+                  Mark all as read
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* User Dropdown */}
+        <div className="relative" ref={profileRef}>
+          <button
+            onClick={() => setShowProfileMenu(!showProfileMenu)}
+            className="flex items-center space-x-2 p-1 rounded-lg hover:bg-slate-50 transition-all cursor-pointer"
+            aria-label="Profile menu"
+          >
+            <div className="h-7 w-7 rounded-full bg-slate-200 overflow-hidden border border-slate-150">
+              <img 
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80" 
+                alt="Alex Johnson Avatar" 
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <span className="text-xs font-semibold text-brand-text hidden md:inline-block">Alex Johnson</span>
+          </button>
+
+          {showProfileMenu && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200/80 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-left">
+                <p className="text-xs font-bold text-brand-text">Alex Johnson</p>
+                <p className="text-[10px] text-slate-400 truncate mt-0.5 font-medium">alex.johnson@pulse.com</p>
+              </div>
+              <div className="py-1">
+                <a href="#" className="flex items-center space-x-2 px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 transition-colors">
+                  <User className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
+                  <span>My Profile</span>
+                </a>
+                <a href="#" className="flex items-center space-x-2 px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 transition-colors">
+                  <Settings className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
+                  <span>Account Settings</span>
+                </a>
+              </div>
+              <div className="border-t border-slate-100 py-1 bg-slate-50/50">
+                <button className="flex items-center space-x-2 w-full px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors text-left cursor-pointer">
+                  <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
+                  <span>Sign Out</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}

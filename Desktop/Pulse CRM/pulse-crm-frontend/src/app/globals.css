@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #1A2B27;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  
+  --color-brand-bg: #FFFFFF;
+  --color-brand-sidebar: #1C3732; /* Dark Spruce Green background */
+  --color-brand-text: #1A2B27;
+  
+  /* Primary Colors */
+  --color-brand-accent: #355E58; /* Spruce Green */
+  --color-brand-accent-hover: #254540;
+  --color-brand-cta: #355E58;
+  --color-brand-cta-hover: #254540;
+  --color-brand-blue: #40706A; /* Spruce Blue/Green */
+  --color-brand-blue-hover: #2B4E4A;
+  
+  /* Supporting Colors */
+  --color-brand-cyan: #4F8B81;
+  --color-brand-light-cyan: #6CAFA5;
+  --color-brand-teal: #3E726A;
+  
+  --color-brand-sidebar-hover: #F5FAF9; /* Soft light spruce-tinted hover */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Inter, system-ui, -apple-system, sans-serif;
+  scroll-behavior: smooth;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Global 200ms transition helper */
+.transition-custom {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Force tabular lining numbers for alignment */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Hide Turbopack / Next.js Development Issue Overlay & Debug Badges */
+nextjs-portal,
+#nextjs-portal,
+[class*="nextjs-portal"],
+div[data-nextjs-toast-wrapper],
+div[class*="nextjs-toast"],
+[id^="nextjs"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
