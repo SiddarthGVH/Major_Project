@@ -1,9 +1,15 @@
 """
-Models package — import all models here so Alembic can discover them.
+Models package
+Import all models here so Alembic auto-detect and SQLAlchemy mapper
+registration work correctly.
+Import order respects FK dependencies:
+  Organization → Role/Permission → User → Company → Contact → Lead → Deal → Activity
 """
-from app.models.organization import Organization  # noqa: F401
+from app.models.organization import Organization      # noqa: F401
 from app.models.role import Role, Permission, RolePermission  # noqa: F401
-from app.models.user import User, UserRole  # noqa: F401
-from app.models.company import Company  # noqa: F401
-from app.models.contact import Contact  # noqa: F401
-from app.models.lead import Lead  # noqa: F401
+from app.models.user import User, UserRole            # noqa: F401
+from app.models.company import Company                # noqa: F401
+from app.models.contact import Contact                # noqa: F401
+from app.models.lead import Lead                      # noqa: F401
+from app.models.deal import Deal                      # noqa: F401
+from app.models.activity import Activity              # noqa: F401
