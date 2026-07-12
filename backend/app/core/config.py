@@ -6,7 +6,7 @@ Follows the 12-factor app methodology.
 from functools import lru_cache
 from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import AnyHttpUrl, field_validator
+from pydantic import AnyHttpUrl
 import secrets
 
 
@@ -51,14 +51,10 @@ class Settings(BaseSettings):
     SUPABASE_SERVICE_KEY: Optional[str] = None
 
     # ── CORS ──────────────────────────────────────────────────────────────────
-    CORS_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://127.0.0.1:3000",
-    ]
+    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000"
     CORS_ALLOW_CREDENTIALS: bool = True
-    CORS_ALLOW_METHODS: List[str] = ["*"]
-    CORS_ALLOW_HEADERS: List[str] = ["*"]
+    CORS_ALLOW_METHODS: str = "*"
+    CORS_ALLOW_HEADERS: str = "*"
 
     # ── Rate Limiting ─────────────────────────────────────────────────────────
     RATE_LIMIT_PER_MINUTE: int = 60
@@ -86,12 +82,22 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_PASSWORD: str = "Admin@123456"
     FIRST_SUPERUSER_FULL_NAME: str = "System Administrator"
 
-    @field_validator("CORS_ORIGINS", mode="before")
-    @classmethod
-    def parse_cors_origins(cls, v):
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+    @property
+    def cors_origins_list(self) -> List[str]:
+        """Parse CORS_ORIGINS string into a list."""
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+
+    @property
+    def cors_methods_list(self) -> List[str]:
+        if self.CORS_ALLOW_METHODS == "*":
+            return ["*"]
+        return [m.strip() for m in self.CORS_ALLOW_METHODS.split(",") if m.strip()]
+
+    @property
+    def cors_headers_list(self) -> List[str]:
+        if self.CORS_ALLOW_HEADERS == "*":
+            return ["*"]
+        return [h.strip() for h in self.CORS_ALLOW_HEADERS.split(",") if h.strip()]
 
     @property
     def is_production(self) -> bool:

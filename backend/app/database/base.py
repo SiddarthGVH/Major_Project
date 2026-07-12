@@ -1,13 +1,17 @@
 """
-SQLAlchemy Declarative Base and TimestampMixin
-All domain models inherit from Base.
-TimestampMixin provides audit fields (created_at, updated_at, etc.).
+SQLAlchemy Declarative Base + Audit Mixins
+─────────────────────────────────────────
+AuditMixin   → id, created_at, updated_at, is_active
+TenantMixin  → extends AuditMixin with organisation_id + created_by
+               (declared as plain UUID columns here; each model that
+               needs FK constraints re-declares them with ForeignKey.
+               SQLAlchemy merges same-named columns, so FKs win.)
 """
 import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
+from sqlalchemy import Boolean, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -17,20 +21,13 @@ def utcnow() -> datetime:
 
 
 class Base(DeclarativeBase):
-    """
-    Project-wide SQLAlchemy declarative base.
-    All models are registered here for Alembic auto-detection.
-    """
+    """Project-wide declarative base — all models register here."""
     pass
 
 
 class AuditMixin:
     """
-    Adds standard audit columns to every table:
-      - id              UUID primary key
-      - created_at      Timestamp of record creation
-      - updated_at      Timestamp of last update (auto-maintained)
-      - is_active       Soft-enable/disable flag
+    Standard audit columns present on every table.
     """
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -61,12 +58,11 @@ class AuditMixin:
 
 class TenantMixin(AuditMixin):
     """
-    Extends AuditMixin with multi-tenancy columns:
-      - organization_id   The owning tenant
-      - created_by        UUID of the user who created this record
-    These are intentionally nullable so the base mixin can be shared
-    across models that set them as actual FK columns in their own table definitions.
+    Extends AuditMixin with multi-tenancy fields.
+    Models that need FK constraints on these columns simply redeclare
+    them with ForeignKey(...) — SQLAlchemy merges the column definitions.
     """
+    # Intentionally no ForeignKey here — concrete models add FKs themselves.
     organization_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
         nullable=True,

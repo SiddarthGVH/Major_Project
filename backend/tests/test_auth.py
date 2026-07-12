@@ -1,115 +1,168 @@
 """
-Authentication Tests
+Authentication Tests — Module 3
+Covers: register, login, logout, refresh, forgot/reset/change password, /me
 """
 import pytest
 from httpx import AsyncClient
 
 
-@pytest.mark.asyncio
+# ── Register ──────────────────────────────────────────────────────────────────
+
 async def test_register_success(client: AsyncClient, seed_roles):
-    response = await client.post("/api/v1/auth/register", json={
+    resp = await client.post("/api/v1/auth/register", json={
         "full_name": "Jane Smith",
-        "email": "jane@test.com",
+        "email": "jane@acme.com",
         "password": "Secur3P@ss",
         "organization_name": "Acme Corp",
     })
-    assert response.status_code == 201
-    data = response.json()
+    assert resp.status_code == 201
+    data = resp.json()
     assert data["success"] is True
     assert "access_token" in data["data"]
     assert "refresh_token" in data["data"]
     assert data["data"]["token_type"] == "bearer"
 
 
-@pytest.mark.asyncio
-async def test_register_duplicate_email(client: AsyncClient, seed_roles):
-    payload = {
-        "full_name": "Jane Smith",
-        "email": "jane.dup@test.com",
-        "password": "Secur3P@ss",
-        "organization_name": "Acme Corp 1",
-    }
-    await client.post("/api/v1/auth/register", json=payload)
-
-    # Second registration with same email
-    payload["organization_name"] = "Acme Corp 2"
-    response = await client.post("/api/v1/auth/register", json=payload)
-    assert response.status_code == 409
-    assert response.json()["error_code"] == "DUPLICATE_RESOURCE"
-
-
-@pytest.mark.asyncio
 async def test_register_weak_password(client: AsyncClient, seed_roles):
-    response = await client.post("/api/v1/auth/register", json={
+    resp = await client.post("/api/v1/auth/register", json={
         "full_name": "Weak User",
         "email": "weak@test.com",
-        "password": "password",   # no uppercase, no special char
+        "password": "password",   # no uppercase / special char
         "organization_name": "Weak Org",
     })
-    assert response.status_code == 422
+    assert resp.status_code == 422
 
 
-@pytest.mark.asyncio
+async def test_register_duplicate_email(client: AsyncClient, seed_roles):
+    payload = {
+        "full_name": "Dup User",
+        "email": "dup@org.com",
+        "password": "Secur3P@ss",
+        "organization_name": "Dup Org 1",
+    }
+    await client.post("/api/v1/auth/register", json=payload)
+    payload["organization_name"] = "Dup Org 2"
+    resp = await client.post("/api/v1/auth/register", json=payload)
+    assert resp.status_code == 409
+    assert resp.json()["error_code"] == "DUPLICATE_RESOURCE"
+
+
+async def test_register_invalid_email(client: AsyncClient, seed_roles):
+    resp = await client.post("/api/v1/auth/register", json={
+        "full_name": "Bad Email",
+        "email": "not-an-email",
+        "password": "Secur3P@ss",
+        "organization_name": "Bad Org",
+    })
+    assert resp.status_code == 422
+
+
+# ── Login ─────────────────────────────────────────────────────────────────────
+
 async def test_login_success(client: AsyncClient, registered_user):
-    response = await client.post("/api/v1/auth/login", json={
+    resp = await client.post("/api/v1/auth/login", json={
         "email": "test.admin@example.com",
         "password": "Test@123456",
     })
-    assert response.status_code == 200
-    assert "access_token" in response.json()["data"]
+    assert resp.status_code == 200
+    assert "access_token" in resp.json()["data"]
 
 
-@pytest.mark.asyncio
 async def test_login_wrong_password(client: AsyncClient, registered_user):
-    response = await client.post("/api/v1/auth/login", json={
+    resp = await client.post("/api/v1/auth/login", json={
         "email": "test.admin@example.com",
-        "password": "WrongPass!1",
+        "password": "WrongP@ss99",
     })
-    assert response.status_code == 401
-    assert response.json()["error_code"] == "INVALID_CREDENTIALS"
+    assert resp.status_code == 401
+    assert resp.json()["error_code"] == "INVALID_CREDENTIALS"
 
 
-@pytest.mark.asyncio
 async def test_login_unknown_email(client: AsyncClient, seed_roles):
-    response = await client.post("/api/v1/auth/login", json={
+    resp = await client.post("/api/v1/auth/login", json={
         "email": "nobody@nowhere.com",
         "password": "Any@12345",
     })
-    assert response.status_code == 401
+    assert resp.status_code == 401
 
 
-@pytest.mark.asyncio
+# ── /me ───────────────────────────────────────────────────────────────────────
+
 async def test_get_me(client: AsyncClient, auth_headers):
-    response = await client.get("/api/v1/auth/me", headers=auth_headers)
-    assert response.status_code == 200
-    data = response.json()["data"]
+    resp = await client.get("/api/v1/auth/me", headers=auth_headers)
+    assert resp.status_code == 200
+    data = resp.json()["data"]
     assert data["email"] == "test.admin@example.com"
     assert "admin" in data["roles"]
+    assert isinstance(data["permissions"], list)
+    assert len(data["permissions"]) > 0
 
 
-@pytest.mark.asyncio
-async def test_me_unauthenticated(client: AsyncClient):
-    response = await client.get("/api/v1/auth/me")
-    assert response.status_code == 401
+async def test_get_me_no_token(client: AsyncClient):
+    resp = await client.get("/api/v1/auth/me")
+    assert resp.status_code == 401
 
 
-@pytest.mark.asyncio
+async def test_get_me_invalid_token(client: AsyncClient):
+    resp = await client.get(
+        "/api/v1/auth/me",
+        headers={"Authorization": "Bearer not.a.real.token"},
+    )
+    assert resp.status_code == 401
+
+
+# ── Refresh ───────────────────────────────────────────────────────────────────
+
 async def test_refresh_token(client: AsyncClient, registered_user):
-    response = await client.post("/api/v1/auth/refresh", json={
+    resp = await client.post("/api/v1/auth/refresh", json={
         "refresh_token": registered_user["refresh_token"]
     })
-    assert response.status_code == 200
-    assert "access_token" in response.json()["data"]
+    assert resp.status_code == 200
+    assert "access_token" in resp.json()["data"]
 
 
-@pytest.mark.asyncio
-async def test_change_password(client: AsyncClient, auth_headers):
-    response = await client.post(
+async def test_refresh_with_bad_token(client: AsyncClient):
+    resp = await client.post("/api/v1/auth/refresh", json={
+        "refresh_token": "garbage.token.here"
+    })
+    assert resp.status_code == 401
+
+
+# ── Change Password ───────────────────────────────────────────────────────────
+
+async def test_change_password_success(client: AsyncClient, auth_headers):
+    resp = await client.post(
         "/api/v1/auth/change-password",
         headers=auth_headers,
         json={
             "current_password": "Test@123456",
-            "new_password": "NewTest@789",
+            "new_password": "NewP@ssw0rd",
         },
     )
-    assert response.status_code == 200
+    assert resp.status_code == 200
+
+
+async def test_change_password_wrong_current(client: AsyncClient, auth_headers):
+    resp = await client.post(
+        "/api/v1/auth/change-password",
+        headers=auth_headers,
+        json={
+            "current_password": "WrongCurrent!1",
+            "new_password": "NewP@ssw0rd",
+        },
+    )
+    assert resp.status_code == 401
+
+
+# ── Forgot / Reset password ───────────────────────────────────────────────────
+
+async def test_forgot_password_always_200(client: AsyncClient, seed_roles):
+    """Forgot-password endpoint never reveals whether email exists."""
+    resp = await client.post("/api/v1/auth/forgot-password", json={
+        "email": "nonexistent@nowhere.com"
+    })
+    assert resp.status_code == 200
+
+
+async def test_logout(client: AsyncClient, auth_headers):
+    resp = await client.post("/api/v1/auth/logout", headers=auth_headers)
+    assert resp.status_code == 204
