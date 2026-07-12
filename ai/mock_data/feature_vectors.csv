@@ -1,6 +1,6 @@
-lead_id,company,company_band,source,source_score,engagement_score,engagement_level,reply_rate,reply_level,recency_days
-L001,Bright Future University,Large,LinkedIn,70,40,MEDIUM,100.0,FAST,6
-L002,TechNova Solutions,Medium,Website,85,15,LOW,100.0,FAST,5
-L003,GreenLeaf Hospitality,Small,Cold Email,40,5,LOW,0.0,NO RESPONSE,9
-L004,Apex Manufacturing,Enterprise,Referral,100,0,LOW,0.0,NO RESPONSE,999
-L005,CloudEdge Startup,Small,Webinar,75,0,LOW,100.0,FAST,999
+lead_id,feature_version,generated_at,company,company_band,source,source_score,engagement_score,engagement_level,reply_rate,reply_level,recency_days
+L001,v1,2026-07-12 21:45:25.070212,Bright Future University,Large,LinkedIn,70,40,MEDIUM,100.0,FAST,7
+L002,v1,2026-07-12 21:45:25.078677,TechNova Solutions,Medium,Website,85,15,LOW,100.0,FAST,6
+L003,v1,2026-07-12 21:45:25.085466,GreenLeaf Hospitality,Small,Cold Email,40,5,LOW,0.0,NO RESPONSE,10
+L004,v1,2026-07-12 21:45:25.090267,Apex Manufacturing,Enterprise,Referral,100,0,LOW,0.0,NO RESPONSE,999
+L005,v1,2026-07-12 21:45:25.093958,CloudEdge Startup,Small,Webinar,75,0,LOW,100.0,FAST,999

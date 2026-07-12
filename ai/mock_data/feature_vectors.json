@@ -1,0 +1,72 @@
+[
+    {
+        "lead_id":"L001",
+        "feature_version":"v1",
+        "generated_at":"2026-07-12 21:45:25.070212",
+        "company":"Bright Future University",
+        "company_band":"Large",
+        "source":"LinkedIn",
+        "source_score":70,
+        "engagement_score":40,
+        "engagement_level":"MEDIUM",
+        "reply_rate":100.0,
+        "reply_level":"FAST",
+        "recency_days":7
+    },
+    {
+        "lead_id":"L002",
+        "feature_version":"v1",
+        "generated_at":"2026-07-12 21:45:25.078677",
+        "company":"TechNova Solutions",
+        "company_band":"Medium",
+        "source":"Website",
+        "source_score":85,
+        "engagement_score":15,
+        "engagement_level":"LOW",
+        "reply_rate":100.0,
+        "reply_level":"FAST",
+        "recency_days":6
+    },
+    {
+        "lead_id":"L003",
+        "feature_version":"v1",
+        "generated_at":"2026-07-12 21:45:25.085466",
+        "company":"GreenLeaf Hospitality",
+        "company_band":"Small",
+        "source":"Cold Email",
+        "source_score":40,
+        "engagement_score":5,
+        "engagement_level":"LOW",
+        "reply_rate":0.0,
+        "reply_level":"NO RESPONSE",
+        "recency_days":10
+    },
+    {
+        "lead_id":"L004",
+        "feature_version":"v1",
+        "generated_at":"2026-07-12 21:45:25.090267",
+        "company":"Apex Manufacturing",
+        "company_band":"Enterprise",
+        "source":"Referral",
+        "source_score":100,
+        "engagement_score":0,
+        "engagement_level":"LOW",
+        "reply_rate":0.0,
+        "reply_level":"NO RESPONSE",
+        "recency_days":999
+    },
+    {
+        "lead_id":"L005",
+        "feature_version":"v1",
+        "generated_at":"2026-07-12 21:45:25.093958",
+        "company":"CloudEdge Startup",
+        "company_band":"Small",
+        "source":"Webinar",
+        "source_score":75,
+        "engagement_score":0,
+        "engagement_level":"LOW",
+        "reply_rate":100.0,
+        "reply_level":"FAST",
+        "recency_days":999
+    }
+]

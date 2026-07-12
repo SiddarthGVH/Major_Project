@@ -1,3 +1,4 @@
+from load_features import save_feature_vectors
 from data_source import (
     get_leads,
     get_companies,
@@ -18,124 +19,119 @@ from features import (
 import pandas as pd
 
 
-# -----------------------------
-# Load data
-# -----------------------------
+def build_feature_vectors():
 
-leads = get_leads()
-companies = get_companies()
-activities = get_activities()
-emails = get_emails()
+    # -----------------------------
+    # Load Data
+    # -----------------------------
+    leads = get_leads(source="mock")
+    companies = get_companies(source="mock")
+    activities = get_activities(source="mock")
+    emails = get_emails(source="mock")
 
-# Merge leads with company details
-merged = leads.merge(companies, on="company_id")
+    
+
+    merged = leads.merge(companies, on="company_id")
+
+    
+
+    feature_vectors = []
+
+    # -----------------------------
+    # Build Features
+    # -----------------------------
+    for _, lead in merged.iterrows():
+
+        lead_id = lead["lead_id"]
+
+        lead_activities = activities[
+            activities["lead_id"] == lead_id
+        ]
+
+        lead_emails = emails[
+            emails["lead_id"] == lead_id
+        ]
+
+        company_band = company_size_band(
+            lead["size"]
+        )
+
+        source_score = source_quality(
+            lead["source"]
+        )
+
+        engagement = engagement_score(
+            lead_activities
+        )
+
+        engagement_status = engagement_level(
+            engagement
+        )
+
+        reply_score = reply_rate(
+            lead_emails
+        )
+
+        reply_status = reply_level(
+            reply_score
+        )
+
+        recency = recency_days(
+            lead_activities
+        )
+
+        feature_vector = {
+
+            "lead_id": lead_id,
+
+            "feature_version": "v1",
+
+            "generated_at": str(pd.Timestamp.now()),
+
+            "company": lead["name"],
+
+            "company_band": company_band,
+
+            "source": lead["source"],
+
+            "source_score": source_score,
+
+            "engagement_score": engagement,
+
+            "engagement_level": engagement_status,
+
+            "reply_rate": reply_score,
+
+            "reply_level": reply_status,
+
+            "recency_days": recency
+
+        }
+
+        feature_vectors.append(feature_vector)
+
+    # RETURN AFTER LOOP
+    return pd.DataFrame(feature_vectors)
 
 
-# Store all feature vectors
-feature_vectors = []
+if __name__ == "__main__":
 
+    features_df = build_feature_vectors()
+    save_feature_vectors(features_df)
 
-# -----------------------------
-# Process each lead
-# -----------------------------
+    print("\nGenerated Feature Vectors\n")
 
-for _, lead in merged.iterrows():
+    print(features_df)
 
-    lead_id = lead["lead_id"]
-
-    # Activities for current lead
-    lead_activities = activities[
-        activities["lead_id"] == lead_id
-    ]
-
-    # Emails for current lead
-    lead_emails = emails[
-        emails["lead_id"] == lead_id
-    ]
-
-
-    company_band = company_size_band(
-        lead["size"]
+    features_df.to_csv(
+        "ai/mock_data/feature_vectors.csv",
+        index=False
     )
 
-
-
-    source_score = source_quality(
-        lead["source"]
+    features_df.to_json(
+        "ai/mock_data/feature_vectors.json",
+        orient="records",
+        indent=4
     )
 
-  
-
-    engagement = engagement_score(
-        lead_activities
-    )
-
-    engagement_status = engagement_level(
-        engagement
-    )
-
-    reply_score = reply_rate(
-    lead_emails
-    )
-
-    reply_status = reply_level(
-    reply_score
-    )
-
-    recency = recency_days(
-    lead_activities
-   )
-
-    # -------------------------
-    # Feature Vector
-    # -------------------------
-
-    feature_vector = {
-
-        "lead_id": lead_id,
-
-        "company": lead["name"],
-
-        "company_band": company_band,
-
-        "source": lead["source"],
-
-        "source_score": source_score,
-
-        "engagement_score": engagement,
-
-        "engagement_level": engagement_status,
-
-        "reply_rate": reply_score,
-
-        "reply_level": reply_status,
-
-        "recency_days": recency
-
-    }
-
-    feature_vectors.append(feature_vector)
-
-
-# ----------------------------------
-# Convert to DataFrame
-# ----------------------------------
-
-features_df = pd.DataFrame(feature_vectors)
-
-print("\nGenerated Feature Vectors:\n")
-
-print(features_df)
-
-
-# ----------------------------------
-# Save Output
-# ----------------------------------
-
-features_df.to_csv(
-    "ai/mock_data/feature_vectors.csv",
-    index=False
-)
-
-print("\nFeature vectors saved successfully.")
-
+    print("\nFeature vectors saved successfully.")
