@@ -13,6 +13,7 @@ class LeadStatus(str, Enum):
     NEGOTIATION = "negotiation"
     WON = "won"
     LOST = "lost"
+    CONVERTED = "converted"
 
 
 class LeadSource(str, Enum):
@@ -46,6 +47,24 @@ class UserStatus(str, Enum):
 class SortOrder(str, Enum):
     ASC = "asc"
     DESC = "desc"
+
+
+class DealStatus(str, Enum):
+    OPEN = "open"
+    QUALIFIED = "qualified"
+    PROPOSAL = "proposal"
+    NEGOTIATION = "negotiation"
+    WON = "won"
+    LOST = "lost"
+
+
+class DealSortField(str, Enum):
+    CREATED_AT = "created_at"
+    UPDATED_AT = "updated_at"
+    NAME = "name"
+    AMOUNT = "amount"
+    EXPECTED_CLOSE_DATE = "expected_close_date"
+    PROBABILITY = "probability"
 
 
 class OrgPlan(str, Enum):
