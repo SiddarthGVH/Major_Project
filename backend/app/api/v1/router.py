@@ -12,6 +12,11 @@ from app.api.v1.contacts import router as contacts_router
 from app.api.v1.leads import router as leads_router
 from app.api.v1.deals import router as deals_router
 from app.api.v1.activity import router as activity_router
+from app.api.v1.pipeline import router as pipeline_router
+from app.api.v1.gmail import router as gmail_router
+from app.api.v1.dashboard import router as dashboard_router
+from app.api.v1.ai import router as ai_router
+from app.api.v1.events import router as events_router
 from app.api.v1.health import router as health_router
 
 api_router = APIRouter()
@@ -25,3 +30,8 @@ api_router.include_router(contacts_router, prefix="/contacts", tags=["Contacts"]
 api_router.include_router(leads_router, prefix="/leads", tags=["Leads"])
 api_router.include_router(deals_router, prefix="/deals", tags=["Deals"])
 api_router.include_router(activity_router, prefix="/activity", tags=["Activity"])
+api_router.include_router(pipeline_router, prefix="/pipeline", tags=["Pipeline"])
+api_router.include_router(gmail_router, prefix="/gmail", tags=["Gmail"])
+api_router.include_router(dashboard_router, prefix="/dashboard", tags=["Dashboard"])
+api_router.include_router(ai_router, prefix="/ai", tags=["AI"])
+api_router.include_router(events_router, prefix="/events", tags=["Events"])

@@ -45,6 +45,32 @@ class Permission(str, Enum):
     LEAD_UPDATE = "lead:update"
     LEAD_DELETE = "lead:delete"
     LEAD_ASSIGN = "lead:assign"
+    LEAD_CONVERT = "lead:convert"
+
+    # ── Deals ────────────────────────────────────────────────────────────────
+    DEAL_CREATE = "deal:create"
+    DEAL_READ = "deal:read"
+    DEAL_UPDATE = "deal:update"
+    DEAL_DELETE = "deal:delete"
+
+    # ── Pipeline ─────────────────────────────────────────────────────────────
+    PIPELINE_READ = "pipeline:read"
+    PIPELINE_UPDATE = "pipeline:update"
+
+    # ── Activity ─────────────────────────────────────────────────────────────
+    ACTIVITY_CREATE = "activity:create"
+    ACTIVITY_READ = "activity:read"
+
+    # ── Emails / Gmail ───────────────────────────────────────────────────────
+    EMAIL_READ = "email:read"
+    EMAIL_SYNC = "email:sync"
+    GMAIL_CONNECT = "gmail:connect"
+
+    # ── Dashboard ────────────────────────────────────────────────────────────
+    DASHBOARD_READ = "dashboard:read"
+
+    # ── AI-ready APIs ─────────────────────────────────────────────────────────
+    AI_ACCESS = "ai:access"
 
     # ── Reports ───────────────────────────────────────────────────────────────
     REPORT_VIEW   = "report:view"
@@ -88,6 +114,20 @@ ROLE_PERMISSIONS: Dict[Role, Set[Permission]] = {
         Permission.LEAD_UPDATE,
         Permission.LEAD_DELETE,
         Permission.LEAD_ASSIGN,
+        Permission.LEAD_CONVERT,
+        Permission.DEAL_CREATE,
+        Permission.DEAL_READ,
+        Permission.DEAL_UPDATE,
+        Permission.DEAL_DELETE,
+        Permission.PIPELINE_READ,
+        Permission.PIPELINE_UPDATE,
+        Permission.ACTIVITY_CREATE,
+        Permission.ACTIVITY_READ,
+        Permission.EMAIL_READ,
+        Permission.EMAIL_SYNC,
+        Permission.GMAIL_CONNECT,
+        Permission.DASHBOARD_READ,
+        Permission.AI_ACCESS,
         Permission.REPORT_VIEW,
         Permission.REPORT_EXPORT,
     },
@@ -103,6 +143,15 @@ ROLE_PERMISSIONS: Dict[Role, Set[Permission]] = {
         Permission.LEAD_CREATE,
         Permission.LEAD_READ,
         Permission.LEAD_UPDATE,
+        Permission.LEAD_CONVERT,
+        Permission.DEAL_CREATE,
+        Permission.DEAL_READ,
+        Permission.DEAL_UPDATE,
+        Permission.PIPELINE_READ,
+        Permission.ACTIVITY_READ,
+        Permission.EMAIL_READ,
+        Permission.EMAIL_SYNC,
+        Permission.DASHBOARD_READ,
         Permission.REPORT_VIEW,
     },
 }
