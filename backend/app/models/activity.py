@@ -1,4 +1,29 @@
 """
+<<<<<<< HEAD
+Activity Timeline Model
+Stores auditable business events that should appear in the CRM timeline.
+"""
+import uuid
+from typing import Optional
+
+from sqlalchemy import Boolean, ForeignKey, JSON, String, Text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.database.base import Base, TenantMixin
+
+
+class ActivityTimeline(Base, TenantMixin):
+    __tablename__ = "activity_timeline_events"
+
+    entity_type: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    entity_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False, index=True)
+    action: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    payload: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+
+=======
 Activity Model — The Event Timeline Backbone
 ═══════════════════════════════════════════════════════════════════════════════
 Every important action in the CRM is recorded as an Activity.
@@ -158,12 +183,23 @@ class Activity(Base, TenantMixin):
     )
 
     # ── Tenancy FK ────────────────────────────────────────────────────────────
+>>>>>>> 2caa082038ab34692767356457dd0dab412d6960
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
+<<<<<<< HEAD
+    created_by: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+
+    def __repr__(self) -> str:
+        return f"<ActivityTimeline id={self.id} entity={self.entity_type!r} action={self.action!r}>"
+=======
 
     # ── Relationships ─────────────────────────────────────────────────────────
     organization: Mapped["Organization"] = relationship(
@@ -190,3 +226,4 @@ class Activity(Base, TenantMixin):
             f"<Activity id={self.id} type={self.activity_type!r} "
             f"entity={self.entity_type}:{self.entity_id}>"
         )
+>>>>>>> 2caa082038ab34692767356457dd0dab412d6960

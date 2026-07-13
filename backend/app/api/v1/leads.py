@@ -7,6 +7,7 @@ PUT    /api/v1/leads/{id}
 DELETE /api/v1/leads/{id}
 PATCH  /api/v1/leads/{id}/status
 POST   /api/v1/leads/{id}/assign
+POST   /api/v1/leads/{id}/convert
 """
 from typing import Optional
 from uuid import UUID
@@ -22,6 +23,7 @@ from app.schemas.lead import (
     LeadStatusUpdateRequest,
     LeadUpdateRequest,
 )
+from app.schemas.deal import DealResponse
 from app.services.lead_service import LeadService
 from app.utils.enums import LeadStatus
 
@@ -147,6 +149,27 @@ async def assign_lead(
     svc = LeadService(db)
     lead = await svc.assign(lead_id, current_user.organization_id, payload)
     return {"success": True, "message": "Lead assigned.", "data": LeadResponse.model_validate(lead)}
+
+
+@router.post(
+    "/{lead_id}/convert",
+    response_model=StandardResponse[DealResponse],
+    status_code=status.HTTP_201_CREATED,
+    summary="Convert lead to deal",
+    description=(
+        "Converts an existing lead into a deal inside a single transaction. "
+        "The workflow copies lead data, maps company/contact/owner, marks the lead as converted, and records a timeline event."
+    ),
+    dependencies=[Depends(require_permission("lead:convert"))],
+)
+async def convert_lead(
+    lead_id: UUID,
+    current_user: CurrentUser,
+    db: DBSession,
+) -> dict:
+    svc = LeadService(db)
+    deal = await svc.convert_to_deal(lead_id, current_user.organization_id, current_user.id)
+    return {"success": True, "message": "Lead converted to deal.", "data": DealResponse.model_validate(deal)}
 
 
 @router.delete(

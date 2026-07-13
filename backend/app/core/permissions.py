@@ -40,25 +40,11 @@ class Permission(str, Enum):
     CONTACT_DELETE = "contact:delete"
 
     # ── Leads ─────────────────────────────────────────────────────────────────
-    LEAD_CREATE  = "lead:create"
-    LEAD_READ    = "lead:read"
-    LEAD_UPDATE  = "lead:update"
-    LEAD_DELETE  = "lead:delete"
-    LEAD_ASSIGN  = "lead:assign"
-    LEAD_CONVERT = "lead:convert"
-
-    # ── Deals ─────────────────────────────────────────────────────────────────
-    DEAL_CREATE       = "deal:create"
-    DEAL_READ         = "deal:read"
-    DEAL_UPDATE       = "deal:update"
-    DEAL_DELETE       = "deal:delete"
-    DEAL_ASSIGN       = "deal:assign"
-    DEAL_CHANGE_STAGE = "deal:change_stage"
-
-    # ── Activities ────────────────────────────────────────────────────────────
-    ACTIVITY_CREATE = "activity:create"
-    ACTIVITY_READ   = "activity:read"
-    ACTIVITY_DELETE = "activity:delete"
+    LEAD_CREATE = "lead:create"
+    LEAD_READ = "lead:read"
+    LEAD_UPDATE = "lead:update"
+    LEAD_DELETE = "lead:delete"
+    LEAD_ASSIGN = "lead:assign"
 
     # ── Reports ───────────────────────────────────────────────────────────────
     REPORT_VIEW   = "report:view"
@@ -102,16 +88,6 @@ ROLE_PERMISSIONS: Dict[Role, Set[Permission]] = {
         Permission.LEAD_UPDATE,
         Permission.LEAD_DELETE,
         Permission.LEAD_ASSIGN,
-        Permission.LEAD_CONVERT,
-        Permission.DEAL_CREATE,
-        Permission.DEAL_READ,
-        Permission.DEAL_UPDATE,
-        Permission.DEAL_DELETE,
-        Permission.DEAL_ASSIGN,
-        Permission.DEAL_CHANGE_STAGE,
-        Permission.ACTIVITY_CREATE,
-        Permission.ACTIVITY_READ,
-        Permission.ACTIVITY_DELETE,
         Permission.REPORT_VIEW,
         Permission.REPORT_EXPORT,
     },
@@ -127,13 +103,6 @@ ROLE_PERMISSIONS: Dict[Role, Set[Permission]] = {
         Permission.LEAD_CREATE,
         Permission.LEAD_READ,
         Permission.LEAD_UPDATE,
-        Permission.LEAD_CONVERT,
-        Permission.DEAL_CREATE,
-        Permission.DEAL_READ,
-        Permission.DEAL_UPDATE,
-        Permission.DEAL_CHANGE_STAGE,
-        Permission.ACTIVITY_CREATE,
-        Permission.ACTIVITY_READ,
         Permission.REPORT_VIEW,
     },
 }

@@ -13,6 +13,8 @@ from app.core.exceptions import (
 )
 from app.core.logging import get_logger
 from app.models.lead import Lead
+from app.repositories.activity_repository import ActivityTimelineRepository
+from app.repositories.deal_repository import DealRepository
 from app.repositories.lead_repository import LeadRepository
 from app.repositories.company_repository import CompanyRepository
 from app.repositories.contact_repository import ContactRepository
@@ -23,7 +25,7 @@ from app.schemas.lead import (
     LeadAssignRequest,
     LeadStatusUpdateRequest,
 )
-from app.utils.enums import LeadStatus
+from app.utils.enums import DealStatus, LeadStatus
 
 logger = get_logger(__name__)
 
@@ -43,6 +45,8 @@ class LeadService:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
         self.repo = LeadRepository(db)
+        self.deal_repo = DealRepository(db)
+        self.activity_repo = ActivityTimelineRepository(db)
         self.company_repo = CompanyRepository(db)
         self.contact_repo = ContactRepository(db)
         self.user_repo = UserRepository(db)
@@ -165,6 +169,62 @@ class LeadService:
     async def delete(self, lead_id: UUID, organization_id: UUID) -> None:
         lead = await self.get(lead_id, organization_id)
         await self.repo.soft_delete(lead)
+
+    async def convert_to_deal(
+        self,
+        lead_id: UUID,
+        organization_id: UUID,
+        created_by: UUID,
+    ):
+        tx_context = self.db.begin_nested() if self.db.in_transaction() else self.db.begin()
+        async with tx_context:
+            lead = await self.get(lead_id, organization_id)
+
+            if lead.status == LeadStatus.CONVERTED.value:
+                raise ConflictException("Lead has already been converted into a deal.")
+
+            existing = await self.deal_repo.get_by_lead_id_in_org(lead_id, organization_id)
+            if existing:
+                raise ConflictException("Lead has already been converted into a deal.")
+
+            deal = await self.deal_repo.create(
+                name=lead.title,
+                description=lead.description,
+                status=DealStatus.OPEN.value,
+                amount=lead.estimated_value,
+                currency=lead.currency,
+                probability=min(max((lead.score or 50), 0), 100),
+                notes=lead.notes,
+                owner_id=lead.owner_id,
+                company_id=lead.company_id,
+                contact_id=lead.contact_id,
+                lead_id=lead.id,
+                organization_id=organization_id,
+                created_by=created_by,
+            )
+
+            await self.repo.update(lead, status=LeadStatus.CONVERTED.value)
+
+            await self.activity_repo.create(
+                entity_type="deal",
+                entity_id=deal.id,
+                action="created_from_lead",
+                title="Lead converted to deal",
+                description=f"Lead '{lead.title}' was converted into deal '{deal.name}'.",
+                payload={
+                    "lead_id": str(lead.id),
+                    "deal_id": str(deal.id),
+                    "lead_title": lead.title,
+                },
+                organization_id=organization_id,
+                created_by=created_by,
+            )
+
+            logger.info(
+                "Lead converted to deal",
+                extra={"lead_id": str(lead.id), "deal_id": str(deal.id)},
+            )
+            return deal
 
     # ── Private helpers ───────────────────────────────────────────────────────
 

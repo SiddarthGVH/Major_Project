@@ -123,6 +123,12 @@ Open Swagger UI: http://localhost:8000/docs
 | POST | /api/v1/leads | Create lead |
 | PATCH | /api/v1/leads/{id}/status | FSM status transition |
 | POST | /api/v1/leads/{id}/assign | Assign lead owner |
+| POST | /api/v1/leads/{id}/convert | Convert lead to deal |
+| GET | /api/v1/deals | List deals (search/filter/sort) |
+| POST | /api/v1/deals | Create deal |
+| GET | /api/v1/deals/{id} | Get deal by ID |
+| PUT | /api/v1/deals/{id} | Update deal |
+| DELETE | /api/v1/deals/{id} | Delete deal |
 | GET | /api/v1/health | System health check |
 
 ---

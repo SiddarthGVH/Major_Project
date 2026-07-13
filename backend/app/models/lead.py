@@ -17,6 +17,7 @@ if TYPE_CHECKING:
     from app.models.organization import Organization
     from app.models.company import Company
     from app.models.contact import Contact
+    from app.models.deal import Deal
     from app.models.user import User
 
 
@@ -91,6 +92,9 @@ class Lead(Base, TenantMixin):
     )
     contact: Mapped[Optional["Contact"]] = relationship(
         "Contact", back_populates="leads", lazy="select"
+    )
+    deal: Mapped[Optional["Deal"]] = relationship(
+        "Deal", back_populates="lead", lazy="select", uselist=False
     )
 
     def __repr__(self) -> str:
