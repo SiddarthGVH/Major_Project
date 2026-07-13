@@ -6,28 +6,12 @@ from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
-import re
 
-
-def _validate_url(v: Optional[str]) -> Optional[str]:
-    if v is None:
-        return v
-    if not re.match(r"^https?://", v):
-        raise ValueError("URL must start with http:// or https://")
-    return v
-
-
-def _validate_phone(v: Optional[str]) -> Optional[str]:
-    if v is None:
-        return v
-    cleaned = re.sub(r"[\s\-\(\)\+\.]", "", v)
-    if not cleaned.isdigit() or len(cleaned) < 7 or len(cleaned) > 15:
-        raise ValueError("Invalid phone number format")
-    return v
+from app.utils.validators import validate_url, validate_phone
 
 
 class CompanyCreateRequest(BaseModel):
-    name: str = Field(min_length=1, max_length=255)
+    name: str = Field(min_length=1, max_length=255, examples=["TechNova Solutions"])
     domain: Optional[str] = Field(default=None, max_length=255)
     website: Optional[str] = Field(default=None, max_length=500)
     description: Optional[str] = None
@@ -47,13 +31,13 @@ class CompanyCreateRequest(BaseModel):
 
     @field_validator("website", "linkedin_url", "twitter_url", mode="before")
     @classmethod
-    def validate_url(cls, v):
-        return _validate_url(v)
+    def _validate_url(cls, v):
+        return validate_url(v)
 
     @field_validator("phone", mode="before")
     @classmethod
-    def validate_phone(cls, v):
-        return _validate_phone(v)
+    def _validate_phone(cls, v):
+        return validate_phone(v)
 
 
 class CompanyUpdateRequest(BaseModel):
@@ -77,13 +61,13 @@ class CompanyUpdateRequest(BaseModel):
 
     @field_validator("website", "linkedin_url", "twitter_url", mode="before")
     @classmethod
-    def validate_url(cls, v):
-        return _validate_url(v)
+    def _validate_url(cls, v):
+        return validate_url(v)
 
     @field_validator("phone", mode="before")
     @classmethod
-    def validate_phone(cls, v):
-        return _validate_phone(v)
+    def _validate_phone(cls, v):
+        return validate_phone(v)
 
 
 class CompanyResponse(BaseModel):

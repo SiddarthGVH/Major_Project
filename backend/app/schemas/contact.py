@@ -6,21 +6,14 @@ from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
-import re
 
-
-def _validate_url(v: Optional[str]) -> Optional[str]:
-    if v is None:
-        return v
-    if not re.match(r"^https?://", v):
-        raise ValueError("URL must start with http:// or https://")
-    return v
+from app.utils.validators import validate_url, validate_phone
 
 
 class ContactCreateRequest(BaseModel):
-    first_name: str = Field(min_length=1, max_length=100)
-    last_name: str = Field(min_length=1, max_length=100)
-    email: EmailStr
+    first_name: str = Field(min_length=1, max_length=100, examples=["Alice"])
+    last_name: str = Field(min_length=1, max_length=100, examples=["Walker"])
+    email: EmailStr = Field(examples=["alice@example.com"])
     phone: Optional[str] = Field(default=None, max_length=30)
     mobile: Optional[str] = Field(default=None, max_length=30)
     job_title: Optional[str] = Field(default=None, max_length=100)
@@ -35,8 +28,13 @@ class ContactCreateRequest(BaseModel):
 
     @field_validator("linkedin_url", "twitter_url", mode="before")
     @classmethod
-    def validate_url(cls, v):
-        return _validate_url(v)
+    def _validate_url(cls, v):
+        return validate_url(v)
+
+    @field_validator("phone", "mobile", mode="before")
+    @classmethod
+    def _validate_phone(cls, v):
+        return validate_phone(v)
 
 
 class ContactUpdateRequest(BaseModel):
@@ -57,8 +55,13 @@ class ContactUpdateRequest(BaseModel):
 
     @field_validator("linkedin_url", "twitter_url", mode="before")
     @classmethod
-    def validate_url(cls, v):
-        return _validate_url(v)
+    def _validate_url(cls, v):
+        return validate_url(v)
+
+    @field_validator("phone", "mobile", mode="before")
+    @classmethod
+    def _validate_phone(cls, v):
+        return validate_phone(v)
 
 
 class ContactResponse(BaseModel):
