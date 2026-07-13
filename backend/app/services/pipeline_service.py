@@ -1,6 +1,8 @@
 ﻿"""
 Pipeline Service
 """
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from decimal import Decimal
 from typing import List, Optional, Tuple
@@ -15,9 +17,13 @@ from app.repositories.deal_repository import DealRepository
 from app.repositories.pipeline_repository import PipelineRepository
 from app.schemas.pipeline import (
     PipelineBoardResponse,
+    PipelineForecastResponse,
+    PipelineForecastStageResponse,
     PipelineStageCreateRequest,
+    PipelineStageResponse,
     PipelineStageStatsResponse,
     PipelineStageUpdateRequest,
+    PipelineStatisticsResponse,
 )
 from app.services.timeline_engine_service import TimelineEngineService
 from app.utils.enums import ActivityType, DealStatus, PipelineStageSlug
@@ -92,7 +98,7 @@ class PipelineService:
             weighted_amount = (Decimal(str(total_amount)) * Decimal(stage.probability)) / Decimal(100)
             summary_stages.append(
                 PipelineStageStatsResponse(
-                    stage=stage,
+                    stage=PipelineStageResponse.model_validate(stage),
                     deal_count=int(deal_count or 0),
                     total_amount=Decimal(str(total_amount or 0)),
                     weighted_amount=weighted_amount,
@@ -106,6 +112,72 @@ class PipelineService:
             total_deals=total_deals,
             total_amount=total_amount,
             weighted_amount=weighted_amount,
+        )
+
+    async def forecast(self, organization_id: UUID, created_by: Optional[UUID] = None) -> PipelineForecastResponse:
+        stages = await self.list_stages(organization_id, created_by)
+        stats_rows = await self.repo.get_board_stats(organization_id)
+        stats_map = {stage.id: (stage, deal_count, total_amount) for stage, deal_count, total_amount in stats_rows}
+
+        stage_forecasts: list[PipelineForecastStageResponse] = []
+        total_pipeline_value = Decimal("0")
+        weighted_pipeline_value = Decimal("0")
+
+        for stage in stages:
+            _, deal_count, total_amount = stats_map.get(stage.id, (stage, 0, Decimal("0")))
+            pipeline_value = Decimal(str(total_amount or 0))
+            weighted_value = (pipeline_value * Decimal(stage.probability)) / Decimal(100)
+            total_pipeline_value += pipeline_value
+            weighted_pipeline_value += weighted_value
+            stage_forecasts.append(
+                PipelineForecastStageResponse(
+                    stage=PipelineStageResponse.model_validate(stage),
+                    deal_count=int(deal_count or 0),
+                    pipeline_value=pipeline_value,
+                    weighted_value=weighted_value,
+                    win_probability=stage.probability,
+                )
+            )
+
+        win_probability = Decimal("0")
+        if total_pipeline_value > 0:
+            win_probability = (weighted_pipeline_value / total_pipeline_value) * Decimal("100")
+
+        return PipelineForecastResponse(
+            organization_id=organization_id,
+            total_pipeline_value=total_pipeline_value,
+            weighted_pipeline_value=weighted_pipeline_value,
+            revenue_forecast=weighted_pipeline_value,
+            win_probability=win_probability,
+            stage_wise_forecast=stage_forecasts,
+            generated_at=datetime.now(timezone.utc),
+        )
+
+    async def statistics(self, organization_id: UUID, created_by: Optional[UUID] = None) -> PipelineStatisticsResponse:
+        forecast = await self.forecast(organization_id, created_by)
+        total_deals = await self.repo.count_total_deals(organization_id)
+        won_deals = 0
+        lost_deals = 0
+        for row in await self.repo.get_board_stats(organization_id):
+            stage = row[0]
+            deal_count = int(row[1] or 0)
+            if stage.slug == PipelineStageSlug.WON.value:
+                won_deals = deal_count
+            elif stage.slug == PipelineStageSlug.LOST.value:
+                lost_deals = deal_count
+        open_deals = max(total_deals - won_deals - lost_deals, 0)
+        return PipelineStatisticsResponse(
+            organization_id=organization_id,
+            total_pipeline_value=forecast.total_pipeline_value,
+            weighted_pipeline_value=forecast.weighted_pipeline_value,
+            revenue_forecast=forecast.revenue_forecast,
+            win_probability=forecast.win_probability,
+            total_deals=total_deals,
+            open_deals=open_deals,
+            won_deals=won_deals,
+            lost_deals=lost_deals,
+            stage_wise_forecast=forecast.stage_wise_forecast,
+            generated_at=forecast.generated_at,
         )
 
     async def create_stage(

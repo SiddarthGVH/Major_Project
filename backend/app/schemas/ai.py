@@ -86,6 +86,22 @@ class AIRecommendationResponse(BaseModel):
     generated_at: datetime
 
 
+class AIJobRequest(BaseModel):
+    job_type: str = Field(min_length=1, max_length=100)
+    entity_type: str = Field(min_length=1, max_length=50)
+    entity_id: Optional[UUID] = None
+    context: dict[str, Any] = Field(default_factory=dict)
+
+
+class AIJobResponse(BaseModel):
+    job_id: UUID
+    job_type: str
+    entity_type: str
+    entity_id: Optional[UUID] = None
+    status: str = "queued"
+    generated_at: datetime
+
+
 class DealInsightRequest(BaseModel):
     deal_id: UUID
     context: dict[str, Any] = Field(default_factory=dict)

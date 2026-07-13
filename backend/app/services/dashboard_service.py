@@ -1,9 +1,10 @@
 ﻿"""
 Dashboard analytics service.
 """
+from __future__ import annotations
+
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-from typing import Iterable
 from uuid import UUID
 
 from sqlalchemy import case, func, select
@@ -20,6 +21,7 @@ from app.repositories.pipeline_repository import PipelineRepository
 from app.schemas.dashboard import (
     DashboardAnalyticsResponse,
     DashboardRevenuePoint,
+    DashboardStatsResponse,
     DashboardSummaryResponse,
     DashboardTrendPoint,
     DashboardTrendResponse,
@@ -89,6 +91,25 @@ class DashboardService:
             recent_email_count=recent_email_count,
             pipeline_distribution=pipeline_board.stages,
             top_sales_representatives=top_sales_reps,
+            generated_at=now,
+        )
+
+    async def stats(self, organization_id: UUID) -> DashboardStatsResponse:
+        now = datetime.now(timezone.utc)
+        summary = await self.summary(organization_id)
+        forecast = await self.pipeline_service.forecast(organization_id)
+        return DashboardStatsResponse(
+            organization_id=organization_id,
+            total_deals=summary.total_deals,
+            total_revenue=summary.revenue,
+            pipeline_value=forecast.total_pipeline_value,
+            lead_conversion_rate=summary.lead_conversion_rate,
+            win_rate=summary.deal_win_rate,
+            activity_count=summary.activity_count,
+            email_count=summary.email_count,
+            forecast=forecast,
+            monthly_revenue=summary.monthly_revenue,
+            top_sales_representatives=summary.top_sales_representatives,
             generated_at=now,
         )
 

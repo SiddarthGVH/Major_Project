@@ -1,17 +1,21 @@
 ﻿"""
 AI-ready placeholder service.
 """
+from __future__ import annotations
+
 from datetime import datetime, timezone
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import NotFoundException
 from app.repositories.deal_repository import DealRepository
+from app.repositories.email_repository import EmailRepository
 from app.repositories.lead_repository import LeadRepository
 from app.schemas.ai import (
     AIConversationSummaryResponse,
     AIEmailSummaryResponse,
+    AIJobResponse,
     AILeadScoreResponse,
     AINextBestActionResponse,
     AIRecommendationResponse,
@@ -25,6 +29,17 @@ class AIService:
         self.db = db
         self.deal_repo = DealRepository(db)
         self.lead_repo = LeadRepository(db)
+        self.email_repo = EmailRepository(db)
+
+    async def create_job(self, organization_id: UUID, job_type: str, entity_type: str, entity_id: UUID | None = None) -> AIJobResponse:
+        return AIJobResponse(
+            job_id=uuid4(),
+            job_type=job_type,
+            entity_type=entity_type,
+            entity_id=entity_id,
+            status="queued",
+            generated_at=datetime.now(timezone.utc),
+        )
 
     async def lead_score(self, organization_id: UUID, lead_id: UUID) -> AILeadScoreResponse:
         lead = await self.lead_repo.get_active_by_id(lead_id, organization_id)
@@ -64,6 +79,9 @@ class AIService:
         )
 
     async def email_summary(self, organization_id: UUID, email_id: UUID) -> AIEmailSummaryResponse:
+        email = await self.email_repo.get_by_id_in_org(organization_id, email_id)
+        if not email:
+            raise NotFoundException("Email", email_id)
         return AIEmailSummaryResponse(
             email_id=email_id,
             status="placeholder",

@@ -1,6 +1,8 @@
-"""
+﻿"""
 Domain event repository.
 """
+from __future__ import annotations
+
 from typing import List, Optional, Tuple
 from uuid import UUID
 
@@ -14,6 +16,15 @@ from app.repositories.base import BaseRepository
 class EventRepository(BaseRepository[DomainEvent]):
     def __init__(self, db: AsyncSession) -> None:
         super().__init__(DomainEvent, db)
+
+    async def get_active_by_id(self, event_id: UUID, organization_id: UUID) -> Optional[DomainEvent]:
+        stmt = select(DomainEvent).where(
+            DomainEvent.id == event_id,
+            DomainEvent.organization_id == organization_id,
+            DomainEvent.is_active.is_(True),
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def list_by_organization(
         self,
@@ -46,3 +57,17 @@ class EventRepository(BaseRepository[DomainEvent]):
             )
         stmt = stmt.order_by(DomainEvent.created_at.desc())
         return await self.get_paginated(stmt, page, page_size)
+
+    async def list_pending(self, organization_id: UUID, limit: int = 100) -> list[DomainEvent]:
+        stmt = (
+            select(DomainEvent)
+            .where(
+                DomainEvent.organization_id == organization_id,
+                DomainEvent.is_active.is_(True),
+                DomainEvent.status == "pending",
+            )
+            .order_by(DomainEvent.created_at.asc())
+            .limit(limit)
+        )
+        result = await self.db.execute(stmt)
+        return list(result.scalars().all())

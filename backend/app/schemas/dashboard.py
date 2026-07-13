@@ -8,7 +8,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from app.schemas.pipeline import PipelineBoardResponse, PipelineStageStatsResponse
+from app.schemas.pipeline import PipelineBoardResponse, PipelineForecastResponse, PipelineStageStatsResponse
 
 
 class DashboardRevenuePoint(BaseModel):
@@ -63,3 +63,18 @@ class DashboardAnalyticsResponse(BaseModel):
     monthly_revenue: list[DashboardRevenuePoint]
     top_sales_representatives: list[TopSalesRepresentativeResponse]
     trends: DashboardTrendResponse
+
+
+class DashboardStatsResponse(BaseModel):
+    organization_id: UUID
+    total_deals: int
+    total_revenue: Decimal
+    pipeline_value: Decimal
+    lead_conversion_rate: Decimal
+    win_rate: Decimal
+    activity_count: int
+    email_count: int
+    forecast: PipelineForecastResponse
+    monthly_revenue: list[DashboardRevenuePoint] = Field(default_factory=list)
+    top_sales_representatives: list[TopSalesRepresentativeResponse] = Field(default_factory=list)
+    generated_at: datetime

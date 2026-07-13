@@ -1,7 +1,10 @@
-"""
+﻿"""
 Domain event routes.
 """
+from __future__ import annotations
+
 from typing import Optional
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query
 
@@ -46,3 +49,19 @@ async def list_events(
         page_size=page_size,
     )
     return {"success": True, "message": "OK", "data": paginated}
+
+
+@router.post(
+    "/replay",
+    response_model=StandardResponse[list[DomainEventResponse]],
+    summary="Replay pending events",
+    dependencies=[Depends(require_permission("activity:read"))],
+)
+async def replay_events(
+    current_user: CurrentUser,
+    db: DBSession,
+    event_id: Optional[UUID] = Query(default=None),
+) -> dict:
+    svc = EventService(db)
+    events = await svc.replay(current_user.organization_id, event_id)
+    return {"success": True, "message": "Events replayed.", "data": [DomainEventResponse.model_validate(event) for event in events]}

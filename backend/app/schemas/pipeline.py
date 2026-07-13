@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pipeline Schemas
 """
 from datetime import datetime
@@ -55,6 +55,38 @@ class PipelineBoardResponse(BaseModel):
     total_deals: int
     total_amount: Decimal
     weighted_amount: Decimal
+
+
+class PipelineForecastStageResponse(BaseModel):
+    stage: PipelineStageResponse
+    deal_count: int
+    pipeline_value: Decimal
+    weighted_value: Decimal
+    win_probability: int
+
+
+class PipelineForecastResponse(BaseModel):
+    organization_id: UUID
+    total_pipeline_value: Decimal
+    weighted_pipeline_value: Decimal
+    revenue_forecast: Decimal
+    win_probability: Decimal
+    stage_wise_forecast: list[PipelineForecastStageResponse]
+    generated_at: datetime
+
+
+class PipelineStatisticsResponse(BaseModel):
+    organization_id: UUID
+    total_pipeline_value: Decimal
+    weighted_pipeline_value: Decimal
+    revenue_forecast: Decimal
+    win_probability: Decimal
+    total_deals: int
+    open_deals: int
+    won_deals: int
+    lost_deals: int
+    stage_wise_forecast: list[PipelineForecastStageResponse]
+    generated_at: datetime
 
 
 class PipelineMoveRequest(BaseModel):

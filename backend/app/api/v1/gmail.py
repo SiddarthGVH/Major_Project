@@ -1,6 +1,8 @@
 ﻿"""
 Gmail integration routes.
 """
+from __future__ import annotations
+
 from typing import Optional
 from uuid import UUID
 
@@ -16,11 +18,76 @@ from app.schemas.email import (
     EmailThreadResponse,
     GmailConnectRequest,
     GmailConnectionResponse,
+    GmailOAuthCallbackRequest,
+    GmailOAuthLoginResponse,
+    GmailTokenRefreshRequest,
+    GmailWebhookRequest,
 )
 from app.services.email_service import EmailService
 from app.utils.enums import EmailDirection, SortOrder
 
 router = APIRouter()
+
+
+@router.get(
+    "/oauth/login",
+    response_model=StandardResponse[GmailOAuthLoginResponse],
+    summary="Start Gmail OAuth login",
+    dependencies=[Depends(require_permission("gmail:connect"))],
+)
+async def oauth_login(current_user: CurrentUser, db: DBSession) -> dict:
+    svc = EmailService(db)
+    result = await svc.start_oauth_login(current_user.organization_id, current_user.id, current_user.email)
+    return {"success": True, "message": "OK", "data": result}
+
+
+@router.post(
+    "/oauth/callback",
+    response_model=StandardResponse[GmailConnectionResponse],
+    status_code=status.HTTP_201_CREATED,
+    summary="Handle Gmail OAuth callback",
+    dependencies=[Depends(require_permission("gmail:connect"))],
+)
+async def oauth_callback(payload: GmailOAuthCallbackRequest, current_user: CurrentUser, db: DBSession) -> dict:
+    svc = EmailService(db)
+    connection = await svc.handle_oauth_callback(current_user.organization_id, current_user.id, payload)
+    return {"success": True, "message": "Gmail connected.", "data": GmailConnectionResponse.model_validate(connection)}
+
+
+@router.post(
+    "/refresh",
+    response_model=StandardResponse[GmailConnectionResponse],
+    summary="Refresh Gmail access token",
+    dependencies=[Depends(require_permission("gmail:connect"))],
+)
+async def refresh_token(payload: GmailTokenRefreshRequest, current_user: CurrentUser, db: DBSession) -> dict:
+    svc = EmailService(db)
+    connection = await svc.refresh_token(current_user.organization_id, current_user.id, payload)
+    return {"success": True, "message": "Token refreshed.", "data": GmailConnectionResponse.model_validate(connection)}
+
+
+@router.post(
+    "/webhook",
+    response_model=StandardResponse[EmailSyncResultResponse],
+    summary="Receive Gmail webhook notification",
+    dependencies=[Depends(require_permission("email:sync"))],
+)
+async def webhook(payload: GmailWebhookRequest, current_user: CurrentUser, db: DBSession) -> dict:
+    svc = EmailService(db)
+    result = await svc.webhook_sync(current_user.organization_id, current_user.id, payload)
+    return {"success": True, "message": "Webhook processed.", "data": result}
+
+
+@router.post(
+    "/sync-worker",
+    response_model=StandardResponse[list[EmailSyncResultResponse]],
+    summary="Run Gmail sync worker",
+    dependencies=[Depends(require_permission("email:sync"))],
+)
+async def sync_worker(current_user: CurrentUser, db: DBSession) -> dict:
+    svc = EmailService(db)
+    results = await svc.sync_all_connections(current_user.organization_id, current_user.id)
+    return {"success": True, "message": "Sync worker completed.", "data": results}
 
 
 @router.post(

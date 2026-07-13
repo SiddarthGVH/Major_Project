@@ -1,11 +1,20 @@
 ﻿"""
 Dashboard routes.
 """
+from __future__ import annotations
+
 from fastapi import APIRouter, Depends
 
 from app.api.deps import CurrentUser, DBSession, require_permission
 from app.schemas.common import StandardResponse
-from app.schemas.dashboard import DashboardAnalyticsResponse, DashboardRevenuePoint, DashboardSummaryResponse, DashboardTrendResponse, TopSalesRepresentativeResponse
+from app.schemas.dashboard import (
+    DashboardAnalyticsResponse,
+    DashboardRevenuePoint,
+    DashboardStatsResponse,
+    DashboardSummaryResponse,
+    DashboardTrendResponse,
+    TopSalesRepresentativeResponse,
+)
 from app.services.dashboard_service import DashboardService
 
 router = APIRouter()
@@ -21,6 +30,18 @@ async def get_dashboard(current_user: CurrentUser, db: DBSession) -> dict:
     svc = DashboardService(db)
     summary = await svc.summary(current_user.organization_id)
     return {"success": True, "message": "OK", "data": summary}
+
+
+@router.get(
+    "/stats",
+    response_model=StandardResponse[DashboardStatsResponse],
+    summary="Get dashboard stats",
+    dependencies=[Depends(require_permission("dashboard:read"))],
+)
+async def get_dashboard_stats(current_user: CurrentUser, db: DBSession) -> dict:
+    svc = DashboardService(db)
+    stats = await svc.stats(current_user.organization_id)
+    return {"success": True, "message": "OK", "data": stats}
 
 
 @router.get(

@@ -1,6 +1,8 @@
 ﻿"""
 Pipeline routes.
 """
+from __future__ import annotations
+
 from typing import Optional
 from uuid import UUID
 
@@ -11,11 +13,12 @@ from app.schemas.common import PaginatedResponse, StandardResponse
 from app.schemas.deal import DealResponse
 from app.schemas.pipeline import (
     PipelineBoardResponse,
+    PipelineForecastResponse,
     PipelineMoveRequest,
     PipelineStageCreateRequest,
     PipelineStageResponse,
-    PipelineStageStatsResponse,
     PipelineStageUpdateRequest,
+    PipelineStatisticsResponse,
 )
 from app.services.pipeline_service import PipelineService
 
@@ -32,6 +35,30 @@ async def get_pipeline(current_user: CurrentUser, db: DBSession) -> dict:
     svc = PipelineService(db)
     board = await svc.get_board(current_user.organization_id, current_user.id)
     return {"success": True, "message": "OK", "data": board}
+
+
+@router.get(
+    "/forecast",
+    response_model=StandardResponse[PipelineForecastResponse],
+    summary="Get pipeline forecast",
+    dependencies=[Depends(require_permission("pipeline:read"))],
+)
+async def get_forecast(current_user: CurrentUser, db: DBSession) -> dict:
+    svc = PipelineService(db)
+    forecast = await svc.forecast(current_user.organization_id, current_user.id)
+    return {"success": True, "message": "OK", "data": forecast}
+
+
+@router.get(
+    "/stats",
+    response_model=StandardResponse[PipelineStatisticsResponse],
+    summary="Get pipeline statistics",
+    dependencies=[Depends(require_permission("pipeline:read"))],
+)
+async def get_stats(current_user: CurrentUser, db: DBSession) -> dict:
+    svc = PipelineService(db)
+    stats = await svc.statistics(current_user.organization_id, current_user.id)
+    return {"success": True, "message": "OK", "data": stats}
 
 
 @router.get(
@@ -87,6 +114,7 @@ async def update_stage(
 @router.delete(
     "/stages/{stage_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    response_model=None,
     summary="Delete pipeline stage",
     dependencies=[Depends(require_permission("pipeline:update"))],
 )

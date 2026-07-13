@@ -1,8 +1,9 @@
 ﻿"""
 Gmail and email repository.
 """
+from __future__ import annotations
+
 from datetime import datetime
-from decimal import Decimal
 from typing import List, Optional, Tuple
 from uuid import UUID
 
@@ -22,6 +23,15 @@ class GmailConnectionRepository(BaseRepository[GmailConnection]):
         stmt = select(GmailConnection).where(
             GmailConnection.organization_id == organization_id,
             GmailConnection.user_id == user_id,
+            GmailConnection.is_active.is_(True),
+        )
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_id_in_org(self, organization_id: UUID, connection_id: UUID) -> Optional[GmailConnection]:
+        stmt = select(GmailConnection).where(
+            GmailConnection.organization_id == organization_id,
+            GmailConnection.id == connection_id,
             GmailConnection.is_active.is_(True),
         )
         result = await self.db.execute(stmt)
@@ -48,6 +58,11 @@ class EmailRepository(BaseRepository[Email]):
 
     async def get_by_message_id(self, organization_id: UUID, gmail_message_id: str) -> Optional[Email]:
         stmt = self._base_query(organization_id).where(Email.gmail_message_id == gmail_message_id)
+        result = await self.db.execute(stmt)
+        return result.scalar_one_or_none()
+
+    async def get_by_id_in_org(self, organization_id: UUID, email_id: UUID) -> Optional[Email]:
+        stmt = self._base_query(organization_id).where(Email.id == email_id)
         result = await self.db.execute(stmt)
         return result.scalar_one_or_none()
 
@@ -89,8 +104,8 @@ class EmailRepository(BaseRepository[Email]):
                     Email.thread_id.ilike(term),
                 )
             )
-        stmt = stmt.order_by(asc(Email.sent_at) if sort_order == SortOrder.ASC else desc(Email.sent_at))
-        stmt = stmt.order_by(asc(Email.created_at) if sort_order == SortOrder.ASC else desc(Email.created_at))
+        sort_clause = asc(Email.sent_at) if sort_order == SortOrder.ASC else desc(Email.sent_at)
+        stmt = stmt.order_by(sort_clause, asc(Email.created_at) if sort_order == SortOrder.ASC else desc(Email.created_at))
         return await self.get_paginated(stmt, page, page_size)
 
     async def list_thread_history(self, organization_id: UUID, thread_id: str) -> List[Email]:
@@ -122,6 +137,6 @@ class EmailRepository(BaseRepository[Email]):
                     Email.body_preview.ilike(term),
                 )
             )
-        stmt = stmt.order_by(asc(Email.sent_at) if sort_order == SortOrder.ASC else desc(Email.sent_at))
-        stmt = stmt.order_by(asc(Email.created_at) if sort_order == SortOrder.ASC else desc(Email.created_at))
+        sort_clause = asc(Email.sent_at) if sort_order == SortOrder.ASC else desc(Email.sent_at)
+        stmt = stmt.order_by(sort_clause, asc(Email.created_at) if sort_order == SortOrder.ASC else desc(Email.created_at))
         return await self.get_paginated(stmt, page, page_size)

@@ -2,7 +2,7 @@
 Email and Gmail Integration Schemas
 """
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field
@@ -23,6 +23,29 @@ class GmailConnectRequest(BaseModel):
     token_expires_at: Optional[datetime] = None
     sync_cursor: Optional[str] = None
     scopes_json: Optional[list[str]] = None
+
+
+class GmailOAuthLoginResponse(BaseModel):
+    authorization_url: str
+    state: str
+
+
+class GmailOAuthCallbackRequest(BaseModel):
+    code: str = Field(min_length=1)
+    state: Optional[str] = None
+    email_address: Optional[EmailStr] = None
+
+
+class GmailTokenRefreshRequest(BaseModel):
+    gmail_connection_id: UUID
+
+
+class GmailWebhookRequest(BaseModel):
+    gmail_connection_id: Optional[UUID] = None
+    history_id: Optional[str] = None
+    email_address: Optional[EmailStr] = None
+    message_ids: list[str] = Field(default_factory=list)
+    payload: dict[str, Any] = Field(default_factory=dict)
 
 
 class GmailConnectionResponse(BaseModel):
@@ -86,6 +109,10 @@ class EmailResponse(BaseModel):
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class EmailDetailResponse(EmailResponse):
+    pass
 
 
 class EmailSyncResultResponse(BaseModel):
