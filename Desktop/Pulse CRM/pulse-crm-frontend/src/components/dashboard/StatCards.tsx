@@ -93,7 +93,7 @@ export default function StatCards({ timeFilter, loading = false }: StatCardsProp
         {Array.from({ length: 5 }).map((_, idx) => (
           <div 
             key={idx} 
-            className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm animate-pulse flex flex-col justify-between h-32"
+            className="bg-white border border-brand-border-purple/15 rounded-xl p-5 shadow-sm animate-pulse flex flex-col justify-between h-32"
           >
             <div className="flex items-center justify-between">
               <div className="h-3 w-16 bg-slate-100 rounded" />
@@ -103,7 +103,7 @@ export default function StatCards({ timeFilter, loading = false }: StatCardsProp
               <div className="h-6 w-20 bg-slate-100 rounded" />
               <div className="h-4 w-8 bg-slate-100 rounded" />
             </div>
-            <div className="mt-3 pt-2.5 border-t border-slate-50 flex justify-between items-center">
+            <div className="mt-3 pt-2.5 border-t border-brand-border-purple/10 flex justify-between items-center">
               <div className="h-3 w-12 bg-slate-100 rounded" />
               <div className="h-4 w-12 bg-slate-100 rounded" />
             </div>
@@ -121,14 +121,14 @@ export default function StatCards({ timeFilter, loading = false }: StatCardsProp
         return (
           <div 
             key={idx} 
-            className="bg-white border border-slate-150/60 rounded-xl p-4.5 shadow-sm/5 hover:shadow-md hover:-translate-y-0.5 hover:border-slate-250 transition-all duration-300 flex flex-col justify-between min-h-[130px] overflow-hidden"
+            className="bg-white border border-brand-border-purple/20 rounded-xl p-4.5 shadow-sm/5 hover:shadow-md hover:-translate-y-0.5 hover:border-brand-border-purple/40 transition-all duration-300 flex flex-col justify-between min-h-[130px] overflow-hidden"
           >
             {/* Header info - Title and Icon side-by-side */}
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">
+              <span className="text-[10px] font-bold text-brand-heading uppercase tracking-wider truncate">
                 {stat.title}
               </span>
-              <div className="h-7 w-7 rounded-lg bg-brand-accent/10 text-brand-accent flex items-center justify-center border border-brand-accent/20 shrink-0">
+              <div className="h-7 w-7 rounded-lg bg-brand-sidebar-hover/20 text-brand-heading flex items-center justify-center border border-brand-border-purple/20 shrink-0">
                 <Icon className="h-4 w-4" strokeWidth={1.75} />
               </div>
             </div>
@@ -148,17 +148,17 @@ export default function StatCards({ timeFilter, loading = false }: StatCardsProp
             </div>
 
             {/* Sparkline & Details - Stacked or scaled to avoid collisions */}
-            <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
-              <div className="text-[9px] text-slate-400 font-semibold truncate leading-none">
+            <div className="mt-3 pt-2.5 border-t border-brand-border-purple/15 flex items-center justify-between gap-2">
+              <div className="text-[9px] text-brand-text/60 font-semibold truncate leading-none">
                 {stat.dateRange}
               </div>
               {/* Sparkline graphic scaled down */}
-              <div className="w-[60px] sm:w-[70px] h-[16px] opacity-40 hover:opacity-70 transition-opacity duration-200 shrink-0">
+              <div className="w-[60px] sm:w-[70px] h-[16px] opacity-60 hover:opacity-90 transition-opacity duration-200 shrink-0">
                 <svg className="w-full h-full overflow-visible" viewBox="0 0 120 40">
                   <path
                     d={sparklinePath}
                     fill="none"
-                    stroke={stat.isPositive ? "#10b981" : "#f59e0b"}
+                    stroke={stat.isPositive ? "#7e71f9" : "#79a7e8"}
                     strokeWidth={1.5}
                     strokeLinecap="round"
                     strokeLinejoin="round"

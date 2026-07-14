@@ -18,9 +18,10 @@ interface HeaderProps {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
   onNewReportClick: () => void;
+  onTabChange?: (tab: string) => void;
 }
 
-export default function Header({ collapsed, setCollapsed, onNewReportClick }: HeaderProps) {
+export default function Header({ collapsed, setCollapsed, onNewReportClick, onTabChange }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,7 +70,7 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
   ].filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm/5 text-slate-650">
+    <header className="h-16 bg-white border-b border-brand-border-purple/20 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm/5 text-brand-text">
       {/* Search & Collapse Toggle */}
       <div className="flex items-center space-x-4 flex-1 max-w-md">
         <button 
@@ -80,7 +81,7 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
           <Menu className="h-4.5 w-4.5" strokeWidth={1.75} />
         </button>
 
-        {/* Polished Search Bar - Light Themed */}
+        {/* Polished Search Bar - Light Themed with Periwinkle Borders */}
         <div className="relative w-full">
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">
             <Search className="h-4 w-4" strokeWidth={1.75} />
@@ -97,19 +98,19 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
             onFocus={() => {
               if (searchQuery.length > 0) setShowSearchResults(true);
             }}
-            className="w-full pl-9 pr-12 py-1.5 border border-slate-200/80 rounded-lg text-xs text-brand-text bg-slate-50/50 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/15 focus:border-brand-accent transition-all duration-200 shadow-sm/5"
+            className="w-full pl-9 pr-12 py-1.5 border border-brand-border-purple/35 rounded-lg text-xs text-brand-text bg-slate-50/60 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/15 focus:border-brand-accent transition-all duration-200 shadow-sm/5"
           />
           <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-            <kbd className="text-[9px] font-sans font-bold text-slate-400 bg-slate-100 border border-slate-205 px-1.5 py-0.5 rounded shadow-sm/5">
+            <kbd className="text-[9px] font-sans font-bold text-brand-text/65 bg-slate-50 border border-brand-border-purple/30 px-1.5 py-0.5 rounded shadow-sm/5">
               ⌘K
             </kbd>
           </div>
 
           {/* Search Dropdown Panel - Light Themed */}
           {showSearchResults && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200/80 rounded-lg shadow-lg overflow-hidden z-50 animate-in fade-in duration-200">
-              <div className="px-3 py-2 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Quick Results</span>
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-brand-border-purple/35 rounded-lg shadow-lg overflow-hidden z-50 animate-in fade-in duration-200">
+              <div className="px-3 py-2 bg-slate-50 border-b border-brand-border-purple/15 flex justify-between items-center">
+                <span className="text-[10px] font-bold text-brand-heading uppercase tracking-wider">Quick Results</span>
                 <button 
                   onClick={() => setShowSearchResults(false)} 
                   className="text-slate-450 hover:text-brand-text text-[9px] uppercase font-bold"
@@ -127,14 +128,14 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
                       className="flex items-center justify-between px-4 py-2 hover:bg-slate-50 text-xs text-brand-text transition-colors"
                     >
                       <span className="font-semibold">{item.title}</span>
-                      <span className="text-[9px] font-bold text-brand-accent bg-brand-accent/5 px-2 py-0.5 rounded border border-brand-accent/20">
+                      <span className="text-[9px] font-bold text-brand-accent bg-brand-accent/5 px-2 py-0.5 rounded border border-brand-border-purple/20">
                         {item.type}
                       </span>
                     </a>
                   ))
                 ) : (
                   <div className="px-4 py-3 text-center text-xs text-slate-400">
-                    No results matching &ldquo;{searchQuery}&rdquo;
+                    No results matching "{searchQuery}"
                   </div>
                 )}
               </div>
@@ -145,7 +146,7 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
 
       {/* Top Bar Actions Cluster - Light Themed */}
       <div className="flex items-center space-x-3.5">
-        {/* + New Report CTA in Electric Purple */}
+        {/* + New Report CTA in Medium Purple */}
         <button
           onClick={onNewReportClick}
           className="inline-flex items-center space-x-1 px-3.5 py-1.5 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-lg text-xs font-bold shadow-sm/10 hover:shadow-sm transition-all duration-200 cursor-pointer"
@@ -168,14 +169,14 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
           </button>
 
           {showNotifications && (
-            <div className="absolute right-0 mt-2 w-80 bg-white border border-slate-200/80 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="px-4 py-3 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
-                <span className="font-bold text-brand-text text-xs">Notifications</span>
+            <div className="absolute right-0 mt-2 w-80 bg-white border border-brand-border-purple/35 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="px-4 py-3 bg-slate-50 border-b border-brand-border-purple/15 flex justify-between items-center">
+                <span className="font-bold text-brand-heading text-xs">Notifications</span>
                 <span className="text-[9px] bg-brand-accent/10 text-brand-accent px-2 py-0.5 rounded-full font-bold">
                   4 New
                 </span>
               </div>
-              <div className="divide-y divide-slate-50 max-h-72 overflow-y-auto">
+              <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
                 {notifications.map((n) => (
                   <div key={n.id} className="p-3 hover:bg-slate-50/50 transition-colors flex items-start space-x-2.5 text-[11px]">
                     <div className="mt-0.5">
@@ -191,9 +192,23 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
                   </div>
                 ))}
               </div>
-              <div className="p-2 border-t border-slate-100 bg-slate-50 text-center">
-                <button className="text-[10px] font-bold text-brand-accent hover:text-brand-accent-hover transition-colors w-full py-1">
-                  Mark all as read
+              <div className="p-2 border-t border-brand-border-purple/15 bg-slate-50 text-center flex justify-between px-4">
+                <button 
+                  type="button"
+                  onClick={() => setShowNotifications(false)}
+                  className="text-[10px] font-bold text-slate-500 hover:text-brand-text transition-colors py-1 cursor-pointer"
+                >
+                  Mark all read
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setShowNotifications(false);
+                    onTabChange?.('notifications');
+                  }}
+                  className="text-[10px] font-bold text-brand-accent hover:text-brand-accent-hover transition-colors py-1 cursor-pointer"
+                >
+                  View all alerts
                 </button>
               </div>
             </div>
@@ -207,34 +222,52 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick }: He
             className="flex items-center space-x-2 p-1 rounded-lg hover:bg-slate-50 transition-all cursor-pointer"
             aria-label="Profile menu"
           >
-            <div className="h-7 w-7 rounded-full bg-slate-200 overflow-hidden border border-slate-150">
+            <div className="h-7 w-7 rounded-full bg-slate-200 overflow-hidden border border-brand-border-purple/20">
               <img 
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80" 
                 alt="Alex Johnson Avatar" 
                 className="h-full w-full object-cover"
               />
             </div>
-            <span className="text-xs font-semibold text-brand-text hidden md:inline-block">Alex Johnson</span>
+            <span className="text-xs font-bold text-brand-text hidden md:inline-block">Alex Johnson</span>
           </button>
 
           {showProfileMenu && (
-            <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200/80 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-100 text-left">
+            <div className="absolute right-0 mt-2 w-48 bg-white border border-brand-border-purple/35 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="px-4 py-2.5 bg-slate-50 border-b border-brand-border-purple/15 text-left">
                 <p className="text-xs font-bold text-brand-text">Alex Johnson</p>
-                <p className="text-[10px] text-slate-400 truncate mt-0.5 font-medium">alex.johnson@pulse.com</p>
+                <p className="text-[10px] text-slate-400 truncate mt-0.5 font-bold">alex.johnson@pulse.com</p>
               </div>
               <div className="py-1">
-                <a href="#" className="flex items-center space-x-2 px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 transition-colors">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    onTabChange?.('profile');
+                  }}
+                  className="flex items-center space-x-2 w-full text-left px-4 py-2 text-xs text-brand-text/80 hover:bg-slate-50 transition-colors cursor-pointer"
+                >
                   <User className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
                   <span>My Profile</span>
+                </button>
+                <a href="/blueprint" className="flex items-center space-x-2 px-4 py-2 text-xs text-brand-text/80 hover:bg-slate-50 transition-colors">
+                  <FileText className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
+                  <span>Engineering Docs</span>
                 </a>
-                <a href="#" className="flex items-center space-x-2 px-4 py-2 text-xs text-slate-600 hover:bg-slate-50 transition-colors">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    onTabChange?.('settings');
+                  }}
+                  className="flex items-center space-x-2 w-full text-left px-4 py-2 text-xs text-brand-text/80 hover:bg-slate-50 transition-colors cursor-pointer"
+                >
                   <Settings className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
                   <span>Account Settings</span>
-                </a>
+                </button>
               </div>
-              <div className="border-t border-slate-100 py-1 bg-slate-50/50">
-                <button className="flex items-center space-x-2 w-full px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors text-left cursor-pointer">
+              <div className="border-t border-brand-border-purple/15 py-1 bg-slate-50/50">
+                <button className="flex items-center space-x-2 w-full px-4 py-2 text-xs text-rose-600 hover:bg-rose-55 hover:text-rose-700 transition-colors text-left cursor-pointer">
                   <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
                   <span>Sign Out</span>
                 </button>

@@ -75,9 +75,9 @@ export default function RightPanel({ onNewReportClick, recentReports, loading = 
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="bg-white border border-slate-100 rounded-xl p-5 h-36" />
-        <div className="bg-white border border-slate-100 rounded-xl p-5 h-64" />
-        <div className="bg-white border border-slate-100 rounded-xl p-5 h-56" />
+        <div className="bg-white border border-brand-border-purple/15 rounded-xl p-5 h-36" />
+        <div className="bg-white border border-brand-border-purple/15 rounded-xl p-5 h-64" />
+        <div className="bg-white border border-brand-border-purple/15 rounded-xl p-5 h-56" />
       </div>
     );
   }
@@ -86,8 +86,8 @@ export default function RightPanel({ onNewReportClick, recentReports, loading = 
     <div className="space-y-6">
       
       {/* Report Builder Card - Styled using main accent and soft shadows */}
-      <div className="bg-white border border-slate-150/60 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-250 transition-all duration-300">
-        <h3 className="font-bold text-brand-text text-sm">Report builder</h3>
+      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
+        <h3 className="font-bold text-brand-heading text-sm">Report builder</h3>
         <p className="text-xs text-slate-400 mt-1 leading-relaxed">
           Create custom reports with your own metrics and filters.
         </p>
@@ -101,8 +101,8 @@ export default function RightPanel({ onNewReportClick, recentReports, loading = 
       </div>
 
       {/* Key Metrics Summary - Polished layout with tabular values */}
-      <div className="bg-white border border-slate-150/60 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-250 transition-all duration-300">
-        <h3 className="font-bold text-brand-text text-sm mb-4">Key metrics summary</h3>
+      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
+        <h3 className="font-bold text-brand-heading text-sm mb-4">Key metrics summary</h3>
         
         <div className="space-y-3.5">
           {metrics.map((metric, idx) => {
@@ -114,8 +114,8 @@ export default function RightPanel({ onNewReportClick, recentReports, loading = 
                     <Icon className={`h-4 w-4 ${metric.color}`} strokeWidth={1.75} />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-500">{metric.title}</h4>
-                    <p className="text-[10px] text-slate-400 mt-0.5 font-medium">{metric.desc}</p>
+                    <h4 className="text-xs font-bold text-brand-text/75">{metric.title}</h4>
+                    <p className="text-[10px] text-brand-text/60 mt-0.5 font-medium">{metric.desc}</p>
                   </div>
                 </div>
                 
@@ -137,27 +137,27 @@ export default function RightPanel({ onNewReportClick, recentReports, loading = 
       </div>
 
       {/* Recent Reports - Polished and unified styling */}
-      <div className="bg-white border border-slate-150/60 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-250 transition-all duration-300">
-        <h3 className="font-bold text-brand-text text-sm mb-4">Recent reports</h3>
+      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
+        <h3 className="font-bold text-brand-heading text-sm mb-4">Recent reports</h3>
         
         <div className="space-y-2">
           {recentReports.map((report) => (
             <div 
               key={report.id} 
-              className="flex items-start space-x-2.5 p-2 hover:bg-slate-50 rounded-lg transition-all duration-200 border border-transparent hover:border-slate-100"
+              className="flex items-start space-x-2.5 p-2 hover:bg-slate-50 rounded-lg transition-all duration-200 border border-transparent hover:border-brand-border-purple/15"
             >
-              <div className="h-7.5 w-7.5 rounded-lg bg-blue-50/50 flex items-center justify-center shrink-0 text-brand-accent border border-blue-100/30">
+              <div className="h-7.5 w-7.5 rounded-lg bg-brand-sidebar-hover/15 flex items-center justify-center shrink-0 text-brand-accent border border-brand-border-purple/20">
                 <FileSpreadsheet className="h-4 w-4" strokeWidth={1.75} />
               </div>
               <div className="overflow-hidden">
                 <h4 className="text-xs font-bold text-brand-text truncate leading-tight">{report.title}</h4>
-                <p className="text-[10px] text-slate-400 mt-1">{report.time}</p>
+                <p className="text-[10px] text-brand-text/60 mt-1">{report.time}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-4 pt-3 border-t border-slate-100 text-center">
+        <div className="mt-4 pt-3 border-t border-brand-border-purple/15 text-center">
           <a 
             href="#" 
             className="inline-flex items-center space-x-1 text-xs font-bold text-brand-accent hover:text-brand-accent-hover transition-colors"

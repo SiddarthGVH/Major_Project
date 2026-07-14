@@ -30,32 +30,32 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
     { name: "May 18", value: "$3.85M", raw: 3.85, x: 500, y: 30 }
   ];
 
-  // Pipeline stages data: Premium monochrome with unified accent blue highlight for Won
+  // Pipeline stages data: Styled using Medium Blue, Light Blue and Medium Purple for Won stage
   const pipelineStages = [
-    { name: "New", count: 120, width: "w-full", bg: "bg-slate-700" },
-    { name: "Qualified", count: 86, width: "w-[85%]", bg: "bg-slate-600" },
-    { name: "Proposal", count: 40, width: "w-[65%]", bg: "bg-slate-500" },
-    { name: "Negotiation", count: 28, width: "w-[45%]", bg: "bg-slate-400" },
-    { name: "Won", count: 23, width: "w-[30%]", bg: "bg-brand-accent animate-pulse-slow" }, // Active Won highlighted
-    { name: "Lost", count: 14, width: "w-[20%]", bg: "bg-slate-300" }
+    { name: "New", count: 120, width: "w-full", bg: "bg-brand-blue" },
+    { name: "Qualified", count: 86, width: "w-[85%]", bg: "bg-brand-light-blue" },
+    { name: "Proposal", count: 40, width: "w-[65%]", bg: "bg-brand-blue/80" },
+    { name: "Negotiation", count: 28, width: "w-[45%]", bg: "bg-brand-light-blue/80" },
+    { name: "Won", count: 23, width: "w-[30%]", bg: "bg-brand-accent animate-pulse-slow" }, // Active Won highlighted in Medium Purple
+    { name: "Lost", count: 14, width: "w-[20%]", bg: "bg-brand-light-blue/40" }
   ];
 
-  // Source chart percentages using accent colors
+  // Source chart percentages using new accents
   const sources = [
-    { name: "Website", pct: 45, color: "#355E58", offset: 0, val: "$1.73M" }, // Spruce Green
-    { name: "Referral", pct: 25, color: "#007BFF", offset: 45, val: "$0.96M" }, // Primary Blue
-    { name: "Email", pct: 15, color: "#00CCCC", offset: 70, val: "$0.58M" }, // Cyan
-    { name: "Social Media", pct: 10, color: "#17A2B8", offset: 85, val: "$0.39M" }, // Teal
-    { name: "Other", pct: 5, color: "#CBD5E1", offset: 95, val: "$0.19M" }
+    { name: "Website", pct: 45, color: "#7957fb", offset: 0, val: "$1.73M" }, // Medium Purple
+    { name: "Referral", pct: 25, color: "#7e71f9", offset: 45, val: "$0.96M" }, // Soft Purple
+    { name: "Email", pct: 15, color: "#7e8cf1", offset: 70, val: "$0.58M" }, // Periwinkle
+    { name: "Social Media", pct: 10, color: "#79a7e8", offset: 85, val: "$0.39M" }, // Medium Blue
+    { name: "Other", pct: 5, color: "#6ec2de", offset: 95, val: "$0.19M" } // Light Blue
   ];
 
-  // Company size percentages using accent colors
+  // Company size percentages using new accents
   const companySizes = [
-    { name: "1 - 10 employees", pct: 15, color: "#475569", offset: 0 },
-    { name: "11 - 50 employees", pct: 25, color: "#355E58", offset: 15 }, // Spruce Green
-    { name: "51 - 200 employees", pct: 30, color: "#007BFF", offset: 40 }, // Blue
-    { name: "201 - 1000 employees", pct: 20, color: "#00CCCC", offset: 70 }, // Cyan
-    { name: "1000+ employees", pct: 10, color: "#17A2B8", offset: 90 } // Teal
+    { name: "1 - 10 employees", pct: 15, color: "#6ec2de", offset: 0 }, // Light Blue
+    { name: "11 - 50 employees", pct: 25, color: "#7957fb", offset: 15 }, // Medium Purple
+    { name: "51 - 200 employees", pct: 30, color: "#7e71f9", offset: 40 }, // Soft Purple
+    { name: "201 - 1000 employees", pct: 20, color: "#79a7e8", offset: 70 }, // Medium Blue
+    { name: "1000+ employees", pct: 10, color: "#7e8cf1", offset: 90 } // Periwinkle
   ];
 
   // Helper to draw donut ring segments
@@ -108,11 +108,11 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
   // empty state rendering
   if (empty) {
     return (
-      <div className="bg-white border border-slate-150/60 rounded-xl p-12 text-center shadow-sm/5 flex flex-col items-center justify-center min-h-[300px]">
-        <div className="h-12 w-12 rounded-full bg-slate-50 flex items-center justify-center border border-slate-100 text-slate-400">
+      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-12 text-center shadow-sm/5 flex flex-col items-center justify-center min-h-[300px]">
+        <div className="h-12 w-12 rounded-full bg-brand-sidebar-hover/10 flex items-center justify-center border border-brand-border-purple/20 text-brand-heading">
           <BarChart2 className="h-6 w-6" strokeWidth={1.5} />
         </div>
-        <h4 className="text-sm font-bold text-brand-text mt-4">No report data available</h4>
+        <h4 className="text-sm font-bold text-brand-heading mt-4">No report data available</h4>
         <p className="text-xs text-slate-400 mt-1.5 max-w-sm leading-relaxed">
           There are no analytics records matching your selection. Try adjusting the date range filters or selecting a different pipeline.
         </p>
@@ -126,17 +126,17 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Revenue Over Time Line Chart */}
-        <div className="bg-white border border-slate-150/60 rounded-xl p-5 shadow-sm/5 lg:col-span-2 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-slate-250 transition-all duration-300">
+        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 lg:col-span-2 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
           <div>
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-brand-text text-sm">Revenue over time</h3>
+                <h3 className="font-bold text-brand-heading text-sm">Revenue over time</h3>
                 <span title="Historical cumulative revenue tracking">
                   <Info className="h-3.5 w-3.5 text-slate-400 cursor-help" strokeWidth={1.75} />
                 </span>
               </div>
               <div className="relative">
-                <select className="appearance-none bg-slate-55/60 hover:bg-slate-100 border border-slate-200/80 text-slate-600 rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none transition-all cursor-pointer">
+                <select className="appearance-none bg-slate-50 border border-brand-border-purple/35 text-brand-text focus:border-brand-accent rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none transition-all cursor-pointer">
                   <option>This Month</option>
                   <option>Last Month</option>
                   <option>This Quarter</option>
@@ -150,16 +150,16 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
               <svg className="w-full h-full" viewBox="0 0 550 200" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="revenue-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#355E58" stopOpacity="0.12" />
-                    <stop offset="100%" stopColor="#355E58" stopOpacity="0.0" />
+                    <stop offset="0%" stopColor="#7e71f9" stopOpacity="0.12" />
+                    <stop offset="100%" stopColor="#7e71f9" stopOpacity="0.0" />
                   </linearGradient>
                 </defs>
                 
-                {/* Thin, subtle 1px gridlines */}
-                <line x1="40" y1="30" x2="520" y2="30" stroke="#f8fafc" strokeWidth="1" />
-                <line x1="40" y1="70" x2="520" y2="70" stroke="#f8fafc" strokeWidth="1" />
-                <line x1="40" y1="110" x2="520" y2="110" stroke="#f8fafc" strokeWidth="1" />
-                <line x1="40" y1="150" x2="520" y2="150" stroke="#f8fafc" strokeWidth="1" />
+                {/* Thin, subtle 1px gridlines in light Periwinkle */}
+                <line x1="40" y1="30" x2="520" y2="30" stroke="#7e8cf1" strokeOpacity="0.15" strokeWidth="1" />
+                <line x1="40" y1="70" x2="520" y2="70" stroke="#7e8cf1" strokeOpacity="0.15" strokeWidth="1" />
+                <line x1="40" y1="110" x2="520" y2="110" stroke="#7e8cf1" strokeOpacity="0.15" strokeWidth="1" />
+                <line x1="40" y1="150" x2="520" y2="150" stroke="#7e8cf1" strokeOpacity="0.15" strokeWidth="1" />
                 
                 {/* Axis labels y-axis */}
                 <text x="15" y="34" className="text-[9px] font-bold fill-slate-400 font-sans tabular-nums">$4M</text>
@@ -178,7 +178,7 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
                 <path
                   d="M 50 170 Q 87 160 125 150 T 200 135 T 275 120 T 350 90 T 425 70 T 500 30"
                   fill="none"
-                  stroke="#355E58"
+                  stroke="#7957fb"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
@@ -192,8 +192,8 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
                         cx={pt.x}
                         cy={pt.y}
                         r={isHovered ? "5" : "2"}
-                        fill={isHovered ? "#FFFFFF" : "#355E58"}
-                        stroke="#355E58"
+                        fill={isHovered ? "#FFFFFF" : "#7957fb"}
+                        stroke="#7957fb"
                         strokeWidth={isHovered ? "3.5" : "0"}
                         className="cursor-pointer transition-all duration-150"
                         onMouseEnter={() => {
@@ -225,7 +225,7 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
                       y1={revenueHoveredPoint.y}
                       x2={revenueHoveredPoint.x}
                       y2="175"
-                      stroke="#355E58"
+                      stroke="#7957fb"
                       strokeWidth="1"
                       strokeDasharray="3,3"
                     />
@@ -248,12 +248,12 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
         </div>
 
         {/* Deals by Pipeline Stage Funnel Chart */}
-        <div className="bg-white border border-slate-150/60 rounded-xl p-5 shadow-sm/5 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-slate-250 transition-all duration-300">
+        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-brand-text text-sm">Deals by stage</h3>
+              <h3 className="font-bold text-brand-heading text-sm">Deals by stage</h3>
               <div className="relative">
-                <select className="appearance-none bg-slate-55/60 border border-slate-200/80 text-slate-600 rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none cursor-pointer">
+                <select className="appearance-none bg-slate-50 border border-brand-border-purple/35 text-brand-text focus:border-brand-accent rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none cursor-pointer">
                   <option>This Month</option>
                   <option>Last Month</option>
                 </select>
@@ -265,10 +265,10 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
             <div className="space-y-1.5 mt-4">
               {pipelineStages.map((stage, index) => (
                 <div key={index} className="flex items-center justify-between text-[11px] font-semibold">
-                  <span className="w-20 text-slate-500 truncate">{stage.name}</span>
+                  <span className="w-20 text-brand-heading truncate">{stage.name}</span>
                   <div className="flex-1 flex justify-center px-1.5">
                     <div 
-                      className={`h-6.5 ${stage.width} ${stage.bg} hover:opacity-90 transition-all rounded-md flex items-center justify-center text-white text-[10px] font-bold shadow-sm/5 relative group`}
+                      className={`h-6.5 ${stage.width} ${stage.bg} hover:opacity-90 transition-all rounded-md flex items-center justify-center ${stage.name === 'Won' ? 'text-white' : 'text-brand-text'} text-[10px] font-extrabold shadow-sm/5 relative group`}
                     >
                       <span className="tabular-nums">{stage.count}</span>
                       <div className="absolute bottom-full mb-1 bg-slate-900 text-white text-[9px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
@@ -293,16 +293,16 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Deals by Source donut */}
-        <div className="bg-white border border-slate-150/60 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-250 transition-all duration-300">
+        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center space-x-2">
-              <h3 className="font-bold text-brand-text text-sm">Deals by source</h3>
+              <h3 className="font-bold text-brand-heading text-sm">Deals by source</h3>
               <span title="Percentage of deals initiated per source channel">
                 <Info className="h-3.5 w-3.5 text-slate-400 cursor-help" strokeWidth={1.75} />
               </span>
             </div>
             <div className="relative">
-              <select className="appearance-none bg-slate-55/60 border border-slate-200/80 text-slate-600 rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none cursor-pointer">
+              <select className="appearance-none bg-slate-50 border border-brand-border-purple/35 text-brand-text focus:border-brand-accent rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none cursor-pointer">
                 <option>This Month</option>
                 <option>All Time</option>
               </select>
@@ -331,7 +331,7 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
                 <span className="text-lg font-extrabold text-brand-text leading-none font-sans tabular-nums">
                   {hoveredSourceIdx !== null ? sources[hoveredSourceIdx].val : "$3.85M"}
                 </span>
-                <span className="text-[9px] text-slate-400 font-bold tracking-wider uppercase mt-1 leading-none">
+                <span className="text-[9px] text-brand-text/65 font-bold tracking-wider uppercase mt-1 leading-none">
                   {hoveredSourceIdx !== null ? sources[hoveredSourceIdx].name : "Total"}
                 </span>
               </div>
@@ -350,7 +350,7 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
                 >
                   <div className="flex items-center space-x-2">
                     <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: src.color }} />
-                    <span className="text-xs font-semibold text-slate-500">{src.name}</span>
+                    <span className="text-xs font-semibold text-brand-text/75">{src.name}</span>
                   </div>
                   <span className="text-xs font-bold text-brand-text tabular-nums">{src.pct}%</span>
                 </div>
@@ -360,11 +360,11 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
         </div>
 
         {/* Revenue by Company Size donut */}
-        <div className="bg-white border border-slate-150/60 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-slate-250 transition-all duration-300">
+        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-bold text-brand-text text-sm">Revenue by company size</h3>
+            <h3 className="font-bold text-brand-heading text-sm">Revenue by company size</h3>
             <div className="relative">
-              <select className="appearance-none bg-slate-55/60 border border-slate-200/80 text-slate-600 rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none cursor-pointer">
+              <select className="appearance-none bg-slate-50 border border-brand-border-purple/35 text-brand-text focus:border-brand-accent rounded-lg px-2.5 py-1 pr-7 text-[10px] font-bold focus:outline-none cursor-pointer">
                 <option>This Quarter</option>
                 <option>This Year</option>
               </select>
@@ -393,7 +393,7 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
                 <span className="text-lg font-extrabold text-brand-text leading-none font-sans tabular-nums">
                   {hoveredSizeIdx !== null ? `${companySizes[hoveredSizeIdx].pct}%` : "$3.85M"}
                 </span>
-                <span className="text-[9px] text-slate-400 font-bold tracking-wider uppercase mt-1 leading-none">
+                <span className="text-[9px] text-brand-text/65 font-bold tracking-wider uppercase mt-1 leading-none">
                   {hoveredSizeIdx !== null ? companySizes[hoveredSizeIdx].name.split(' ')[0] : "Total"}
                 </span>
               </div>
@@ -412,7 +412,7 @@ export default function Charts({ loading = false, empty = false }: ChartsProps) 
                 >
                   <div className="flex items-center space-x-2">
                     <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: sz.color }} />
-                    <span className="text-xs font-semibold text-slate-550">{sz.name}</span>
+                    <span className="text-xs font-semibold text-brand-text/75">{sz.name}</span>
                   </div>
                   <span className="text-xs font-bold text-brand-text tabular-nums">{sz.pct}%</span>
                 </div>

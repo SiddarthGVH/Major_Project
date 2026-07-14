@@ -8,6 +8,18 @@ import Charts from '@/components/dashboard/Charts';
 import Widgets from '@/components/dashboard/Widgets';
 import RightPanel from '@/components/dashboard/RightPanel';
 import ReportBuilderModal from '@/components/dashboard/ReportBuilderModal';
+import LeadsView from '@/components/dashboard/LeadsView';
+import CompaniesView from '@/components/dashboard/CompaniesView';
+import ContactsView from '@/components/dashboard/ContactsView';
+import PipelineView from '@/components/dashboard/PipelineView';
+import ActivitiesView from '@/components/dashboard/ActivitiesView';
+import EmailsView from '@/components/dashboard/EmailsView';
+import AIInsightsView from '@/components/dashboard/AIInsightsView';
+import CalendarView from '@/components/dashboard/CalendarView';
+import TasksView from '@/components/dashboard/TasksView';
+import NotificationsView from '@/components/dashboard/NotificationsView';
+import ProfileView from '@/components/dashboard/ProfileView';
+import SettingsView from '@/components/dashboard/SettingsView';
 import { Calendar, Filter, ChevronDown, Check } from 'lucide-react';
 
 export default function DashboardHome() {
@@ -66,7 +78,7 @@ export default function DashboardHome() {
   ];
 
   return (
-    <div className="flex bg-slate-50/50 min-h-screen font-sans text-brand-text antialiased">
+    <div className="flex bg-white min-h-screen font-sans text-brand-text antialiased">
       {/* Sidebar navigation - toned down background */}
       <Sidebar 
         activeTab={activeTab} 
@@ -83,113 +95,140 @@ export default function DashboardHome() {
           collapsed={sidebarCollapsed} 
           setCollapsed={setSidebarCollapsed} 
           onNewReportClick={() => setIsReportModalOpen(true)} 
+          onTabChange={(tab) => setActiveTab(tab)}
         />
 
         {/* Dashboard inner scroll view with increased whitespace */}
         <main className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
-          
-          {/* Header block with improved contrast & page title visual prominence */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-extrabold text-brand-text tracking-tight font-sans">
-                Reports & analytics
-              </h1>
-              <p className="text-xs text-slate-450 mt-1 leading-relaxed max-w-2xl font-medium">
-                Track performance, analyze trends, and make data-driven decisions.
-              </p>
-            </div>
-          </div>
-
-          {/* Sub Navigation Tabs (Tactile pills) */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <nav className="flex space-x-1 p-1 bg-slate-100/80 border border-slate-200/50 rounded-xl overflow-x-auto scrollbar-none shrink-0">
-              {subTabs.map((tab) => {
-                const isActive = dashboardSubTab === tab.key;
-                return (
-                  <button
-                    key={tab.key}
-                    onClick={() => handleSubTabChange(tab.key)}
-                    className={`py-1.5 px-3.5 rounded-lg font-extrabold text-xs transition-all duration-200 whitespace-nowrap cursor-pointer ${
-                      isActive 
-                        ? 'bg-brand-accent text-white shadow-sm' 
-                        : 'text-slate-500 hover:text-slate-700 hover:bg-white/40'
-                    }`}
-                  >
-                    {tab.name}
-                  </button>
-                );
-              })}
-            </nav>
-
-            {/* Datepicker and Filters (Tactile and premium style) */}
-            <div className="flex items-center space-x-2 shrink-0 self-end md:self-center">
-              <button className="inline-flex items-center space-x-1.5 bg-white border border-slate-200/80 hover:border-slate-300 active:bg-slate-50 px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-600 transition-all duration-200 cursor-pointer shadow-sm/5">
-                <Calendar className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
-                <span className="tabular-nums">May 12 – May 18, 2025</span>
-              </button>
-
-              <div className="relative">
-                <button 
-                  onClick={() => setShowFiltersMenu(!showFiltersMenu)}
-                  className="inline-flex items-center space-x-1.5 bg-white border border-slate-200/80 hover:border-slate-300 active:bg-slate-50 px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-650 transition-all duration-200 cursor-pointer shadow-sm/5"
-                >
-                  <Filter className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
-                  <span>Filters</span>
-                  <ChevronDown className="h-3 w-3 text-slate-400" strokeWidth={1.75} />
-                </button>
-                
-                {showFiltersMenu && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-200/85 rounded-xl shadow-xl overflow-hidden z-20 animate-in fade-in slide-in-from-top-2 duration-200 p-2.5 text-left">
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Filter Pipeline</p>
-                    <div className="space-y-0.5">
-                      {['All', 'Enterprise Deals', 'Mid-Market Deals', 'Small Business Deals'].map((type) => (
-                        <button
-                          key={type}
-                          onClick={() => {
-                            setSelectedPipelineType(type);
-                            setShowFiltersMenu(false);
-                          }}
-                          className="w-full flex items-center justify-between text-xs font-semibold text-slate-650 hover:bg-slate-50 px-2 py-1.5 rounded-lg text-left"
-                        >
-                          <span>{type}</span>
-                          {selectedPipelineType === type && <Check className="h-3.5 w-3.5 text-brand-accent" strokeWidth={2} />}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+          {activeTab === 'leads' ? (
+            <LeadsView />
+          ) : activeTab === 'contacts' ? (
+            <ContactsView />
+          ) : activeTab === 'companies' ? (
+            <CompaniesView />
+          ) : (activeTab === 'deals' || activeTab === 'pipeline') ? (
+            <PipelineView />
+          ) : activeTab === 'activities' ? (
+            <ActivitiesView />
+          ) : activeTab === 'calendar' ? (
+            <CalendarView />
+          ) : activeTab === 'tasks' ? (
+            <TasksView />
+          ) : activeTab === 'emails' ? (
+            <EmailsView />
+          ) : activeTab === 'ai insights' ? (
+            <AIInsightsView />
+          ) : activeTab === 'settings' ? (
+            <SettingsView />
+          ) : activeTab === 'profile' ? (
+            <ProfileView />
+          ) : activeTab === 'notifications' ? (
+            <NotificationsView />
+          ) : (
+            <>
+              {/* Header block with improved contrast & page title visual prominence */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-serif text-brand-heading tracking-tight font-normal">
+                    Reports & analytics
+                  </h1>
+                  <p className="text-xs md:text-sm text-brand-text/75 mt-2 leading-relaxed max-w-2xl font-medium tracking-wide">
+                    Track performance, analyze trends, and make data-driven decisions.
+                  </p>
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* KPI Stat Cards (Spans full horizontal width above grid split) */}
-          <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
+              {/* Sub Navigation Tabs (Tactile pills) */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <nav className="flex space-x-1 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl overflow-x-auto scrollbar-none shrink-0">
+                  {subTabs.map((tab) => {
+                    const isActive = dashboardSubTab === tab.key;
+                    return (
+                      <button
+                        key={tab.key}
+                        onClick={() => handleSubTabChange(tab.key)}
+                        className={`py-1.5 px-3.5 rounded-lg font-extrabold text-xs transition-all duration-200 whitespace-nowrap cursor-pointer ${
+                          isActive 
+                            ? 'bg-brand-accent text-white shadow-sm' 
+                            : 'text-brand-text/75 hover:text-brand-heading hover:bg-brand-sidebar-hover/20'
+                        }`}
+                      >
+                        {tab.name}
+                      </button>
+                    );
+                  })}
+                </nav>
 
-          {/* 12-Column Dashboard Grid Layout */}
-          <div className="grid grid-cols-12 gap-6">
-            
-            {/* Left section (9 Columns of 12): Charts & Widgets */}
-            <div className="col-span-12 lg:col-span-9 space-y-6">
-              
-              {/* Charts (Revenue, stage funnel, source donuts) */}
-              <Charts loading={isLoading} empty={isEmpty} />
+                {/* Datepicker and Filters (Tactile and premium style) */}
+                <div className="flex items-center space-x-2 shrink-0 self-end md:self-center">
+                  <button className="inline-flex items-center space-x-1.5 bg-white border border-brand-border-purple/35 hover:border-brand-border-purple active:bg-slate-50 px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-text/80 transition-all duration-200 cursor-pointer shadow-sm/5">
+                    <Calendar className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
+                    <span className="tabular-nums">May 12 – May 18, 2025</span>
+                  </button>
 
-              {/* Widgets (Leaderboard & Activity Logs) */}
-              <Widgets loading={isLoading} />
+                  <div className="relative">
+                    <button 
+                      onClick={() => setShowFiltersMenu(!showFiltersMenu)}
+                      className="inline-flex items-center space-x-1.5 bg-white border border-brand-border-purple/35 hover:border-brand-border-purple active:bg-slate-50 px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-text/80 transition-all duration-200 cursor-pointer shadow-sm/5"
+                    >
+                      <Filter className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
+                      <span>Filters</span>
+                      <ChevronDown className="h-3 w-3 text-slate-400" strokeWidth={1.75} />
+                    </button>
+                    
+                    {showFiltersMenu && (
+                      <div className="absolute right-0 mt-2 w-56 bg-white border border-brand-border-purple/35 rounded-xl shadow-xl overflow-hidden z-20 animate-in fade-in slide-in-from-top-2 duration-200 p-2.5 text-left">
+                        <p className="text-[9px] font-bold text-brand-heading uppercase tracking-wider mb-2 px-2">Filter Pipeline</p>
+                        <div className="space-y-0.5">
+                          {['All', 'Enterprise Deals', 'Mid-Market Deals', 'Small Business Deals'].map((type) => (
+                            <button
+                              key={type}
+                              onClick={() => {
+                                setSelectedPipelineType(type);
+                                setShowFiltersMenu(false);
+                              }}
+                              className="w-full flex items-center justify-between text-xs font-semibold text-brand-text/80 hover:bg-slate-50 px-2 py-1.5 rounded-lg text-left"
+                            >
+                              <span>{type}</span>
+                              {selectedPipelineType === type && <Check className="h-3.5 w-3.5 text-brand-accent" strokeWidth={2} />}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-            </div>
+              {/* KPI Stat Cards (Spans full horizontal width above grid split) */}
+              <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
 
-            {/* Right section (3 Columns of 12): Report Builder, Key Metrics, Recent Reports */}
-            <div className="col-span-12 lg:col-span-3 space-y-6">
-              <RightPanel 
-                onNewReportClick={() => setIsReportModalOpen(true)} 
-                recentReports={recentReports}
-                loading={isLoading}
-              />
-            </div>
+              {/* 12-Column Dashboard Grid Layout */}
+              <div className="grid grid-cols-12 gap-6">
+                
+                {/* Left section (9 Columns of 12): Charts & Widgets */}
+                <div className="col-span-12 lg:col-span-9 space-y-6">
+                  
+                  {/* Charts (Revenue, stage funnel, source donuts) */}
+                  <Charts loading={isLoading} empty={isEmpty} />
 
-          </div>
+                  {/* Widgets (Leaderboard & Activity Logs) */}
+                  <Widgets loading={isLoading} />
 
+                </div>
+
+                {/* Right section (3 Columns of 12): Report Builder, Key Metrics, Recent Reports */}
+                <div className="col-span-12 lg:col-span-3 space-y-6">
+                  <RightPanel 
+                    onNewReportClick={() => setIsReportModalOpen(true)} 
+                    recentReports={recentReports}
+                    loading={isLoading}
+                  />
+                </div>
+
+              </div>
+            </>
+          )}
         </main>
       </div>
 
