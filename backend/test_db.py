@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿import asyncio
+=======
+import asyncio
+>>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
 
 from sqlalchemy import text
 
@@ -23,6 +27,10 @@ async def main():
         await engine.dispose()
 
 
+<<<<<<< HEAD
 asyncio.run(main())
 
 
+=======
+asyncio.run(main())
+>>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
