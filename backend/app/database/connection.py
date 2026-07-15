@@ -1,4 +1,4 @@
-"""
+﻿"""
 Async SQLAlchemy 2.0 Database Connection
 - Creates the async engine with connection pooling
 - Provides an async session factory
@@ -6,11 +6,8 @@ Async SQLAlchemy 2.0 Database Connection
 """
 from typing import AsyncGenerator
 
-from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
+from sqlalchemy.engine.url import make_url
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
 from app.core.config import settings
@@ -18,41 +15,33 @@ from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
-# ── Engine ────────────────────────────────────────────────────────────────────
-# NullPool is used in test environments to avoid connection reuse issues.
-# In production we rely on asyncpg's built-in pool.
+url = make_url(settings.DATABASE_URL)
+engine_kwargs = {
+    "echo": settings.DEBUG,
+    "pool_pre_ping": True,
+}
+if url.drivername.startswith("sqlite"):
+    engine_kwargs["poolclass"] = NullPool
+else:
+    engine_kwargs.update(
+        pool_size=settings.DATABASE_POOL_SIZE,
+        max_overflow=settings.DATABASE_MAX_OVERFLOW,
+        pool_timeout=settings.DATABASE_POOL_TIMEOUT,
+        pool_recycle=settings.DATABASE_POOL_RECYCLE,
+    )
 
-engine = create_async_engine(
-    settings.DATABASE_URL,
-    echo=settings.DEBUG,                        # SQL query logging in debug mode
-    pool_size=settings.DATABASE_POOL_SIZE,
-    max_overflow=settings.DATABASE_MAX_OVERFLOW,
-    pool_timeout=settings.DATABASE_POOL_TIMEOUT,
-    pool_recycle=settings.DATABASE_POOL_RECYCLE,
-    pool_pre_ping=True,                         # Validate connections before checkout
-)
+engine = create_async_engine(settings.DATABASE_URL, **engine_kwargs)
 
-# ── Session Factory ───────────────────────────────────────────────────────────
 AsyncSessionFactory = async_sessionmaker(
     bind=engine,
     class_=AsyncSession,
-    expire_on_commit=False,   # Keep objects accessible after commit without re-query
+    expire_on_commit=False,
     autocommit=False,
     autoflush=False,
 )
 
 
-# ── FastAPI Dependency ────────────────────────────────────────────────────────
-
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    """
-    Yield a database session for each request.
-    Automatically commits on success, rolls back on any exception.
-    Usage:
-        @router.get("/")
-        async def endpoint(db: AsyncSession = Depends(get_db)):
-            ...
-    """
     async with AsyncSessionFactory() as session:
         try:
             yield session
@@ -65,12 +54,9 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 
 async def check_db_connection() -> bool:
-    """
-    Health-check helper — returns True if the DB is reachable.
-    Called from the /health endpoint.
-    """
     try:
         from sqlalchemy import text
+
         async with AsyncSessionFactory() as session:
             await session.execute(text("SELECT 1"))
         return True

@@ -5,7 +5,7 @@ Stores auditable business events that should appear in the CRM timeline.
 import uuid
 from typing import Optional
 
-from sqlalchemy import Boolean, ForeignKey, JSON, String, Text
+from sqlalchemy import ForeignKey, JSON, String, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -35,4 +35,5 @@ class ActivityTimeline(Base, TenantMixin):
     )
 
     def __repr__(self) -> str:
+        return f"<ActivityTimeline id={self.id} entity={self.entity_type!r} action={self.action!r}>"
         return f"<ActivityTimeline id={self.id} entity={self.entity_type!r} action={self.action!r}>"

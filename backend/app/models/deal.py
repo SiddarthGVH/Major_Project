@@ -3,6 +3,11 @@ Deal Model
 Represents an active sales opportunity derived from a lead or created directly.
 """
 import uuid
+from datetime import date, datetime
+from decimal import Decimal
+from typing import TYPE_CHECKING, Optional
+
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
 from datetime import date
 from decimal import Decimal
 from typing import TYPE_CHECKING, Optional
@@ -18,6 +23,7 @@ if TYPE_CHECKING:
     from app.models.company import Company
     from app.models.contact import Contact
     from app.models.lead import Lead
+    from app.models.pipeline import PipelineStage
     from app.models.user import User
 
 
@@ -25,9 +31,7 @@ class Deal(Base, TenantMixin):
     """Sales deal / opportunity record."""
 
     __tablename__ = "deals"
-    __table_args__ = (
-        UniqueConstraint("lead_id", name="uq_deal_lead_id"),
-    )
+    __table_args__ = (UniqueConstraint("lead_id", name="uq_deal_lead_id"),)
 
     name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
@@ -37,6 +41,8 @@ class Deal(Base, TenantMixin):
     expected_close_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True, index=True)
     probability: Mapped[int] = mapped_column(Integer, default=50, nullable=False)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    close_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    closed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -59,6 +65,12 @@ class Deal(Base, TenantMixin):
     lead_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("leads.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    pipeline_stage_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("pipeline_stages.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
     )
@@ -89,6 +101,12 @@ class Deal(Base, TenantMixin):
     lead: Mapped[Optional["Lead"]] = relationship(
         "Lead", back_populates="deal", lazy="select"
     )
+    pipeline_stage: Mapped[Optional["PipelineStage"]] = relationship(
+        "PipelineStage", back_populates="deals", lazy="select"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Deal id={self.id} name={self.name!r} status={self.status!r}>"
 
     def __repr__(self) -> str:
         return f"<Deal id={self.id} name={self.name!r} status={self.status!r}>"
