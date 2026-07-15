@@ -14,10 +14,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.base import Base, TenantMixin
 
 if TYPE_CHECKING:
-    from app.models.organization import Organization
     from app.models.company import Company
     from app.models.contact import Contact
     from app.models.lead import Lead
+    from app.models.organization import Organization
     from app.models.pipeline import PipelineStage
     from app.models.user import User
 
@@ -38,6 +38,12 @@ class Deal(Base, TenantMixin):
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     close_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     closed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    pipeline_stage_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("pipeline_stages.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
 
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -50,7 +56,6 @@ class Deal(Base, TenantMixin):
         ForeignKey("users.id", ondelete="SET NULL"),
         nullable=True,
     )
-
     owner_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="SET NULL"),
@@ -60,12 +65,6 @@ class Deal(Base, TenantMixin):
     lead_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("leads.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-    )
-    pipeline_stage_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("pipeline_stages.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
     )

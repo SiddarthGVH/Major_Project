@@ -36,3 +36,31 @@ class ActivityTimeline(Base, TenantMixin):
 
     def __repr__(self) -> str:
         return f"<ActivityTimeline id={self.id} entity={self.entity_type!r} action={self.action!r}>"
+=======
+
+    # ── Relationships ─────────────────────────────────────────────────────────
+    organization: Mapped["Organization"] = relationship(
+        "Organization", lazy="select"
+    )
+    performed_by: Mapped[Optional["User"]] = relationship(
+        "User", foreign_keys=[performed_by_id], lazy="select"
+    )
+    lead: Mapped[Optional["Lead"]] = relationship(
+        "Lead", foreign_keys=[lead_id], lazy="select"
+    )
+    deal: Mapped[Optional["Deal"]] = relationship(
+        "Deal", foreign_keys=[deal_id], lazy="select"
+    )
+    contact: Mapped[Optional["Contact"]] = relationship(
+        "Contact", foreign_keys=[contact_id], lazy="select"
+    )
+    company: Mapped[Optional["Company"]] = relationship(
+        "Company", foreign_keys=[company_id], lazy="select"
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<Activity id={self.id} type={self.activity_type!r} "
+            f"entity={self.entity_type}:{self.entity_id}>"
+        )
+>>>>>>> 2caa082038ab34692767356457dd0dab412d6960
