@@ -21,6 +21,7 @@ import SettingsView from '@/components/dashboard/SettingsView';
 import ProductsView from '@/components/dashboard/ProductsView';
 import DocumentsView from '@/components/dashboard/DocumentsView';
 import ReportsView from '@/components/dashboard/ReportsView';
+import WorkflowsView from '@/components/dashboard/WorkflowsView';
 import { Calendar, Filter, ChevronDown, Check } from 'lucide-react';
 
 export default function DashboardHome() {
@@ -119,6 +120,8 @@ export default function DashboardHome() {
             <DocumentsView />
           ) : activeTab === 'reports' ? (
             <ReportsView />
+          ) : activeTab === 'workflows' ? (
+            <WorkflowsView />
           ) : activeTab === 'ai insights' ? (
             <AIInsightsView />
           ) : activeTab === 'settings' ? (
