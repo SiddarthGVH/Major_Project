@@ -1,4 +1,4 @@
-﻿"""
+"""
 Deal Repository
 """
 from decimal import Decimal
@@ -20,7 +20,7 @@ class DealRepository(BaseRepository[Deal]):
     def _base_query(self, organization_id: UUID):
         return select(Deal).where(
             Deal.organization_id == organization_id,
-            Deal.is_deleted == False,
+            Deal.is_deleted.is_(False),
         )
 
     async def get_active_by_id(self, deal_id: UUID, organization_id: UUID) -> Optional[Deal]:
@@ -109,5 +109,5 @@ class DealRepository(BaseRepository[Deal]):
                     Deal.notes.ilike(term),
                 )
             )
-        stmt = stmt.order_by(Deal.updated_at.desc(), Deal.created_at.desc())
+        stmt = stmt.order_by(desc(Deal.created_at))
         return await self.get_paginated(stmt, page, page_size)

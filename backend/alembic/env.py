@@ -1,15 +1,20 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import asyncio
 from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import pool
+from sqlalchemy.engine.url import make_url
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+from app.core.config import settings
 from app.database.base import Base
 
-DATABASE_URL = "postgresql+asyncpg://postgres:Pulse_CRM%40Team2@db.sbwjmnngmrjcygyrrzbj.supabase.co:5432/postgres"
+_raw_database_url = make_url(settings.DATABASE_URL)
+if _raw_database_url.drivername == "postgresql":
+    _raw_database_url = _raw_database_url.set(drivername="postgresql+asyncpg")
+DATABASE_URL = str(_raw_database_url)
 
 config = context.config
 
@@ -40,7 +45,7 @@ def do_run_migrations(connection) -> None:
 
 async def run_migrations_online() -> None:
     configuration = config.get_section(config.config_ini_section) or {}
-    configuration["sqlalchemy.url"] = DATABASE_URL
+    configuration["sqlalchemy.url"] = DATABASE_URL.replace("%", "%%")
 
     connectable = async_engine_from_config(
         configuration,
@@ -58,3 +63,4 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     asyncio.run(run_migrations_online())
+

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 ﻿"""
+>>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
 """
 Activity Timeline Repository
 """
@@ -9,7 +12,10 @@ from typing import List, Optional, Tuple
 from uuid import UUID
 
 from sqlalchemy import asc, desc, or_, select
+<<<<<<< HEAD
+=======
 from sqlalchemy import or_, select
+>>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.activity import ActivityTimeline
@@ -77,13 +83,22 @@ class ActivityTimelineRepository(BaseRepository[ActivityTimeline]):
         search: Optional[str] = None,
         sort_order: SortOrder = SortOrder.DESC,
     ) -> Tuple[List[ActivityTimeline], int]:
-        return await self.list_by_organization(
-            organization_id=organization_id,
-            entity_type=entity_type,
-            entity_id=entity_id,
-            action=None,
-            search=search,
-            page=page,
-            page_size=page_size,
-            sort_order=sort_order,
+        stmt = self._base_query(organization_id).where(
+            ActivityTimeline.entity_type == entity_type,
+            ActivityTimeline.entity_id == entity_id,
         )
+<<<<<<< HEAD
+        if search:
+            term = f"%{search.lower()}%"
+            stmt = stmt.where(
+                or_(
+                    ActivityTimeline.title.ilike(term),
+                    ActivityTimeline.description.ilike(term),
+                    ActivityTimeline.action.ilike(term),
+                )
+            )
+        sort_clause = asc(ActivityTimeline.created_at) if sort_order == SortOrder.ASC else desc(ActivityTimeline.created_at)
+        stmt = stmt.order_by(sort_clause, desc(ActivityTimeline.id))
+        return await self.get_paginated(stmt, page, page_size)
+=======
+>>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
