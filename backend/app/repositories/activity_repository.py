@@ -1,4 +1,5 @@
 ﻿"""
+"""
 Activity Timeline Repository
 """
 from __future__ import annotations
@@ -8,6 +9,7 @@ from typing import List, Optional, Tuple
 from uuid import UUID
 
 from sqlalchemy import asc, desc, or_, select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.activity import ActivityTimeline

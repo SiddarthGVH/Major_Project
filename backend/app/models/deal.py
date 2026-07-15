@@ -8,6 +8,11 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
+from datetime import date
+from decimal import Decimal
+from typing import TYPE_CHECKING, Optional
+
+from sqlalchemy import Boolean, Date, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -99,6 +104,9 @@ class Deal(Base, TenantMixin):
     pipeline_stage: Mapped[Optional["PipelineStage"]] = relationship(
         "PipelineStage", back_populates="deals", lazy="select"
     )
+
+    def __repr__(self) -> str:
+        return f"<Deal id={self.id} name={self.name!r} status={self.status!r}>"
 
     def __repr__(self) -> str:
         return f"<Deal id={self.id} name={self.name!r} status={self.status!r}>"
