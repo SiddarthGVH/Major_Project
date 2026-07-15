@@ -78,7 +78,7 @@ export default function DashboardHome() {
   ];
 
   return (
-    <div className="flex bg-white min-h-screen font-sans text-brand-text antialiased">
+    <div className="flex bg-white h-screen overflow-hidden font-sans text-brand-text antialiased">
       {/* Sidebar navigation - toned down background */}
       <Sidebar 
         activeTab={activeTab} 
@@ -88,7 +88,7 @@ export default function DashboardHome() {
       />
 
       {/* Main dashboard content container */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         
         {/* Top Navbar */}
         <Header 
@@ -98,36 +98,36 @@ export default function DashboardHome() {
           onTabChange={(tab) => setActiveTab(tab)}
         />
 
-        {/* Dashboard inner scroll view with increased whitespace */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
+        {/* Dashboard inner scroll view with fixed size */}
+        <main className="flex-1 overflow-hidden p-6 md:p-8 flex flex-col min-h-0">
           {activeTab === 'leads' ? (
-            <LeadsView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><LeadsView /></div>
           ) : activeTab === 'contacts' ? (
-            <ContactsView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><ContactsView /></div>
           ) : activeTab === 'companies' ? (
-            <CompaniesView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><CompaniesView /></div>
           ) : (activeTab === 'deals' || activeTab === 'pipeline') ? (
-            <PipelineView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><PipelineView /></div>
           ) : activeTab === 'activities' ? (
-            <ActivitiesView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><ActivitiesView /></div>
           ) : activeTab === 'calendar' ? (
-            <CalendarView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><CalendarView /></div>
           ) : activeTab === 'tasks' ? (
-            <TasksView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><TasksView /></div>
           ) : activeTab === 'emails' ? (
-            <EmailsView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><EmailsView /></div>
           ) : activeTab === 'ai insights' ? (
-            <AIInsightsView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><AIInsightsView /></div>
           ) : activeTab === 'settings' ? (
-            <SettingsView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><SettingsView /></div>
           ) : activeTab === 'profile' ? (
-            <ProfileView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><ProfileView /></div>
           ) : activeTab === 'notifications' ? (
-            <NotificationsView />
+            <div className="flex-1 min-h-0 overflow-y-auto"><NotificationsView /></div>
           ) : (
-            <>
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
               {/* Header block with improved contrast & page title visual prominence */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 shrink-0">
                 <div>
                   <h1 className="text-3xl md:text-4xl font-serif text-brand-heading tracking-tight font-normal">
                     Reports & analytics
@@ -139,7 +139,7 @@ export default function DashboardHome() {
               </div>
 
               {/* Sub Navigation Tabs (Tactile pills) */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 shrink-0 mt-4">
                 <nav className="flex space-x-1 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl overflow-x-auto scrollbar-none shrink-0">
                   {subTabs.map((tab) => {
                     const isActive = dashboardSubTab === tab.key;
@@ -201,24 +201,25 @@ export default function DashboardHome() {
               </div>
 
               {/* KPI Stat Cards (Spans full horizontal width above grid split) */}
-              <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
+              <div className="shrink-0 mt-6">
+                <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
+              </div>
 
-              {/* 12-Column Dashboard Grid Layout */}
-              <div className="grid grid-cols-12 gap-6">
+              {/* Dashboard Side-Scrolling Columns Layout */}
+              <div className="flex-1 min-h-0 overflow-x-auto flex flex-row space-x-6 mt-6 pb-2 scrollbar-thin scrollbar-thumb-brand-border-purple/20 scrollbar-track-transparent">
                 
-                {/* Left section (9 Columns of 12): Charts & Widgets */}
-                <div className="col-span-12 lg:col-span-9 space-y-6">
-                  
-                  {/* Charts (Revenue, stage funnel, source donuts) */}
+                {/* Column 1: Charts (Revenue, stage funnel, source donuts) */}
+                <div className="w-[850px] shrink-0 h-full overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-slate-200">
                   <Charts loading={isLoading} empty={isEmpty} />
-
-                  {/* Widgets (Leaderboard & Activity Logs) */}
-                  <Widgets loading={isLoading} />
-
                 </div>
 
-                {/* Right section (3 Columns of 12): Report Builder, Key Metrics, Recent Reports */}
-                <div className="col-span-12 lg:col-span-3 space-y-6">
+                {/* Column 2: Widgets (Leaderboard & Activity Logs) */}
+                <div className="w-[800px] shrink-0 h-full overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-slate-200">
+                  <Widgets loading={isLoading} />
+                </div>
+
+                {/* Column 3: Report Builder, Key Metrics, Recent Reports */}
+                <div className="w-[320px] shrink-0 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
                   <RightPanel 
                     onNewReportClick={() => setIsReportModalOpen(true)} 
                     recentReports={recentReports}
@@ -227,7 +228,7 @@ export default function DashboardHome() {
                 </div>
 
               </div>
-            </>
+            </div>
           )}
         </main>
       </div>
