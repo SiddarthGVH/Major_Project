@@ -3,13 +3,21 @@ Activity Timeline Model
 Stores auditable business events that should appear in the CRM timeline.
 """
 import uuid
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import ForeignKey, JSON, String, Text
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, TenantMixin
+
+if TYPE_CHECKING:
+    from app.models.company import Company
+    from app.models.contact import Contact
+    from app.models.deal import Deal
+    from app.models.lead import Lead
+    from app.models.organization import Organization
+    from app.models.user import User
 
 
 class ActivityTimeline(Base, TenantMixin):
@@ -36,31 +44,3 @@ class ActivityTimeline(Base, TenantMixin):
 
     def __repr__(self) -> str:
         return f"<ActivityTimeline id={self.id} entity={self.entity_type!r} action={self.action!r}>"
-=======
-
-    # ── Relationships ─────────────────────────────────────────────────────────
-    organization: Mapped["Organization"] = relationship(
-        "Organization", lazy="select"
-    )
-    performed_by: Mapped[Optional["User"]] = relationship(
-        "User", foreign_keys=[performed_by_id], lazy="select"
-    )
-    lead: Mapped[Optional["Lead"]] = relationship(
-        "Lead", foreign_keys=[lead_id], lazy="select"
-    )
-    deal: Mapped[Optional["Deal"]] = relationship(
-        "Deal", foreign_keys=[deal_id], lazy="select"
-    )
-    contact: Mapped[Optional["Contact"]] = relationship(
-        "Contact", foreign_keys=[contact_id], lazy="select"
-    )
-    company: Mapped[Optional["Company"]] = relationship(
-        "Company", foreign_keys=[company_id], lazy="select"
-    )
-
-    def __repr__(self) -> str:
-        return (
-            f"<Activity id={self.id} type={self.activity_type!r} "
-            f"entity={self.entity_type}:{self.entity_id}>"
-        )
->>>>>>> 2caa082038ab34692767356457dd0dab412d6960

@@ -1,20 +1,15 @@
-﻿"""
-Application Configuration
-Loads all environment variables using pydantic-settings.
-Follows the 12-factor app methodology.
-"""
 from functools import lru_cache
 from typing import List, Optional
 
+import secrets
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-import secrets
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
-        env_file_encoding="utf-8",
+        env_file_encoding="utf-8-sig",
         case_sensitive=False,
         extra="ignore",
     )
@@ -36,7 +31,9 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 15
 
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:password@localhost:5432/pulse_crm"
+    # Database (loaded from .env)
+    DATABASE_URL: str
+
     DATABASE_POOL_SIZE: int = 10
     DATABASE_MAX_OVERFLOW: int = 20
     DATABASE_POOL_TIMEOUT: int = 30
@@ -69,7 +66,10 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: Optional[str] = None
     GOOGLE_REDIRECT_URI: Optional[str] = None
     GOOGLE_WEBHOOK_SECRET: Optional[str] = None
-    GOOGLE_OAUTH_SCOPES: str = "https://www.googleapis.com/auth/gmail.readonly,https://www.googleapis.com/auth/gmail.modify"
+    GOOGLE_OAUTH_SCOPES: str = (
+        "https://www.googleapis.com/auth/gmail.readonly,"
+        "https://www.googleapis.com/auth/gmail.modify"
+    )
 
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "json"
@@ -86,11 +86,7 @@ class Settings(BaseSettings):
         if value is None:
             return False
         text = str(value).strip().lower()
-        if text in {"1", "true", "yes", "y", "on"}:
-            return True
-        if text in {"0", "false", "no", "n", "off", "warn", "info", "debug", "error"}:
-            return False
-        return False
+        return text in {"1", "true", "yes", "y", "on"}
 
     @property
     def cors_origins_list(self) -> List[str]:
@@ -98,15 +94,15 @@ class Settings(BaseSettings):
 
     @property
     def cors_methods_list(self) -> List[str]:
-        if self.CORS_ALLOW_METHODS == "*":
-            return ["*"]
-        return [m.strip() for m in self.CORS_ALLOW_METHODS.split(",") if m.strip()]
+        return ["*"] if self.CORS_ALLOW_METHODS == "*" else [
+            m.strip() for m in self.CORS_ALLOW_METHODS.split(",") if m.strip()
+        ]
 
     @property
     def cors_headers_list(self) -> List[str]:
-        if self.CORS_ALLOW_HEADERS == "*":
-            return ["*"]
-        return [h.strip() for h in self.CORS_ALLOW_HEADERS.split(",") if h.strip()]
+        return ["*"] if self.CORS_ALLOW_HEADERS == "*" else [
+            h.strip() for h in self.CORS_ALLOW_HEADERS.split(",") if h.strip()
+        ]
 
     @property
     def is_production(self) -> bool:

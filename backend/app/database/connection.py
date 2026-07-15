@@ -1,4 +1,4 @@
-﻿"""
+"""
 Async SQLAlchemy 2.0 Database Connection
 - Creates the async engine with connection pooling
 - Provides an async session factory
@@ -15,7 +15,14 @@ from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
-url = make_url(settings.DATABASE_URL)
+
+def _normalize_database_url(raw_url: str) -> str:
+    url = make_url(raw_url)
+    if url.drivername == 'postgresql':
+        url = url.set(drivername='postgresql+asyncpg')
+    return str(url)
+
+url = make_url(_normalize_database_url(settings.DATABASE_URL))
 engine_kwargs = {
     "echo": settings.DEBUG,
     "pool_pre_ping": True,
@@ -30,7 +37,7 @@ else:
         pool_recycle=settings.DATABASE_POOL_RECYCLE,
     )
 
-engine = create_async_engine(settings.DATABASE_URL, **engine_kwargs)
+engine = create_async_engine(_normalize_database_url(settings.DATABASE_URL), **engine_kwargs)
 
 AsyncSessionFactory = async_sessionmaker(
     bind=engine,
@@ -63,3 +70,4 @@ async def check_db_connection() -> bool:
     except Exception as exc:
         logger.error("Database health check failed: %s", exc)
         return False
+
