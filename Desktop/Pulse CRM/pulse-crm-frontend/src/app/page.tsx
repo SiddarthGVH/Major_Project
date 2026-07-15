@@ -139,8 +139,8 @@ export default function DashboardHome() {
               </div>
 
               {/* Sub Navigation Tabs (Tactile pills) */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <nav className="flex space-x-1 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl overflow-x-auto scrollbar-none shrink-0">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <nav className="flex space-x-1 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl overflow-x-auto scrollbar-none min-w-0">
                   {subTabs.map((tab) => {
                     const isActive = dashboardSubTab === tab.key;
                     return (
@@ -160,7 +160,7 @@ export default function DashboardHome() {
                 </nav>
 
                 {/* Datepicker and Filters (Tactile and premium style) */}
-                <div className="flex items-center space-x-2 shrink-0 self-end md:self-center">
+                <div className="flex items-center space-x-2 shrink-0 self-start lg:self-center">
                   <button className="inline-flex items-center space-x-1.5 bg-white border border-brand-border-purple/35 hover:border-brand-border-purple active:bg-slate-50 px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-text/80 transition-all duration-200 cursor-pointer shadow-sm/5">
                     <Calendar className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
                     <span className="tabular-nums">May 12 – May 18, 2025</span>
