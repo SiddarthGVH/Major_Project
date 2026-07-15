@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pulse CRM — Week 1 Planning & Handoff Blueprint",
-  description: "Technical system architecture, ER database design, OpenAPI route planner, and sprint milestones roadmap for Pulse CRM.",
+  title: "Pulse CRM",
+  description: "Enterprise CRM client dashboard.",
 };
 
 export default function RootLayout({

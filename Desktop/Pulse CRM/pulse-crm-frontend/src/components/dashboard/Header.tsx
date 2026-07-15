@@ -250,10 +250,7 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
                   <User className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
                   <span>My Profile</span>
                 </button>
-                <a href="/blueprint" className="flex items-center space-x-2 px-4 py-2 text-xs text-brand-text/80 hover:bg-slate-50 transition-colors">
-                  <FileText className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
-                  <span>Engineering Docs</span>
-                </a>
+
                 <button 
                   type="button"
                   onClick={() => {

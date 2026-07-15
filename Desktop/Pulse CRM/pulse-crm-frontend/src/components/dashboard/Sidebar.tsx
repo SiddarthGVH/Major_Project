@@ -131,16 +131,7 @@ export default function Sidebar({ activeTab, setActiveTab, collapsed }: SidebarP
             </span>
           )}
         </button>
-        {!collapsed && (
-          <div className="mt-3">
-            <Link 
-              href="/blueprint" 
-              className="inline-block text-[9px] uppercase tracking-wider font-extrabold text-center text-brand-text hover:text-white border border-brand-border-purple/30 hover:bg-brand-accent bg-brand-secondary-accent/10 px-2 py-1.5 rounded-lg transition-all w-full"
-            >
-              Developer Docs
-            </Link>
-          </div>
-        )}
+
       </div>
     </aside>
   );
