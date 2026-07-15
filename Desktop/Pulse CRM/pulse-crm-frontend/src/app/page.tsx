@@ -88,7 +88,7 @@ export default function DashboardHome() {
       />
 
       {/* Main dashboard content container */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
         
         {/* Top Navbar */}
         <Header 
@@ -98,36 +98,36 @@ export default function DashboardHome() {
           onTabChange={(tab) => setActiveTab(tab)}
         />
 
-        {/* Dashboard inner scroll view with fixed size */}
-        <main className="flex-1 overflow-hidden p-6 md:p-8 flex flex-col min-h-0">
+        {/* Dashboard inner scroll view with increased whitespace */}
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6">
           {activeTab === 'leads' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><LeadsView /></div>
+            <LeadsView />
           ) : activeTab === 'contacts' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><ContactsView /></div>
+            <ContactsView />
           ) : activeTab === 'companies' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><CompaniesView /></div>
+            <CompaniesView />
           ) : (activeTab === 'deals' || activeTab === 'pipeline') ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><PipelineView /></div>
+            <PipelineView />
           ) : activeTab === 'activities' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><ActivitiesView /></div>
+            <ActivitiesView />
           ) : activeTab === 'calendar' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><CalendarView /></div>
+            <CalendarView />
           ) : activeTab === 'tasks' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><TasksView /></div>
+            <TasksView />
           ) : activeTab === 'emails' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><EmailsView /></div>
+            <EmailsView />
           ) : activeTab === 'ai insights' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><AIInsightsView /></div>
+            <AIInsightsView />
           ) : activeTab === 'settings' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><SettingsView /></div>
+            <SettingsView />
           ) : activeTab === 'profile' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><ProfileView /></div>
+            <ProfileView />
           ) : activeTab === 'notifications' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto"><NotificationsView /></div>
+            <NotificationsView />
           ) : (
-            <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+            <>
               {/* Header block with improved contrast & page title visual prominence */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 shrink-0">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <h1 className="text-3xl md:text-4xl font-serif text-brand-heading tracking-tight font-normal">
                     Reports & analytics
@@ -139,7 +139,7 @@ export default function DashboardHome() {
               </div>
 
               {/* Sub Navigation Tabs (Tactile pills) */}
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 shrink-0 mt-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <nav className="flex space-x-1 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl overflow-x-auto scrollbar-none shrink-0">
                   {subTabs.map((tab) => {
                     const isActive = dashboardSubTab === tab.key;
@@ -201,25 +201,24 @@ export default function DashboardHome() {
               </div>
 
               {/* KPI Stat Cards (Spans full horizontal width above grid split) */}
-              <div className="shrink-0 mt-6">
-                <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
-              </div>
+              <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
 
-              {/* Dashboard Side-Scrolling Columns Layout */}
-              <div className="flex-1 min-h-0 overflow-x-auto flex flex-row space-x-6 mt-6 pb-2 scrollbar-thin scrollbar-thumb-brand-border-purple/20 scrollbar-track-transparent">
+              {/* 12-Column Dashboard Grid Layout */}
+              <div className="grid grid-cols-12 gap-6">
                 
-                {/* Column 1: Charts (Revenue, stage funnel, source donuts) */}
-                <div className="w-[850px] shrink-0 h-full overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-slate-200">
+                {/* Left section (9 Columns of 12): Charts & Widgets */}
+                <div className="col-span-12 lg:col-span-9 space-y-6">
+                  
+                  {/* Charts (Revenue, stage funnel, source donuts) */}
                   <Charts loading={isLoading} empty={isEmpty} />
-                </div>
 
-                {/* Column 2: Widgets (Leaderboard & Activity Logs) */}
-                <div className="w-[800px] shrink-0 h-full overflow-y-auto pr-2 space-y-6 scrollbar-thin scrollbar-thumb-slate-200">
+                  {/* Widgets (Leaderboard & Activity Logs) */}
                   <Widgets loading={isLoading} />
+
                 </div>
 
-                {/* Column 3: Report Builder, Key Metrics, Recent Reports */}
-                <div className="w-[320px] shrink-0 h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
+                {/* Right section (3 Columns of 12): Report Builder, Key Metrics, Recent Reports */}
+                <div className="col-span-12 lg:col-span-3 space-y-6">
                   <RightPanel 
                     onNewReportClick={() => setIsReportModalOpen(true)} 
                     recentReports={recentReports}
@@ -228,7 +227,7 @@ export default function DashboardHome() {
                 </div>
 
               </div>
-            </div>
+            </>
           )}
         </main>
       </div>
