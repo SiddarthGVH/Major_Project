@@ -126,9 +126,9 @@ export default function Sidebar({ activeTab, setActiveTab, collapsed }: SidebarP
             )}
           </div>
           {!collapsed && (
-            <button className="text-brand-text/70 hover:text-brand-text transition-colors cursor-pointer">
+            <span className="text-brand-text/70 hover:text-brand-text transition-colors">
               <ChevronDown className="h-4.5 w-4.5" strokeWidth={2} />
-            </button>
+            </span>
           )}
         </button>
         {!collapsed && (
