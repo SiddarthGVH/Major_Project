@@ -15,16 +15,16 @@ import PipelineView from '@/components/dashboard/PipelineView';
 import ActivitiesView from '@/components/dashboard/ActivitiesView';
 import EmailsView from '@/components/dashboard/EmailsView';
 import AIInsightsView from '@/components/dashboard/AIInsightsView';
-import CalendarView from '@/components/dashboard/CalendarView';
-import TasksView from '@/components/dashboard/TasksView';
 import NotificationsView from '@/components/dashboard/NotificationsView';
 import ProfileView from '@/components/dashboard/ProfileView';
 import SettingsView from '@/components/dashboard/SettingsView';
+import ProductsView from '@/components/dashboard/ProductsView';
+import DocumentsView from '@/components/dashboard/DocumentsView';
 import { Calendar, Filter, ChevronDown, Check } from 'lucide-react';
 
 export default function DashboardHome() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('reports');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [dashboardSubTab, setDashboardSubTab] = useState('overview');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [showFiltersMenu, setShowFiltersMenu] = useState(false);
@@ -108,14 +108,14 @@ export default function DashboardHome() {
             <CompaniesView />
           ) : (activeTab === 'deals' || activeTab === 'pipeline') ? (
             <PipelineView />
+          ) : activeTab === 'products' ? (
+            <ProductsView />
           ) : activeTab === 'activities' ? (
             <ActivitiesView />
-          ) : activeTab === 'calendar' ? (
-            <CalendarView />
-          ) : activeTab === 'tasks' ? (
-            <TasksView />
           ) : activeTab === 'emails' ? (
             <EmailsView />
+          ) : activeTab === 'documents' ? (
+            <DocumentsView />
           ) : activeTab === 'ai insights' ? (
             <AIInsightsView />
           ) : activeTab === 'settings' ? (

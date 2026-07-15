@@ -10,8 +10,11 @@ import {
   FileText, 
   GitPullRequest,
   Search,
-  Filter
+  CheckSquare,
+  ListFilter
 } from 'lucide-react';
+import TasksView from './TasksView';
+import CalendarView from './CalendarView';
 
 interface ActivityLog {
   id: number;
@@ -24,6 +27,8 @@ interface ActivityLog {
 }
 
 export default function ActivitiesView() {
+  const [activeSubTab, setActiveSubTab] = useState<'audit' | 'tasks' | 'calendar'>('audit');
+  
   const [logs] = useState<ActivityLog[]>([
     { id: 1, type: 'note', title: 'Internal Note Added', desc: 'Alex Rivera: Interested in enterprise migration plan.', user: 'Sarah Johnson', time: '10 mins ago', dateKey: 'today' },
     { id: 2, type: 'email', title: 'Proposal Email Sent', desc: 'Subject: Cloud migration specs and security SLAs', user: 'Sarah Johnson', time: '2 hours ago', dateKey: 'today' },
@@ -58,77 +63,120 @@ export default function ActivitiesView() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-          <div>
-            <h2 className="font-serif text-2xl text-brand-heading font-normal">Audit Activities Log</h2>
-            <p className="text-[11px] text-brand-text/60 mt-0.5 font-bold">Monitor a chronological timeline of calls, emails, notes, stage adjustments, and lead actions.</p>
+      {/* Unified Tab Sub-Navigation (Tactile pills) */}
+      <div className="flex space-x-1.5 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl w-fit">
+        <button
+          onClick={() => setActiveSubTab('audit')}
+          className={`py-1.5 px-4 rounded-lg font-extrabold text-xs transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === 'audit' 
+              ? 'bg-brand-accent text-white shadow-sm' 
+              : 'text-brand-text/75 hover:text-brand-heading hover:bg-brand-sidebar-hover/20'
+          }`}
+        >
+          <ListFilter className="h-3.5 w-3.5" />
+          <span>Audit Logs</span>
+        </button>
+        <button
+          onClick={() => setActiveSubTab('tasks')}
+          className={`py-1.5 px-4 rounded-lg font-extrabold text-xs transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === 'tasks' 
+              ? 'bg-brand-accent text-white shadow-sm' 
+              : 'text-brand-text/75 hover:text-brand-heading hover:bg-brand-sidebar-hover/20'
+          }`}
+        >
+          <CheckSquare className="h-3.5 w-3.5" />
+          <span>Tasks Workspace</span>
+        </button>
+        <button
+          onClick={() => setActiveSubTab('calendar')}
+          className={`py-1.5 px-4 rounded-lg font-extrabold text-xs transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+            activeSubTab === 'calendar' 
+              ? 'bg-brand-accent text-white shadow-sm' 
+              : 'text-brand-text/75 hover:text-brand-heading hover:bg-brand-sidebar-hover/20'
+          }`}
+        >
+          <Calendar className="h-3.5 w-3.5" />
+          <span>Calendar</span>
+        </button>
+      </div>
+
+      {/* Render sub views */}
+      {activeSubTab === 'audit' && (
+        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+            <div>
+              <h2 className="font-serif text-2xl text-brand-heading font-normal">Audit Activities Log</h2>
+              <p className="text-[11px] text-brand-text/60 mt-0.5 font-bold">Monitor a chronological timeline of calls, emails, notes, stage adjustments, and lead actions.</p>
+            </div>
+            
+            {/* Time Filter Pills */}
+            <div className="flex space-x-1 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl shrink-0">
+              {['all', 'today', 'week', 'month'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setDateFilter(tab as any)}
+                  className={`py-1 px-3 rounded-lg font-extrabold text-[10px] uppercase transition-all duration-200 cursor-pointer ${
+                    dateFilter === tab 
+                      ? 'bg-brand-accent text-white shadow-sm' 
+                      : 'text-brand-text/75 hover:text-brand-heading hover:bg-brand-sidebar-hover/20'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
-          
-          {/* Time Filter Pills */}
-          <div className="flex space-x-1 p-1 bg-brand-sidebar-hover/15 border border-brand-border-purple/20 rounded-xl shrink-0">
-            {['all', 'today', 'week', 'month'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setDateFilter(tab as any)}
-                className={`py-1 px-3 rounded-lg font-extrabold text-[10px] uppercase transition-all duration-200 cursor-pointer ${
-                  dateFilter === tab 
-                    ? 'bg-brand-accent text-white shadow-sm' 
-                    : 'text-brand-text/75 hover:text-brand-heading hover:bg-brand-sidebar-hover/20'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+
+          {/* Search */}
+          <div className="relative mb-5">
+            <span className="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-400">
+              <Search className="h-3.5 w-3.5" />
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search activities by user, log description, action type..." 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 border border-brand-border-purple/35 rounded-lg text-xs text-brand-text placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand-accent/20"
+            />
           </div>
-        </div>
 
-        {/* Search */}
-        <div className="relative mb-5">
-          <span className="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-slate-400">
-            <Search className="h-3.5 w-3.5" />
-          </span>
-          <input 
-            type="text" 
-            placeholder="Search activities by user, log description, action type..." 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 border border-brand-border-purple/35 rounded-lg text-xs text-brand-text placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-brand-accent/20"
-          />
-        </div>
+          {/* Timeline representation */}
+          <div className="relative border-l border-brand-border-purple/15 pl-4 ml-3 space-y-6">
+            {filtered.length > 0 ? (
+              filtered.map((log) => (
+                <div key={log.id} className="relative">
+                  {/* Visual Icon Node overlay */}
+                  <div className="absolute -left-[27px] top-0 h-6.5 w-6.5 rounded-full bg-white border border-brand-border-purple/30 flex items-center justify-center shadow-sm/5">
+                    {getIcon(log.type)}
+                  </div>
 
-        {/* Timeline representation */}
-        <div className="relative border-l border-brand-border-purple/15 pl-4 ml-3 space-y-6">
-          {filtered.length > 0 ? (
-            filtered.map((log) => (
-              <div key={log.id} className="relative">
-                {/* Visual Icon Node overlay */}
-                <div className="absolute -left-[27px] top-0 h-6.5 w-6.5 rounded-full bg-white border border-brand-border-purple/30 flex items-center justify-center shadow-sm/5">
-                  {getIcon(log.type)}
-                </div>
-
-                <div className="bg-slate-50/50 hover:bg-slate-50 border border-brand-border-purple/15 rounded-xl p-4 transition-colors">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
-                    <div>
-                      <h4 className="text-xs font-extrabold text-brand-heading">{log.title}</h4>
-                      <p className="text-xs text-brand-text/80 mt-1 font-semibold leading-relaxed">{log.desc}</p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="text-[10px] font-bold text-slate-400 flex items-center justify-end">
-                        <Clock className="h-3 w-3 mr-1 text-slate-350" />
-                        {log.time}
-                      </span>
-                      <p className="text-[9px] text-brand-accent font-extrabold mt-0.5">by {log.user}</p>
+                  <div className="bg-slate-50/50 hover:bg-slate-50 border border-brand-border-purple/15 rounded-xl p-4 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
+                      <div>
+                        <h4 className="text-xs font-extrabold text-brand-heading">{log.title}</h4>
+                        <p className="text-xs text-brand-text/80 mt-1 font-semibold leading-relaxed">{log.desc}</p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="text-[10px] font-bold text-slate-400 flex items-center justify-end">
+                          <Clock className="h-3 w-3 mr-1 text-slate-350" />
+                          {log.time}
+                        </span>
+                        <p className="text-[9px] text-brand-accent font-extrabold mt-0.5">by {log.user}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-slate-400 text-center py-6 text-xs font-semibold">No activity logs found matching the filter criteria.</p>
-          )}
+              ))
+            ) : (
+              <p className="text-slate-400 text-center py-6 text-xs font-semibold">No activity logs found matching the filter criteria.</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {activeSubTab === 'tasks' && <TasksView />}
+      {activeSubTab === 'calendar' && <CalendarView />}
     </div>
   );
 }
