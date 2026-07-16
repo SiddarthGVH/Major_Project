@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     REDOC_URL: str = "/redoc"
     OPENAPI_URL: str = "/openapi.json"
 
-    SECRET_KEY: str = secrets.token_urlsafe(64)
+    SECRET_KEY: str = "19QH1CDdpBDwKG70Ye63Efgznl53PfJ1jt8SipTlU4BWlmYqLPM66DT_WwN5ll9YpNf2L9jhjKjKMuJHf9CJuw"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     ALGORITHM: str = "HS256"
