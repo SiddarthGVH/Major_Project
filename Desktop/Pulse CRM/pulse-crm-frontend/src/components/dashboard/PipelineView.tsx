@@ -134,7 +134,7 @@ export default function PipelineView() {
       <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h2 className="font-serif text-2xl text-brand-heading font-normal">Deals Kanban Pipeline</h2>
+            <h2 className="font-sans text-2xl text-brand-heading font-bold">Deals Kanban Pipeline</h2>
             <p className="text-[11px] text-brand-text/60 mt-0.5 font-bold">Drag and drop cards to update pipeline stages, track forecasts, and monitor deal velocity.</p>
           </div>
           <button 

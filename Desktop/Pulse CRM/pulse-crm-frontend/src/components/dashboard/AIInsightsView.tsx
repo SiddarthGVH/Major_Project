@@ -66,7 +66,7 @@ export default function AIInsightsView() {
           <Sparkles className="h-5 w-5" />
         </div>
         <div>
-          <h2 className="font-serif text-2xl text-brand-heading font-normal">AI Copilot Insights</h2>
+          <h2 className="font-sans text-2xl text-brand-heading font-bold">AI Copilot Insights</h2>
           <p className="text-xs text-brand-text/80 mt-1 leading-relaxed font-bold max-w-2xl">
             Real-time recommendations generated using predictive lead scoring, compliance mapping status, and contact velocity.
           </p>

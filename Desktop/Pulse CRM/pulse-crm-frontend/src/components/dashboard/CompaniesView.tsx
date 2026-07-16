@@ -171,7 +171,7 @@ export default function CompaniesView() {
         <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <div>
-              <h2 className="font-serif text-2xl text-brand-heading font-normal">Companies</h2>
+              <h2 className="font-sans text-2xl text-brand-heading font-bold">Companies</h2>
               <p className="text-[11px] text-brand-text/60 mt-0.5 font-bold">Monitor accounts, track revenue sizes, and view contact chains.</p>
             </div>
             <button 

@@ -66,4 +66,65 @@ div[class*="nextjs-toast"],
   pointer-events: none !important;
 }
 
+/* --- Spacing & Breathing Room Adjustments --- */
+
+/* Increase global card padding to p-6 (24px) for cards using p-5 (20px) */
+.rounded-xl.p-5 {
+  padding: 1.5rem !important;
+}
+
+/* Add more padding to table rows to prevent congested grids */
+table tbody tr td {
+  padding-top: 0.9rem !important;
+  padding-bottom: 0.9rem !important;
+}
+table thead tr th {
+  padding-bottom: 0.75rem !important;
+}
+
+/* Bump microscopic text sizes slightly for better legibility and ease of reading */
+.text-\[9px\] {
+  font-size: 10px !important;
+}
+.text-\[10px\] {
+  font-size: 11.5px !important;
+  letter-spacing: 0.025em;
+}
+.text-\[11px\] {
+  font-size: 12.5px !important;
+  letter-spacing: 0.01em;
+}
+.text-xs {
+  font-size: 13.5px !important;
+}
+
+/* Give grid layouts more spacing */
+.gap-6 {
+  gap: 1.75rem !important; /* 28px */
+}
+.gap-5 {
+  gap: 1.5rem !important; /* 24px */
+}
+.gap-4 {
+  gap: 1.25rem !important; /* 20px */
+}
+
+/* Give vertical flex stacks slightly more spacing */
+.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1.75rem !important;
+}
+.space-y-5 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1.5rem !important;
+}
+.space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1.25rem !important;
+}
+
+/* Ensure buttons and inputs have consistent, comfortable spacing */
+input, select, textarea {
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+
 

@@ -45,7 +45,7 @@ export default function ProfileView() {
           </div>
           
           <div className="flex-1 text-center sm:text-left min-w-0">
-            <h2 className="font-serif text-2xl text-brand-heading font-normal">{profile.name}</h2>
+            <h2 className="font-sans text-2xl text-brand-heading font-bold">{profile.name}</h2>
             <p className="text-xs text-brand-accent font-extrabold mt-0.5">{profile.role} — {profile.department}</p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4 text-[11px] font-semibold text-brand-text/75">

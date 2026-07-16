@@ -183,7 +183,7 @@ export default function ContactsView() {
         <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <div>
-              <h2 className="font-serif text-2xl text-brand-heading font-normal">Contacts Directory</h2>
+              <h2 className="font-sans text-2xl text-brand-heading font-bold">Contacts Directory</h2>
               <p className="text-[11px] text-brand-text/60 mt-0.5 font-bold">Track profiles, designation hierarchies, phone links, and messaging history.</p>
             </div>
             <button 

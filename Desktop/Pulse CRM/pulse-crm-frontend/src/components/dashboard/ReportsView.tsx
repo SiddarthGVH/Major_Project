@@ -138,7 +138,7 @@ export default function ReportsView() {
     <div className="space-y-6">
       {/* Page Title Header */}
       <div>
-        <h1 className="text-3xl md:text-4xl font-serif text-brand-heading tracking-tight font-normal">
+        <h1 className="text-3xl md:text-4xl font-sans text-brand-heading tracking-tight font-bold">
           Business Strategy Reports
         </h1>
         <p className="text-xs md:text-sm text-brand-text/75 mt-2 leading-relaxed max-w-2xl font-medium tracking-wide">
@@ -411,7 +411,7 @@ export default function ReportsView() {
                     />
                     {/* Lost segment */}
                     <div 
-                      className="h-full bg-rose-455 transition-all duration-300"
+                      className="h-full bg-rose-500 transition-all duration-300"
                       style={{ width: `${lostPct}%` }}
                     />
                   </div>

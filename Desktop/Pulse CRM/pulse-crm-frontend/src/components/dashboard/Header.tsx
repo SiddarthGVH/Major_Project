@@ -19,9 +19,10 @@ interface HeaderProps {
   setCollapsed: (collapsed: boolean) => void;
   onNewReportClick: () => void;
   onTabChange?: (tab: string) => void;
+  onOpenCommandPalette?: () => void;
 }
 
-export default function Header({ collapsed, setCollapsed, onNewReportClick, onTabChange }: HeaderProps) {
+export default function Header({ collapsed, setCollapsed, onNewReportClick, onTabChange, onOpenCommandPalette }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,12 +49,16 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        searchInputRef.current?.focus();
+        if (onOpenCommandPalette) {
+          onOpenCommandPalette();
+        } else {
+          searchInputRef.current?.focus();
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [onOpenCommandPalette]);
 
   const notifications = [
     { id: 1, text: "Sarah Johnson won the 'Acme Enterprise' deal!", type: "won", time: "10m ago" },
@@ -89,58 +94,23 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
           <input
             ref={searchInputRef}
             type="text"
-            placeholder="Search leads, contacts, companies, deals..."
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setShowSearchResults(e.target.value.length > 0);
+            placeholder="Search leads, contacts, companies, deals... (Ctrl+K)"
+            value=""
+            readOnly
+            onClick={() => {
+              if (onOpenCommandPalette) onOpenCommandPalette();
             }}
-            onFocus={() => {
-              if (searchQuery.length > 0) setShowSearchResults(true);
+            onFocus={(e) => {
+              e.target.blur();
+              if (onOpenCommandPalette) onOpenCommandPalette();
             }}
-            className="w-full pl-9 pr-12 py-1.5 border border-brand-border-purple/35 rounded-lg text-xs text-brand-text bg-slate-50/60 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/15 focus:border-brand-accent transition-all duration-200 shadow-sm/5"
+            className="w-full pl-9 pr-12 py-1.5 border border-brand-border-purple/35 rounded-lg text-xs text-brand-text bg-slate-50/60 placeholder-slate-400 cursor-pointer focus:outline-none transition-all duration-200 shadow-sm/5"
           />
           <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
             <kbd className="text-[9px] font-sans font-bold text-brand-text/65 bg-slate-50 border border-brand-border-purple/30 px-1.5 py-0.5 rounded shadow-sm/5">
               ⌘K
             </kbd>
           </div>
-
-          {/* Search Dropdown Panel - Light Themed */}
-          {showSearchResults && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-brand-border-purple/35 rounded-lg shadow-lg overflow-hidden z-50 animate-in fade-in duration-200">
-              <div className="px-3 py-2 bg-slate-50 border-b border-brand-border-purple/15 flex justify-between items-center">
-                <span className="text-[10px] font-bold text-brand-heading uppercase tracking-wider">Quick Results</span>
-                <button 
-                  onClick={() => setShowSearchResults(false)} 
-                  className="text-slate-450 hover:text-brand-text text-[9px] uppercase font-bold"
-                >
-                  Clear
-                </button>
-              </div>
-              <div className="py-1">
-                {searchResults.length > 0 ? (
-                  searchResults.map((item, idx) => (
-                    <a
-                      key={idx}
-                      href={item.link}
-                      onClick={() => setShowSearchResults(false)}
-                      className="flex items-center justify-between px-4 py-2 hover:bg-slate-50 text-xs text-brand-text transition-colors"
-                    >
-                      <span className="font-semibold">{item.title}</span>
-                      <span className="text-[9px] font-bold text-brand-accent bg-brand-accent/5 px-2 py-0.5 rounded border border-brand-border-purple/20">
-                        {item.type}
-                      </span>
-                    </a>
-                  ))
-                ) : (
-                  <div className="px-4 py-3 text-center text-xs text-slate-400">
-                    No results matching "{searchQuery}"
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 

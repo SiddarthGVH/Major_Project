@@ -22,6 +22,7 @@ import ProductsView from '@/components/dashboard/ProductsView';
 import DocumentsView from '@/components/dashboard/DocumentsView';
 import ReportsView from '@/components/dashboard/ReportsView';
 import WorkflowsView from '@/components/dashboard/WorkflowsView';
+import CommandPalette from '@/components/dashboard/CommandPalette';
 import { Calendar, Filter, ChevronDown, Check } from 'lucide-react';
 
 export default function DashboardHome() {
@@ -29,6 +30,19 @@ export default function DashboardHome() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [dashboardSubTab, setDashboardSubTab] = useState('overview');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  // Global listener for Ctrl+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   const [showFiltersMenu, setShowFiltersMenu] = useState(false);
   const [selectedPipelineType, setSelectedPipelineType] = useState('All');
   
@@ -98,6 +112,7 @@ export default function DashboardHome() {
           setCollapsed={setSidebarCollapsed} 
           onNewReportClick={() => setIsReportModalOpen(true)} 
           onTabChange={(tab) => setActiveTab(tab)}
+          onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         />
 
         {/* Dashboard inner scroll view with increased whitespace */}
@@ -135,7 +150,7 @@ export default function DashboardHome() {
               {/* Header block with improved contrast & page title visual prominence */}
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-serif text-brand-heading tracking-tight font-normal">
+                  <h1 className="text-3xl md:text-4xl font-sans text-brand-heading tracking-tight font-bold">
                     Reports & analytics
                   </h1>
                   <p className="text-xs md:text-sm text-brand-text/75 mt-2 leading-relaxed max-w-2xl font-medium tracking-wide">
@@ -243,6 +258,14 @@ export default function DashboardHome() {
         isOpen={isReportModalOpen} 
         onClose={() => setIsReportModalOpen(false)} 
         onSave={handleSaveReport}
+      />
+
+      {/* Command Palette search modal */}
+      <CommandPalette 
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        setActiveTab={setActiveTab}
+        onNewReportClick={() => setIsReportModalOpen(true)}
       />
     </div>
   );

@@ -404,7 +404,7 @@ export default function LeadsView() {
           {/* Header Row */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
             <div>
-              <h2 className="font-serif text-2xl text-brand-heading font-normal">Sales Leads</h2>
+              <h2 className="font-sans text-2xl text-brand-heading font-bold">Sales Leads</h2>
               <p className="text-[11px] text-brand-text/60 mt-0.5 font-bold">Manage prospects, monitor qualification scores, and trigger follow-ups.</p>
             </div>
             <button 
