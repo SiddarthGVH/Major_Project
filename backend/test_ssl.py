@@ -17,7 +17,8 @@ async def main():
             ssl=ssl_context,
         )
 
-        print("Connected!")
+        print("✅ Connected!")
+        print(await conn.fetchval("SELECT version()"))
         await conn.close()
 
     except Exception as e:

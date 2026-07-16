@@ -44,7 +44,3 @@ class ActivityTimeline(Base, TenantMixin):
 
     def __repr__(self) -> str:
         return f"<ActivityTimeline id={self.id} entity={self.entity_type!r} action={self.action!r}>"
-<<<<<<< HEAD
-=======
-        return f"<ActivityTimeline id={self.id} entity={self.entity_type!r} action={self.action!r}>"
->>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
