@@ -76,6 +76,12 @@ class Deal(Base, TenantMixin):
         nullable=True,
         index=True,
     )
+    pipeline_stage_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("pipeline_stages.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     organization: Mapped["Organization"] = relationship(
@@ -92,7 +98,10 @@ class Deal(Base, TenantMixin):
         "Lead", back_populates="deal", lazy="select"
     )
     pipeline_stage: Mapped[Optional["PipelineStage"]] = relationship(
-        "PipelineStage", back_populates="deals", lazy="select"
+        "PipelineStage",
+        back_populates="deals",
+        foreign_keys=[pipeline_stage_id],
+        lazy="select",
     )
 
     def __repr__(self) -> str:
