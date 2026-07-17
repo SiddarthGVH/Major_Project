@@ -166,15 +166,6 @@ export default function LeadsView() {
     }
   ]);
 
-  useEffect(() => {
-    getLeads().then(data => {
-      setLeads(data as any);
-      if (data.length > 0) {
-        setSelectedLeadId(data[0].id as any);
-      }
-    });
-  }, []);
-
   // Selections & Filters State
   const [selectedLeadId, setSelectedLeadId] = useState<number | string>(1);
   const [searchQuery, setSearchQuery] = useState('');
@@ -196,6 +187,15 @@ export default function LeadsView() {
   const [emailForm, setEmailForm] = useState({ subject: '', body: '' });
   const [callForm, setCallForm] = useState({ outcome: 'Spoke with Lead', notes: '' });
   const [meetingForm, setMeetingForm] = useState({ title: '', date: '', time: '', desc: '' });
+
+  useEffect(() => {
+    getLeads().then(data => {
+      setLeads(data as any);
+      if (data.length > 0) {
+        setSelectedLeadId(data[0].id as any);
+      }
+    });
+  }, []);
 
   // Get currently active lead object
   const activeLead = leads.find(l => l.id === selectedLeadId) || leads[0];

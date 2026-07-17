@@ -98,15 +98,6 @@ export default function CompaniesView() {
     }
   ]);
 
-  useEffect(() => {
-    getCompanies().then(data => {
-      setCompanies(data as any);
-      if (data.length > 0) {
-        setSelectedId(data[0].id as any);
-      }
-    });
-  }, []);
-
   const [selectedId, setSelectedId] = useState<number | string>(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -117,6 +108,15 @@ export default function CompaniesView() {
     name: '', industry: '', revenue: '', employees: 10, owner: 'Sarah Johnson', notes: ''
   });
   const [contactName, setContactName] = useState('');
+
+  useEffect(() => {
+    getCompanies().then(data => {
+      setCompanies(data as any);
+      if (data.length > 0) {
+        setSelectedId(data[0].id as any);
+      }
+    });
+  }, []);
 
   const active = companies.find(c => c.id === selectedId) || companies[0];
 

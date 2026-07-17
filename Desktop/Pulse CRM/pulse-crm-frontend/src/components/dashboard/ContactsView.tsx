@@ -89,15 +89,6 @@ export default function ContactsView() {
     }
   ]);
 
-  useEffect(() => {
-    getContacts().then(data => {
-      setContacts(data as any);
-      if (data.length > 0) {
-        setSelectedId(data[0].id as any);
-      }
-    });
-  }, []);
-
   const [selectedId, setSelectedId] = useState<number | string>(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeHistoryTab, setActiveHistoryTab] = useState<'timeline' | 'calls' | 'meetings' | 'emails'>('timeline');
@@ -114,6 +105,15 @@ export default function ContactsView() {
   });
   const [emailForm, setEmailForm] = useState({ subject: '', body: '' });
   const [callForm, setCallForm] = useState({ outcome: 'Spoke with Lead', notes: '' });
+
+  useEffect(() => {
+    getContacts().then(data => {
+      setContacts(data as any);
+      if (data.length > 0) {
+        setSelectedId(data[0].id as any);
+      }
+    });
+  }, []);
 
   const active = contacts.find(c => c.id === selectedId) || contacts[0];
 
