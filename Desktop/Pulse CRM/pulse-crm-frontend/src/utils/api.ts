@@ -136,19 +136,11 @@ export async function getLeads(): Promise<Lead[]> {
     return dbLeads.map((dl, idx) => {
       const fallback = MOCK_LEADS[idx] || MOCK_LEADS[0];
       return {
+        ...fallback, // Inherit all mock fields (timeline, emails, calls, meetings, owner, score)
         id: dl.id,
-        name: fallback.name,
-        company: fallback.company,
-        email: fallback.email,
-        phone: fallback.phone,
-        status: dl.status || 'New',
-        value: String(dl.value || '0'),
-        priority: fallback.priority,
-        owner: fallback.owner,
-        ownerAvatar: fallback.ownerAvatar,
-        notes: dl.description || fallback.notes,
-        score: fallback.score,
-        history: fallback.history
+        status: dl.status || fallback.status,
+        value: String(dl.value || fallback.value),
+        notes: dl.description || fallback.notes
       };
     });
   } catch {
@@ -179,13 +171,12 @@ export async function getContacts(): Promise<Contact[]> {
     return dbContacts.map((dc, idx) => {
       const fallback = MOCK_CONTACTS[idx] || MOCK_CONTACTS[0];
       return {
+        ...fallback, // Inherit mock timeline, calls, meetings, emails
         id: dc.id,
         name: `${dc.first_name} ${dc.last_name}`,
-        company: fallback.company,
         email: dc.email,
-        phone: dc.phone || '',
-        role: dc.job_title || 'Contact',
-        avatar: fallback.avatar
+        phone: dc.phone || fallback.phone,
+        role: dc.job_title || fallback.role
       };
     });
   } catch {
@@ -209,13 +200,11 @@ export async function getCompanies(): Promise<Company[]> {
     return dbCompanies.map((dc, idx) => {
       const fallback = MOCK_COMPANIES[idx] || MOCK_COMPANIES[0];
       return {
+        ...fallback, // Inherit mock contacts, timeline, emails, files
         id: dc.id,
         name: dc.name,
-        domain: dc.domain || '',
-        industry: dc.industry || '',
-        employees: fallback.employees,
-        revenue: fallback.revenue,
-        status: fallback.status
+        domain: dc.domain || fallback.domain,
+        industry: dc.industry || fallback.industry
       };
     });
   } catch {
@@ -239,17 +228,14 @@ export async function getDeals(): Promise<Deal[]> {
     return dbDeals.map((dd, idx) => {
       const fallback = MOCK_DEALS[idx] || MOCK_DEALS[0];
       return {
+        ...fallback,
         id: dd.id,
         title: dd.name,
-        company: fallback.company,
-        value: Number(dd.value || 0),
+        value: Number(dd.value || fallback.value),
         stage: dd.stage_id === 'd1f60c42-b0c6-4767-88ea-d4b68e9f2918' ? 'Qualified' :
                dd.stage_id === 'e2f50c42-b0c6-4767-88ea-d4b68e9f2919' ? 'Proposal' :
                dd.stage_id === 'f3f40c42-b0c6-4767-88ea-d4b68e9f2920' ? 'Under Review' :
-               dd.stage_id === 'a4f30c42-b0c6-4767-88ea-d4b68e9f2921' ? 'Won' : 'Lost',
-        priority: fallback.priority,
-        owner: fallback.owner,
-        closeDate: fallback.closeDate
+               dd.stage_id === 'a4f30c42-b0c6-4767-88ea-d4b68e9f2921' ? 'Won' : 'Lost'
       };
     });
   } catch {
