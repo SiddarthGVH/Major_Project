@@ -1,13 +1,10 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from datetime import datetime
 from typing import List, Optional, Tuple
 from uuid import UUID
 
 from sqlalchemy import asc, desc, or_, select
-
-from sqlalchemy import or_, select
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.activity import ActivityTimeline
@@ -79,4 +76,17 @@ class ActivityTimelineRepository(BaseRepository[ActivityTimeline]):
             ActivityTimeline.entity_type == entity_type,
             ActivityTimeline.entity_id == entity_id,
         )
+        if search:
+            term = f"%{search.lower()}%"
+            stmt = stmt.where(
+                or_(
+                    ActivityTimeline.title.ilike(term),
+                    ActivityTimeline.description.ilike(term),
+                    ActivityTimeline.action.ilike(term),
+                    ActivityTimeline.entity_type.ilike(term),
+                )
+            )
 
+        sort_clause = asc(ActivityTimeline.created_at) if sort_order == SortOrder.ASC else desc(ActivityTimeline.created_at)
+        stmt = stmt.order_by(sort_clause, desc(ActivityTimeline.id))
+        return await self.get_paginated(stmt, page, page_size)
