@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getCompanies } from '@/utils/api';
 import { 
   Building2, 
   Search, 
@@ -97,7 +98,16 @@ export default function CompaniesView() {
     }
   ]);
 
-  const [selectedId, setSelectedId] = useState(1);
+  useEffect(() => {
+    getCompanies().then(data => {
+      setCompanies(data as any);
+      if (data.length > 0) {
+        setSelectedId(data[0].id as any);
+      }
+    });
+  }, []);
+
+  const [selectedId, setSelectedId] = useState<number | string>(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

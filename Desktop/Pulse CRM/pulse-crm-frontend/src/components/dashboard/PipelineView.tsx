@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getDeals, updateDealStage } from '@/utils/api';
 import { 
   Plus, 
   DollarSign, 
@@ -16,32 +17,31 @@ import {
 } from 'lucide-react';
 
 interface Deal {
-  id: number;
+  id: number | string;
   title: string;
   company: string;
   value: number;
-  stage: 'Lead' | 'Contacted' | 'Proposal' | 'Negotiation' | 'Won' | 'Lost';
+  stage: 'Qualified' | 'Proposal' | 'Under Review' | 'Won' | 'Lost';
   priority: 'High' | 'Medium' | 'Low';
   owner: string;
   closeDate: string;
 }
 
 export default function PipelineView() {
-  const [deals, setDeals] = useState<Deal[]>([
-    { id: 1, title: "Database Cloud Migration", company: "TechCorp Inc.", value: 120000, stage: "Proposal", priority: "High", owner: "Sarah Johnson", closeDate: "2025-06-30" },
-    { id: 2, title: "SSO Integration Scope", company: "Sparta Creative", value: 45000, stage: "Lead", priority: "Medium", owner: "Sarah Johnson", closeDate: "2025-07-15" },
-    { id: 3, title: "Compliance Suite Expansion", company: "MedSaaS Solutions", value: 85000, stage: "Contacted", priority: "High", owner: "Alex Johnson", closeDate: "2025-05-25" },
-    { id: 4, title: "Global Logistics API", company: "Empiric Logistics", value: 380000, stage: "Negotiation", priority: "High", owner: "David Wilson", closeDate: "2025-08-01" },
-    { id: 5, title: "Analytics Custom Tier", company: "ByteSized Co.", value: 18000, stage: "Won", priority: "Low", owner: "Alex Johnson", closeDate: "2025-05-10" }
-  ]);
+  const [deals, setDeals] = useState<Deal[]>([]);
 
-  const stages: Deal['stage'][] = ['Lead', 'Contacted', 'Proposal', 'Negotiation', 'Won', 'Lost'];
+  useEffect(() => {
+    getDeals().then(data => {
+      setDeals(data as any);
+    });
+  }, []);
+
+  const stages: Deal['stage'][] = ['Qualified', 'Proposal', 'Under Review', 'Won', 'Lost'];
 
   const stageProbabilities: Record<Deal['stage'], number> = {
-    'Lead': 0.1,
-    'Contacted': 0.25,
-    'Proposal': 0.5,
-    'Negotiation': 0.75,
+    'Qualified': 0.1,
+    'Proposal': 0.4,
+    'Under Review': 0.7,
     'Won': 1.0,
     'Lost': 0.0
   };
@@ -53,11 +53,11 @@ export default function PipelineView() {
 
   // Form state
   const [form, setForm] = useState({
-    title: '', company: '', value: 0, stage: 'Lead' as Deal['stage'], priority: 'Medium' as Deal['priority'], owner: 'Sarah Johnson', closeDate: ''
+    title: '', company: '', value: 0, stage: 'Qualified' as Deal['stage'], priority: 'Medium' as Deal['priority'], owner: 'Sarah Johnson', closeDate: ''
   });
 
   // Drag and drop states
-  const [draggedId, setDraggedId] = useState<number | null>(null);
+  const [draggedId, setDraggedId] = useState<number | string | null>(null);
 
   // Calculating pipeline statistics
   const totalValue = deals.reduce((acc, d) => d.stage !== 'Lost' ? acc + d.value : acc, 0);
@@ -77,7 +77,7 @@ export default function PipelineView() {
   };
 
   // HTML5 Drag handlers
-  const handleDragStart = (id: number) => {
+  const handleDragStart = (id: number | string) => {
     setDraggedId(id);
   };
 
@@ -88,6 +88,20 @@ export default function PipelineView() {
   const handleDrop = (stage: Deal['stage']) => {
     if (draggedId === null) return;
     setDeals(deals.map(d => d.id === draggedId ? { ...d, stage } : d));
+    
+    // Commit update to backend if stage maps to seeded UUIDs
+    const stageIds: Record<string, string> = {
+      'Qualified': 'd1f60c42-b0c6-4767-88ea-d4b68e9f2918',
+      'Proposal': 'e2f50c42-b0c6-4767-88ea-d4b68e9f2919',
+      'Under Review': 'f3f40c42-b0c6-4767-88ea-d4b68e9f2920',
+      'Won': 'a4f30c42-b0c6-4767-88ea-d4b68e9f2921',
+      'Lost': 'b5f20c42-b0c6-4767-88ea-d4b68e9f2922'
+    };
+    const stageId = stageIds[stage];
+    if (stageId) {
+      updateDealStage(draggedId, stageId).catch(err => console.warn("Failed to update deal stage in backend", err));
+    }
+    
     setDraggedId(null);
   };
 
@@ -124,7 +138,7 @@ export default function PipelineView() {
     setSelectedDeal(null);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number | string) => {
     setDeals(deals.filter(d => d.id !== id));
   };
 
@@ -139,7 +153,7 @@ export default function PipelineView() {
           </div>
           <button 
             onClick={() => {
-              setForm({ title: '', company: '', value: 10000, stage: 'Lead', priority: 'Medium', owner: 'Sarah Johnson', closeDate: '' });
+              setForm({ title: '', company: '', value: 10000, stage: 'Qualified', priority: 'Medium', owner: 'Sarah Johnson', closeDate: '' });
               setIsAddModalOpen(true);
             }}
             className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"

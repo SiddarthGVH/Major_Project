@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getLeads } from '@/utils/api';
 import { 
   Search, 
   Filter, 
@@ -165,8 +166,17 @@ export default function LeadsView() {
     }
   ]);
 
+  useEffect(() => {
+    getLeads().then(data => {
+      setLeads(data as any);
+      if (data.length > 0) {
+        setSelectedLeadId(data[0].id as any);
+      }
+    });
+  }, []);
+
   // Selections & Filters State
-  const [selectedLeadId, setSelectedLeadId] = useState<number>(1);
+  const [selectedLeadId, setSelectedLeadId] = useState<number | string>(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');

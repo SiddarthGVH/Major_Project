@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getContacts } from '@/utils/api';
 import { 
   Contact, 
   Search, 
@@ -88,7 +89,16 @@ export default function ContactsView() {
     }
   ]);
 
-  const [selectedId, setSelectedId] = useState(1);
+  useEffect(() => {
+    getContacts().then(data => {
+      setContacts(data as any);
+      if (data.length > 0) {
+        setSelectedId(data[0].id as any);
+      }
+    });
+  }, []);
+
+  const [selectedId, setSelectedId] = useState<number | string>(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeHistoryTab, setActiveHistoryTab] = useState<'timeline' | 'calls' | 'meetings' | 'emails'>('timeline');
 

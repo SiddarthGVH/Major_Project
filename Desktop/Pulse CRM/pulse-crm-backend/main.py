@@ -102,6 +102,138 @@ def startup_event():
             ]
             db.add_all(permissions)
             db.commit()
+
+        # Seed default User (Sarah Johnson)
+        sarah = db.query(models.User).filter(models.User.email == 'sarah.j@pulse.crm').first()
+        if sarah is None:
+            sarah = models.User(
+                id=UUID('f1f80c42-b0c6-4767-88ea-d4b68e9f2929'),
+                email='sarah.j@pulse.crm',
+                password_hash='pbkdf2:sha256:260000$hashedpassword',
+                full_name='Sarah Johnson'
+            )
+            # Add Administrator role
+            role = db.query(models.Role).filter(models.Role.name == 'Administrator').first()
+            if role:
+                sarah.roles.append(role)
+            db.add(sarah)
+            db.commit()
+
+        # Seed Companies
+        if db.query(models.Company).first() is None:
+            companies = [
+                models.Company(
+                    id=UUID('e1f80c42-b0c6-4767-88ea-d4b68e9f2930'),
+                    name='TechCorp',
+                    domain='techcorp.com',
+                    industry='Technology',
+                    owner_id=sarah.id
+                ),
+                models.Company(
+                    id=UUID('e2f80c42-b0c6-4767-88ea-d4b68e9f2931'),
+                    name='Sparta Creative',
+                    domain='spartacreative.io',
+                    industry='Design/Creative',
+                    owner_id=sarah.id
+                ),
+                models.Company(
+                    id=UUID('e3f80c42-b0c6-4767-88ea-d4b68e9f2932'),
+                    name='Empiric Logistics',
+                    domain='empiriclogistics.com',
+                    industry='Logistics',
+                    owner_id=sarah.id
+                )
+            ]
+            db.add_all(companies)
+            db.commit()
+
+        # Seed Contacts
+        if db.query(models.Contact).first() is None:
+            contacts = [
+                models.Contact(
+                    id=UUID('c1f80c42-b0c6-4767-88ea-d4b68e9f2940'),
+                    company_id=UUID('e1f80c42-b0c6-4767-88ea-d4b68e9f2930'),
+                    first_name='Alex',
+                    last_name='Rivera',
+                    email='alex.rivera@techcorp.com',
+                    phone='+1 (555) 019-2834',
+                    job_title='Director of Security'
+                ),
+                models.Contact(
+                    id=UUID('c2f80c42-b0c6-4767-88ea-d4b68e9f2941'),
+                    company_id=UUID('e2f80c42-b0c6-4767-88ea-d4b68e9f2931'),
+                    first_name='Helena',
+                    last_name='Troy',
+                    email='helena.t@spartacreative.io',
+                    phone='+1 (555) 014-9821',
+                    job_title='Creative Lead'
+                ),
+                models.Contact(
+                    id=UUID('c3f80c42-b0c6-4767-88ea-d4b68e9f2942'),
+                    company_id=UUID('e3f80c42-b0c6-4767-88ea-d4b68e9f2932'),
+                    first_name='Marcus',
+                    last_name='Vance',
+                    email='marcus.v@empiric.com',
+                    phone='+1 (555) 012-3456',
+                    job_title='VP of Infrastructure'
+                )
+            ]
+            db.add_all(contacts)
+            db.commit()
+
+        # Seed Leads
+        if db.query(models.Lead).first() is None:
+            leads = [
+                models.Lead(
+                    id=UUID('l1f80c42-b0c6-4767-88ea-d4b68e9f2950'),
+                    contact_id=UUID('c1f80c42-b0c6-4767-88ea-d4b68e9f2940'),
+                    title='SSO Config Approved & Security Review',
+                    description='We reviewed the SSO guidelines you sent. Our compliance team approved the SAML setup but they have some questions regarding custom SLAs and liability limits.',
+                    value=120000.0,
+                    status='New',
+                    source='Website'
+                ),
+                models.Lead(
+                    id=UUID('l2f80c42-b0c6-4767-88ea-d4b68e9f2951'),
+                    contact_id=UUID('c2f80c42-b0c6-4767-88ea-d4b68e9f2941'),
+                    title='Pricing Inquiry - Custom Enterprise Tier',
+                    description='I was looking over the custom analytics dashboard tiers on your pricing page. We have around 40 designers who need priority SLA support.',
+                    value=45000.0,
+                    status='New',
+                    source='Referral'
+                )
+            ]
+            db.add_all(leads)
+            db.commit()
+
+        # Seed Deals
+        if db.query(models.Deal).first() is None:
+            deals = [
+                models.Deal(
+                    id=UUID('d1f80c42-b0c6-4767-88ea-d4b68e9f2960'),
+                    lead_id=UUID('l1f80c42-b0c6-4767-88ea-d4b68e9f2950'),
+                    company_id=UUID('e1f80c42-b0c6-4767-88ea-d4b68e9f2930'),
+                    contact_id=UUID('c1f80c42-b0c6-4767-88ea-d4b68e9f2940'),
+                    stage_id=UUID('d1f60c42-b0c6-4767-88ea-d4b68e9f2918'),
+                    owner_id=sarah.id,
+                    name='SSO Deployment & Enterprise Expansion',
+                    value=120000.0,
+                    status='Open'
+                ),
+                models.Deal(
+                    id=UUID('d2f80c42-b0c6-4767-88ea-d4b68e9f2961'),
+                    lead_id=UUID('l2f80c42-b0c6-4767-88ea-d4b68e9f2951'),
+                    company_id=UUID('e2f80c42-b0c6-4767-88ea-d4b68e9f2931'),
+                    contact_id=UUID('c2f80c42-b0c6-4767-88ea-d4b68e9f2941'),
+                    stage_id=UUID('e2f50c42-b0c6-4767-88ea-d4b68e9f2919'),
+                    owner_id=sarah.id,
+                    name='Design Agency Analytics Tier',
+                    value=45000.0,
+                    status='Open'
+                )
+            ]
+            db.add_all(deals)
+            db.commit()
     except Exception as e:
         print(f"Error seeding database: {e}")
         db.rollback()
