@@ -8,14 +8,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
-<<<<<<< HEAD
-=======
-from datetime import date
-from decimal import Decimal
-from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import Boolean, Date, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
->>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -46,15 +39,6 @@ class Deal(Base, TenantMixin):
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     close_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     closed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-<<<<<<< HEAD
-    pipeline_stage_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("pipeline_stages.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-    )
-=======
->>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
 
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -79,15 +63,7 @@ class Deal(Base, TenantMixin):
         nullable=True,
         index=True,
     )
-<<<<<<< HEAD
-=======
-    pipeline_stage_id: Mapped[Optional[uuid.UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("pipeline_stages.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-    )
->>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2
+
     company_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("companies.id", ondelete="SET NULL"),
@@ -97,6 +73,12 @@ class Deal(Base, TenantMixin):
     contact_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("contacts.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    pipeline_stage_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("pipeline_stages.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
     )
@@ -116,14 +98,11 @@ class Deal(Base, TenantMixin):
         "Lead", back_populates="deal", lazy="select"
     )
     pipeline_stage: Mapped[Optional["PipelineStage"]] = relationship(
-        "PipelineStage", back_populates="deals", lazy="select"
+        "PipelineStage",
+        back_populates="deals",
+        foreign_keys=[pipeline_stage_id],
+        lazy="select",
     )
 
     def __repr__(self) -> str:
         return f"<Deal id={self.id} name={self.name!r} status={self.status!r}>"
-<<<<<<< HEAD
-=======
-
-    def __repr__(self) -> str:
-        return f"<Deal id={self.id} name={self.name!r} status={self.status!r}>"
->>>>>>> 8c70aea23112d0ec090a696619d810cd6c7fb7a2

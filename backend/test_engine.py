@@ -17,7 +17,9 @@ ssl_context.verify_mode = ssl.CERT_NONE
 
 engine = create_async_engine(
     DATABASE_URL,
-    connect_args={"ssl": ssl_context},
+    connect_args={
+        "ssl": ssl_context,
+    },
     echo=True,
 )
 
@@ -26,11 +28,20 @@ print(engine.url)
 
 
 async def main():
-    async with engine.connect() as conn:
-        print(await conn.scalar(text("SELECT current_user")))
-        print(await conn.scalar(text("SELECT version()")))
+    try:
+        async with engine.connect() as conn:
+            result = await conn.execute(text("SELECT current_user"))
+            print("Current User:", result.scalar())
 
-    await engine.dispose()
+            result = await conn.execute(text("SELECT version()"))
+            print(result.scalar())
+
+    except Exception as e:
+        print(type(e).__name__)
+        print(e)
+
+    finally:
+        await engine.dispose()
 
 
 asyncio.run(main())

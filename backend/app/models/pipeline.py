@@ -51,7 +51,10 @@ class PipelineStage(Base, TenantMixin):
         "Organization", back_populates="pipeline_stages", lazy="select"
     )
     deals: Mapped[List["Deal"]] = relationship(
-        "Deal", back_populates="pipeline_stage", lazy="select"
+        "Deal",
+        back_populates="pipeline_stage",
+        foreign_keys="Deal.pipeline_stage_id",
+        lazy="select",
     )
 
     def __repr__(self) -> str:
