@@ -3,48 +3,60 @@
 const API_BASE_URL = 'http://localhost:8000';
 
 export interface Lead {
-  id: string | number;
+  id: number | string;
   name: string;
   company: string;
   email: string;
   phone: string;
+  score: number;
   status: 'New' | 'Contacted' | 'Qualified' | 'Converted' | 'Lost';
-  value: string;
-  priority: 'Low' | 'Medium' | 'High';
+  priority: 'High' | 'Medium' | 'Low';
   owner: string;
   ownerAvatar: string;
   notes: string;
-  score: number;
-  history?: { date: string; type: string; details: string }[];
+  timeline: { id: number; type: string; title: string; desc: string; time: string }[];
+  emails: { id: number; subject: string; body: string; time: string }[];
+  calls: { id: number; outcome: string; notes: string; time: string }[];
+  meetings: { id: number; title: string; date: string; time: string; desc: string }[];
 }
 
 export interface Contact {
-  id: string | number;
+  id: number | string;
   name: string;
   company: string;
-  email: string;
+  designation: string;
   phone: string;
-  role: string;
-  avatar?: string;
+  email: string;
+  notes: string;
+  timeline: { id: number; title: string; time: string }[];
+  calls: { id: number; outcome: string; notes: string; time: string }[];
+  meetings: { id: number; title: string; date: string; time: string }[];
+  emails: { id: number; subject: string; body: string; time: string }[];
 }
 
 export interface Company {
-  id: string | number;
+  id: number | string;
   name: string;
-  domain: string;
   industry: string;
-  employees: string;
   revenue: string;
-  status: 'Active' | 'Prospect' | 'Partner';
+  employees: number;
+  contacts: string[];
+  openDeals: number;
+  owner: string;
+  ownerAvatar: string;
+  notes: string;
+  timeline: { id: number; title: string; time: string }[];
+  emails: { id: number; subject: string; time: string }[];
+  files: { id: number; name: string; size: string }[];
 }
 
 export interface Deal {
-  id: string | number;
+  id: number | string;
   title: string;
   company: string;
   value: number;
   stage: 'Qualified' | 'Proposal' | 'Under Review' | 'Won' | 'Lost';
-  priority: 'Low' | 'Medium' | 'High';
+  priority: 'High' | 'Medium' | 'Low';
   owner: string;
   closeDate: string;
 }
@@ -54,55 +66,214 @@ export const MOCK_LEADS: Lead[] = [
   {
     id: 1,
     name: "Alex Rivera",
-    company: "TechCorp",
+    company: "TechCorp Inc.",
     email: "alex.rivera@techcorp.com",
     phone: "+1 (555) 019-2834",
-    status: "New",
-    value: "120000",
+    score: 88,
+    status: "Qualified",
     priority: "High",
     owner: "Sarah Johnson",
     ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80",
-    notes: "SSO guidelines sent. Security compliance approved SAML setup. SLA terms negotiation pending.",
-    score: 87,
-    history: [
-      { date: "Yesterday, 10:15 AM", type: "email", details: "SSO Config Approved & Security Review" },
-      { date: "2 days ago", type: "call", details: "Initial introductory discovery call" }
-    ]
+    notes: "Met at TechEx 2025. Interested in migrating their legacy database to our unified SaaS solution. Has a budget of $120K. Ready for proposal stage next week.",
+    timeline: [
+      { id: 1, type: "creation", title: "Lead Ingestion", desc: "Lead created from TechEx 2025 conference scan.", time: "4 days ago" },
+      { id: 2, type: "call", title: "Discovery Call Logged", desc: "Spoke to Alex. Confirmed decision matrix and budget availability.", time: "2 days ago" }
+    ],
+    emails: [
+      { id: 1, subject: "Pulse CRM Info Request", body: "Hi Alex, thank you for stopping by our booth. Here is the migration documentation we discussed.", time: "3 days ago" }
+    ],
+    calls: [
+      { id: 1, outcome: "Spoke with Lead", notes: "Alex is highly technical. Focus proposal on database security and speed.", time: "2 days ago" }
+    ],
+    meetings: []
   },
   {
     id: 2,
+    name: "Marcus Aurelius",
+    company: "MedSaaS Solutions",
+    email: "marcus.aurelius@medsaas.org",
+    phone: "+1 (555) 304-9843",
+    score: 72,
+    status: "Contacted",
+    priority: "Medium",
+    owner: "Alex Johnson",
+    ownerAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80",
+    notes: "Currently evaluating competitor pricing. Emphasized compliance standards (HIPAA/GDPR) as critical factors. Scheduled a follow-up demo.",
+    timeline: [
+      { id: 1, type: "creation", title: "Lead Form Submission", desc: "Lead created from inbound marketing landing page.", time: "6 days ago" },
+      { id: 2, type: "email", title: "Introduction Email Sent", desc: "Shared introduction and pricing tiers overview.", time: "5 days ago" }
+    ],
+    emails: [
+      { id: 1, subject: "Welcome to Pulse CRM", body: "Hello Marcus, introducing Pulse and attaching compliance guidelines.", time: "5 days ago" }
+    ],
+    calls: [],
+    meetings: []
+  },
+  {
+    id: 3,
     name: "Helena Troy",
     company: "Sparta Creative",
     email: "helena.t@spartacreative.io",
-    phone: "+1 (555) 014-9821",
+    phone: "+1 (555) 834-0192",
+    score: 95,
     status: "New",
-    value: "45000",
-    priority: "Medium",
+    priority: "High",
     owner: "Sarah Johnson",
     ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80",
-    notes: "Volumetric pricing requested for 40 agency designer seats. Seeking customized priority SLA.",
-    score: 62,
-    history: [
-      { date: "Yesterday, 4:30 PM", type: "email", details: "Pricing Inquiry - Custom Enterprise Tier" }
-    ]
+    notes: "Inbound contact request. Enterprise customer asking about custom SSO support and priority SLA details. Immediate response required.",
+    timeline: [
+      { id: 1, type: "creation", title: "Inbound Request Recieved", desc: "Submitted custom enterprise contact form.", time: "10 hours ago" }
+    ],
+    emails: [],
+    calls: [],
+    meetings: []
+  },
+  {
+    id: 4,
+    name: "David Hume",
+    company: "Empiric Logistics",
+    email: "david.hume@empiric.co.uk",
+    phone: "+44 20 7946 0192",
+    score: 41,
+    status: "Lost",
+    priority: "Low",
+    owner: "David Wilson",
+    ownerAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&fit=crop&q=80",
+    notes: "Small business prospect. Rejected pricing packages as out of scope for budget limit. Keep in cold nurturing list for low-tier launch.",
+    timeline: [
+      { id: 1, type: "creation", title: "API Ingestion", desc: "Lead created through automated developer partner API.", time: "10 days ago" },
+      { id: 2, type: "call", title: "Call Outcome: Busy", desc: "Tried logging call, prospect rejected due to resource limits.", time: "8 days ago" }
+    ],
+    emails: [],
+    calls: [
+      { id: 1, outcome: "Lead Not Interested", notes: "No budget availability. Moving to cold nurturing.", time: "8 days ago" }
+    ],
+    meetings: []
   }
 ];
 
 export const MOCK_CONTACTS: Contact[] = [
-  { id: 1, name: "Alex Rivera", company: "TechCorp", email: "alex.rivera@techcorp.com", phone: "+1 (555) 019-2834", role: "Director of Security", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80" },
-  { id: 2, name: "Helena Troy", company: "Sparta Creative", email: "helena.t@spartacreative.io", phone: "+1 (555) 014-9821", role: "Creative Lead", avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&fit=crop&q=80" },
-  { id: 3, name: "Marcus Vance", company: "Empiric Logistics", email: "marcus.v@empiric.com", phone: "+1 (555) 012-3456", role: "VP of Infrastructure", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=80&fit=crop&q=80" }
+  {
+    id: 1,
+    name: "Alex Rivera",
+    company: "TechCorp Inc.",
+    designation: "VP of Engineering",
+    phone: "+1 (555) 019-2834",
+    email: "alex.rivera@techcorp.com",
+    notes: "Preferred contact method is email. High technical authority.",
+    timeline: [
+      { id: 1, title: "SSO blueprint sent", time: "2 days ago" },
+      { id: 2, title: "Intro call logged", time: "1 week ago" }
+    ],
+    calls: [
+      { id: 1, outcome: "Spoke with Lead", notes: "Discussed cloud migration scope.", time: "1 week ago" }
+    ],
+    meetings: [],
+    emails: [
+      { id: 1, subject: "Cloud migration outline", body: "Shared guidelines and specs document.", time: "2 days ago" }
+    ]
+  },
+  {
+    id: 2,
+    name: "Marcus Aurelius",
+    company: "MedSaaS Solutions",
+    designation: "Director of Compliance",
+    phone: "+1 (555) 304-9843",
+    email: "marcus.aurelius@medsaas.org",
+    notes: "Extremely detail oriented. Highly concerned with security guidelines.",
+    timeline: [
+      { id: 1, title: "Product walkthrough demo", time: "3 days ago" }
+    ],
+    calls: [],
+    meetings: [
+      { id: 1, title: "Security compliance review", date: "2025-05-20", time: "10:00 AM" }
+    ],
+    emails: []
+  },
+  {
+    id: 3,
+    name: "Helena Troy",
+    company: "Sparta Creative",
+    designation: "CEO & Founder",
+    phone: "+1 (555) 834-0192",
+    email: "helena.t@spartacreative.io",
+    notes: "Met at local design panel. Interested in CRM team workflows onboarding.",
+    timeline: [
+      { id: 1, title: "Profile created", time: "10 hours ago" }
+    ],
+    calls: [],
+    meetings: [],
+    emails: []
+  }
 ];
 
 export const MOCK_COMPANIES: Company[] = [
-  { id: 1, name: "TechCorp", domain: "techcorp.com", industry: "Technology", employees: "1,200", revenue: "$45M", status: "Prospect" },
-  { id: 2, name: "Sparta Creative", domain: "spartacreative.io", industry: "Design Agency", employees: "85", revenue: "$3.2M", status: "Prospect" },
-  { id: 3, name: "Empiric Logistics", domain: "empiriclogistics.com", industry: "Supply Chain", employees: "450", revenue: "$18.5M", status: "Partner" }
+  {
+    id: 1,
+    name: "TechCorp Inc.",
+    industry: "Software & IT",
+    revenue: "$12,400,000",
+    employees: 320,
+    contacts: ["Alex Rivera (VP Eng)", "Jane Doe (Product Manager)"],
+    openDeals: 2,
+    owner: "Sarah Johnson",
+    ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80",
+    notes: "Expanding cloud migration contracts. Security SLA signed in Q1.",
+    timeline: [
+      { id: 1, title: "SSO Config Approved", time: "2 days ago" },
+      { id: 2, title: "Discovery meeting logged", time: "1 week ago" }
+    ],
+    emails: [
+      { id: 1, subject: "SSO integration guidelines", time: "3 days ago" }
+    ],
+    files: [
+      { id: 1, name: "Migration_Blueprint.pdf", size: "2.4 MB" }
+    ]
+  },
+  {
+    id: 2,
+    name: "MedSaaS Solutions",
+    industry: "Healthcare tech",
+    revenue: "$4,500,000",
+    employees: 85,
+    contacts: ["Marcus Aurelius (Director)"],
+    openDeals: 1,
+    owner: "Alex Johnson",
+    ownerAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80",
+    notes: "Evaluating compliance guidelines. Demo was well received.",
+    timeline: [
+      { id: 1, title: "Product Demo Scheduled", time: "3 days ago" }
+    ],
+    emails: [
+      { id: 1, subject: "Sandbox login requests", time: "4 days ago" }
+    ],
+    files: []
+  },
+  {
+    id: 3,
+    name: "Sparta Creative",
+    industry: "Marketing & Design",
+    revenue: "$1,200,000",
+    employees: 24,
+    contacts: ["Helena Troy (CEO)"],
+    openDeals: 0,
+    owner: "Sarah Johnson",
+    ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80",
+    notes: "SSO and custom branding design requirements are priority.",
+    timeline: [
+      { id: 1, title: "Form Ingestion", time: "10 hours ago" }
+    ],
+    emails: [],
+    files: []
+  }
 ];
 
 export const MOCK_DEALS: Deal[] = [
-  { id: 1, title: "SSO Deployment & Enterprise Expansion", company: "TechCorp", value: 120000, stage: "Qualified", priority: "High", owner: "Sarah Johnson", closeDate: "2025-07-20" },
-  { id: 2, title: "Design Agency Analytics Tier", company: "Sparta Creative", value: 45000, stage: "Proposal", priority: "Medium", owner: "Sarah Johnson", closeDate: "2025-08-15" }
+  { id: 1, title: "Database Cloud Migration", company: "TechCorp Inc.", value: 120000, stage: "Proposal", priority: "High", owner: "Sarah Johnson", closeDate: "2025-06-30" },
+  { id: 2, title: "SSO Integration Scope", company: "Sparta Creative", value: 45000, stage: "Qualified", priority: "Medium", owner: "Sarah Johnson", closeDate: "2025-07-15" },
+  { id: 3, title: "Compliance Suite Expansion", company: "MedSaaS Solutions", value: 85000, stage: "Under Review", priority: "High", owner: "Alex Johnson", closeDate: "2025-05-25" },
+  { id: 4, title: "Global Logistics API", company: "Empiric Logistics", value: 380000, stage: "Proposal", priority: "High", owner: "David Wilson", closeDate: "2025-08-01" },
+  { id: 5, title: "Analytics Custom Tier", company: "ByteSized Co.", value: 18000, stage: "Won", priority: "Low", owner: "Alex Johnson", closeDate: "2025-05-10" }
 ];
 
 // Helper to make API calls with fallback
@@ -176,7 +347,7 @@ export async function getContacts(): Promise<Contact[]> {
         name: `${dc.first_name} ${dc.last_name}`,
         email: dc.email,
         phone: dc.phone || fallback.phone,
-        role: dc.job_title || fallback.role
+        designation: dc.job_title || fallback.designation
       };
     });
   } catch {
