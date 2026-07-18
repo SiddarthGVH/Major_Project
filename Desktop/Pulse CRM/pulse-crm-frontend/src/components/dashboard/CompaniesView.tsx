@@ -10,7 +10,7 @@ import {
   Eye, 
   UserPlus, 
   Users, 
-  DollarSign, 
+  IndianRupee, 
   Briefcase, 
   Clock, 
   Paperclip, 
@@ -42,7 +42,7 @@ export default function CompaniesView() {
       id: 1,
       name: "TechCorp Inc.",
       industry: "Software & IT",
-      revenue: "$12,400,000",
+      revenue: "₹12,400,000",
       employees: 320,
       contacts: ["Alex Rivera (VP Eng)", "Jane Doe (Product Manager)"],
       openDeals: 2,
@@ -64,7 +64,7 @@ export default function CompaniesView() {
       id: 2,
       name: "MedSaaS Solutions",
       industry: "Healthcare tech",
-      revenue: "$4,500,000",
+      revenue: "₹4,500,000",
       employees: 85,
       contacts: ["Marcus Aurelius (Director)"],
       openDeals: 1,
@@ -83,7 +83,7 @@ export default function CompaniesView() {
       id: 3,
       name: "Sparta Creative",
       industry: "Marketing & Design",
-      revenue: "$1,200,000",
+      revenue: "₹1,200,000",
       employees: 24,
       contacts: ["Helena Troy (CEO)"],
       openDeals: 0,
@@ -379,7 +379,7 @@ export default function CompaniesView() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[9px] font-extrabold text-brand-heading uppercase tracking-wider mb-1">Revenue</label>
-                  <input type="text" placeholder="e.g. $5,000,000" value={form.revenue} onChange={e => setForm({...form, revenue: e.target.value})} className="w-full px-3 py-1.5 border border-brand-border-purple/35 rounded-lg text-xs text-brand-text focus:outline-none" />
+                  <input type="text" placeholder="e.g. ₹5,000,000" value={form.revenue} onChange={e => setForm({...form, revenue: e.target.value})} className="w-full px-3 py-1.5 border border-brand-border-purple/35 rounded-lg text-xs text-brand-text focus:outline-none" />
                 </div>
                 <div>
                   <label className="block text-[9px] font-extrabold text-brand-heading uppercase tracking-wider mb-1">Employees</label>

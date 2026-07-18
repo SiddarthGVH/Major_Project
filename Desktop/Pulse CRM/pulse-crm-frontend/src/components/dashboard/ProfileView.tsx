@@ -99,7 +99,7 @@ export default function ProfileView() {
           <div className="mt-4 p-3.5 bg-brand-sidebar-hover/15 border border-brand-border-purple/25 rounded-xl text-[10px] font-bold text-brand-heading flex items-start space-x-2">
             <Award className="h-4.5 w-4.5 text-brand-accent shrink-0 mt-0.5" />
             <div>
-              <span>Top performance status active. You are on track to exceed Q3 target parameters by $45,000.</span>
+              <span>Top performance status active. You are on track to exceed Q3 target parameters by ₹45,000.</span>
             </div>
           </div>
         </div>

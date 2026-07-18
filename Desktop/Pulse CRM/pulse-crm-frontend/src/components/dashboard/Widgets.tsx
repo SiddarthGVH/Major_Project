@@ -26,7 +26,7 @@ export default function Widgets({
     {
       name: "Alex Johnson",
       deals: 8,
-      revenue: "$1.25M",
+      revenue: "₹1.25M",
       revenueRaw: 1250000,
       winRate: "40.0%",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80"
@@ -34,7 +34,7 @@ export default function Widgets({
     {
       name: "Sarah Johnson",
       deals: 6,
-      revenue: "$980K",
+      revenue: "₹980K",
       revenueRaw: 980000,
       winRate: "33.0%",
       avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80"
@@ -42,7 +42,7 @@ export default function Widgets({
     {
       name: "David Wilson",
       deals: 5,
-      revenue: "$750K",
+      revenue: "₹750K",
       revenueRaw: 750000,
       winRate: "29.0%",
       avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&fit=crop&q=80"
@@ -50,7 +50,7 @@ export default function Widgets({
     {
       name: "Lisa Martinez",
       deals: 3,
-      revenue: "$480K",
+      revenue: "₹480K",
       revenueRaw: 480000,
       winRate: "25.0%",
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&fit=crop&q=80"
@@ -58,7 +58,7 @@ export default function Widgets({
     {
       name: "Michael Brown",
       deals: 2,
-      revenue: "$360K",
+      revenue: "₹360K",
       revenueRaw: 360000,
       winRate: "20.0%",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80"

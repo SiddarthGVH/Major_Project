@@ -80,9 +80,9 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
           {/* Mock Kanban Board */}
           <div className="grid grid-cols-3 gap-2 flex-1 mt-3">
             {[
-              { col: 'Qualified', name: 'Acme Corp', val: '$120K' },
-              { col: 'Proposal', name: 'Initech Inc', val: '$85K' },
-              { col: 'Negotiation', name: 'Stark Ind.', val: '$230K' }
+              { col: 'Qualified', name: 'Acme Corp', val: '₹120K' },
+              { col: 'Proposal', name: 'Initech Inc', val: '₹85K' },
+              { col: 'Negotiation', name: 'Stark Ind.', val: '₹230K' }
             ].map((card, i) => (
               <div key={i} className="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/50 flex flex-col justify-between">
                 <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wide">{card.col}</span>
@@ -330,7 +330,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                   {/* Cards Row */}
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { l: 'Revenue', n: '$1.2M', c: 'border-brand-accent/15' },
+                      { l: 'Revenue', n: '₹1.2M', c: 'border-brand-accent/15' },
                       { l: 'Deals', n: '432', c: 'border-slate-100' },
                       { l: 'AI Priority', n: '86%', c: 'border-slate-100' }
                     ].map((card, i) => (
@@ -377,7 +377,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         <div className="w-full max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { label: 'Active Business Seats', val: '14,820+', desc: '+18.4% this qtr', color: 'text-violet-600', bg: 'bg-violet-500/10', icon: Users },
-            { label: 'Deals Closed Natively', val: '432,050+', desc: '$124M total value', color: 'text-blue-600', bg: 'bg-blue-500/10', icon: Award },
+            { label: 'Deals Closed Natively', val: '432,050+', desc: '₹124M total value', color: 'text-blue-600', bg: 'bg-blue-500/10', icon: Award },
             { label: 'AI Priority Accuracy', val: '98.4%', desc: '1.2s response latency', color: 'text-emerald-600', bg: 'bg-emerald-500/10', icon: Sparkles },
             { label: 'Pipeline Velocity Boost', val: '3.4x', desc: 'Saves 8.2 hrs / rep / wk', color: 'text-pink-600', bg: 'bg-pink-500/10', icon: Zap }
           ].map((stat, idx) => {
@@ -552,9 +552,9 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                 chart: (
                   <div className="space-y-2 mt-4 h-24 flex flex-col justify-center select-none">
                     {[
-                      { name: 'Alex J.', val: 'w-[90%]', rev: '$1.2M', bg: 'bg-pink-500' },
-                      { name: 'Sarah J.', val: 'w-[75%]', rev: '$980K', bg: 'bg-rose-400' },
-                      { name: 'David W.', val: 'w-[55%]', rev: '$750K', bg: 'bg-slate-300' }
+                      { name: 'Alex J.', val: 'w-[90%]', rev: '₹1.2M', bg: 'bg-pink-500' },
+                      { name: 'Sarah J.', val: 'w-[75%]', rev: '₹980K', bg: 'bg-rose-400' },
+                      { name: 'David W.', val: 'w-[55%]', rev: '₹750K', bg: 'bg-slate-300' }
                     ].map((rep, i) => (
                       <div key={i} className="flex items-center justify-between text-[9px] font-extrabold text-slate-600">
                         <span className="w-12 truncate text-left">{rep.name}</span>

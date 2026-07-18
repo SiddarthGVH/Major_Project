@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, Search, Trash2, Edit, X, Package, DollarSign, Tag, Info } from 'lucide-react';
+import { Plus, Search, Trash2, Edit, X, Package, IndianRupee, Tag, Info } from 'lucide-react';
 
 interface Product {
   id: number;

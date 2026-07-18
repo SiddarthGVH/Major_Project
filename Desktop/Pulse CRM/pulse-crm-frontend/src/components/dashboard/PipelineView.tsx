@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { getDeals, updateDealStage } from '@/utils/api';
 import { 
   Plus, 
-  DollarSign, 
+  IndianRupee, 
   TrendingUp, 
   Sparkles, 
   X, 
@@ -167,7 +167,7 @@ export default function PipelineView() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 pt-4 border-t border-brand-border-purple/15">
           <div className="flex items-center space-x-3 bg-slate-50/50 p-3 rounded-lg border border-brand-border-purple/15">
             <div className="h-8.5 w-8.5 rounded-lg bg-brand-sidebar-hover/10 flex items-center justify-center text-brand-accent border border-brand-border-purple/20">
-              <DollarSign className="h-4.5 w-4.5" />
+              <IndianRupee className="h-4.5 w-4.5" />
             </div>
             <div>
               <p className="text-[9px] font-extrabold text-brand-text/60 uppercase">Total Pipeline Value</p>

@@ -88,7 +88,7 @@ export default function LeadsView() {
       priority: "High",
       owner: "Sarah Johnson",
       ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80",
-      notes: "Met at TechEx 2025. Interested in migrating their legacy database to our unified SaaS solution. Has a budget of $120K. Ready for proposal stage next week.",
+      notes: "Met at TechEx 2025. Interested in migrating their legacy database to our unified SaaS solution. Has a budget of ₹120K. Ready for proposal stage next week.",
       timeline: [
         { id: 1, type: "creation", title: "Lead Ingestion", desc: "Lead created from TechEx 2025 conference scan.", time: "4 days ago" },
         { id: 2, type: "call", title: "Discovery Call Logged", desc: "Spoke to Alex. Confirmed decision matrix and budget availability.", time: "2 days ago" }

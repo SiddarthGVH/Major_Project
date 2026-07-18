@@ -83,7 +83,7 @@ export default function WorkflowsView() {
       trigger: "Time Delay & Activity Tracker",
       nodes: [
         { id: "1", type: "trigger" as const, category: "Time-Based Events", label: "10 Days Inactive", desc: "No touchpoints logged in 10 days", config: "Stage == Proposal" },
-        { id: "2", type: "condition" as const, category: "Property Filters", label: "Deal Size > $50K", desc: "Focuses on high-value pipeline", config: "Value >= 50000" },
+        { id: "2", type: "condition" as const, category: "Property Filters", label: "Deal Size > ₹50K", desc: "Focuses on high-value pipeline", config: "Value >= 50000" },
         { id: "3", type: "action" as const, category: "Internal Actions", label: "Ping Slack Owner", desc: "Send urgent warning channel message", config: "Slack AE Channel" }
       ]
     },

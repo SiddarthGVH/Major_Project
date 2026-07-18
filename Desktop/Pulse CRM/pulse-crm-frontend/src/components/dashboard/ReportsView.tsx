@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { 
   TrendingUp, 
-  DollarSign, 
+  IndianRupee, 
   Award, 
   Target, 
   Clock, 
@@ -36,7 +36,7 @@ export default function ReportsView() {
 
   // 1. High-Level Summary Cards (KPIs)
   const kpis: KPI[] = [
-    { title: "Total Revenue Won", value: "$3,852,000", change: "+26.4%", isPositive: true, timeframe: "vs last month", icon: DollarSign },
+    { title: "Total Revenue Won", value: "₹3,852,000", change: "+26.4%", isPositive: true, timeframe: "vs last month", icon: IndianRupee },
     { title: "New Leads Created", value: "145 leads", change: "+18.2%", isPositive: true, timeframe: "vs last month", icon: Users },
     { title: "Win Rate", value: "32.4%", change: "+4.1%", isPositive: true, timeframe: "vs last month", icon: Target },
     { title: "Average Sales Cycle", value: "24.5 Days", change: "-3.2 days", isPositive: true, timeframe: "vs last month", icon: Clock }
@@ -56,11 +56,11 @@ export default function ReportsView() {
 
   // 3. Revenue by Product/Service
   const productData = [
-    { name: "Enterprise DB Cloud Licenses", value: "$1,733,400", pct: 45, color: "#7957fb" },
-    { name: "Real-time AI Co-pilot Seats", value: "$963,000", pct: 25, color: "#7e71f9" },
-    { name: "Compliance & Security SLAs", value: "$577,800", pct: 15, color: "#7e8cf1" },
-    { name: "Professional Migration Services", value: "$385,200", pct: 10, color: "#79a7e8" },
-    { name: "SSO Integration Gateways", value: "$192,600", pct: 5, color: "#6ec2de" }
+    { name: "Enterprise DB Cloud Licenses", value: "₹1,733,400", pct: 45, color: "#7957fb" },
+    { name: "Real-time AI Co-pilot Seats", value: "₹963,000", pct: 25, color: "#7e71f9" },
+    { name: "Compliance & Security SLAs", value: "₹577,800", pct: 15, color: "#7e8cf1" },
+    { name: "Professional Migration Services", value: "₹385,200", pct: 10, color: "#79a7e8" },
+    { name: "SSO Integration Gateways", value: "₹192,600", pct: 5, color: "#6ec2de" }
   ];
 
   // 4. Win/Loss Analysis by Reason Codes
@@ -83,11 +83,11 @@ export default function ReportsView() {
 
   // 6. Ranks Sales Reps (Leaderboard Metric Toggles)
   const repPerformance = [
-    { name: "Alex Johnson", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80", revenue: 1250000, revenueStr: "$1.25M", deals: 8, activities: 245 },
-    { name: "Sarah Johnson", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80", revenue: 980000, revenueStr: "$980K", deals: 6, activities: 198 },
-    { name: "David Wilson", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&fit=crop&q=80", revenue: 750000, revenueStr: "$750K", deals: 5, activities: 165 },
-    { name: "Lisa Martinez", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&fit=crop&q=80", revenue: 480000, revenueStr: "$480K", deals: 3, activities: 120 },
-    { name: "Michael Brown", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80", revenue: 360000, revenueStr: "$360K", deals: 2, activities: 95 }
+    { name: "Alex Johnson", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80", revenue: 1250000, revenueStr: "₹1.25M", deals: 8, activities: 245 },
+    { name: "Sarah Johnson", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80", revenue: 980000, revenueStr: "₹980K", deals: 6, activities: 198 },
+    { name: "David Wilson", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&fit=crop&q=80", revenue: 750000, revenueStr: "₹750K", deals: 5, activities: 165 },
+    { name: "Lisa Martinez", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&fit=crop&q=80", revenue: 480000, revenueStr: "₹480K", deals: 3, activities: 120 },
+    { name: "Michael Brown", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80", revenue: 360000, revenueStr: "₹360K", deals: 2, activities: 95 }
   ];
   const maxLeaderboardVals = {
     revenue: 1250000,
@@ -227,11 +227,11 @@ export default function ReportsView() {
                   ))}
 
                   {/* Y Axis Labels */}
-                  <text x="10" y="34" className="text-[9px] font-bold fill-slate-400 font-sans">$800K</text>
-                  <text x="10" y="69" className="text-[9px] font-bold fill-slate-400 font-sans">$600K</text>
-                  <text x="10" y="104" className="text-[9px] font-bold fill-slate-400 font-sans">$400K</text>
-                  <text x="10" y="139" className="text-[9px] font-bold fill-slate-400 font-sans">$200K</text>
-                  <text x="10" y="174" className="text-[9px] font-bold fill-slate-400 font-sans">$0</text>
+                  <text x="10" y="34" className="text-[9px] font-bold fill-slate-400 font-sans">₹800K</text>
+                  <text x="10" y="69" className="text-[9px] font-bold fill-slate-400 font-sans">₹600K</text>
+                  <text x="10" y="104" className="text-[9px] font-bold fill-slate-400 font-sans">₹400K</text>
+                  <text x="10" y="139" className="text-[9px] font-bold fill-slate-400 font-sans">₹200K</text>
+                  <text x="10" y="174" className="text-[9px] font-bold fill-slate-400 font-sans">₹0</text>
 
                   {/* Render Columns */}
                   {forecastData.map((d, idx) => {
@@ -340,7 +340,7 @@ export default function ReportsView() {
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                     <span className="text-lg font-extrabold text-brand-text leading-none font-sans tabular-nums">
-                      {hoveredProduct !== null ? productData[hoveredProduct].value : "$3.85M"}
+                      {hoveredProduct !== null ? productData[hoveredProduct].value : "₹3.85M"}
                     </span>
                     <span className="text-[8px] text-brand-text/65 font-bold tracking-wider uppercase mt-1 leading-none max-w-[100px] truncate">
                       {hoveredProduct !== null ? productData[hoveredProduct].name.split(' ')[0] : "Total"}
