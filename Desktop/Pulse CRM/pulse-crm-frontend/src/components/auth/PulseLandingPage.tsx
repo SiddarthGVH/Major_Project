@@ -13,7 +13,11 @@ import {
   LayoutDashboard,
   CheckCircle2,
   Lock,
-  ChevronRight
+  ChevronRight,
+  TrendingUp,
+  Award,
+  Zap,
+  Users
 } from 'lucide-react';
 
 interface PulseLandingPageProps {
@@ -195,7 +199,11 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 text-slate-950 font-sans flex flex-col overflow-x-hidden">
+    <div className="min-h-screen w-full bg-slate-50 text-slate-950 font-sans flex flex-col overflow-x-hidden relative">
+      
+      {/* Background radial glow accents to add color depth */}
+      <div className="absolute top-10 left-[10%] w-96 h-96 bg-brand-accent/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
+      <div className="absolute top-[40%] right-[5%] w-80 h-80 bg-brand-blue/5 blur-[100px] rounded-full pointer-events-none z-0"></div>
       
       {/* 1. Header Navigation Bar */}
       <header className="sticky top-0 bg-white/95 backdrop-blur-md border-b border-slate-200/80 z-40 h-16 w-full flex items-center justify-between px-6 md:px-12 select-none shadow-sm/5">
@@ -212,10 +220,10 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500">
-          <a href="#features" className="hover:text-brand-accent transition-colors">Features</a>
+          <a href="#metrics" className="hover:text-brand-accent transition-colors">Performance</a>
           <a href="#suite" className="hover:text-brand-accent transition-colors">Unified Suite</a>
+          <a href="#features" className="hover:text-brand-accent transition-colors">Features</a>
           <a href="#pricing" className="hover:text-brand-accent transition-colors">Pricing</a>
-          <a href="#integrations" className="hover:text-brand-accent transition-colors">Integrations</a>
         </nav>
 
         {/* Action Buttons */}
@@ -235,8 +243,8 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         </div>
       </header>
 
-      {/* 2. Hero Section (Above the Fold) */}
-      <section className="relative w-full py-16 md:py-24 bg-gradient-to-b from-white to-slate-50 flex items-center justify-center px-6 md:px-12 border-b border-slate-200/50">
+      {/* 2. Hero Section */}
+      <section className="relative w-full py-16 md:py-24 bg-gradient-to-b from-white to-slate-50 flex items-center justify-center px-6 md:px-12 border-b border-slate-200/50 z-10">
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column: Core Value Pitch */}
@@ -367,8 +375,32 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         </div>
       </section>
 
-      {/* 3. Interactive Product Suite Grid (Zoho-style App Showcase) */}
-      <section id="suite" className="py-20 bg-white flex flex-col items-center justify-center px-6 md:px-12 border-b border-slate-200/50">
+      {/* 3. Metrics Statistics Band (Adding real data & color variety) */}
+      <section id="metrics" className="py-12 bg-white border-b border-slate-200/60 relative overflow-hidden select-none z-10">
+        <div className="w-full max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { label: 'Active Business Seats', val: '14,820+', desc: '+18.4% this qtr', color: 'text-violet-600', bg: 'bg-violet-500/10', icon: Users },
+            { label: 'Deals Closed Natively', val: '432,050+', desc: '$124M total value', color: 'text-blue-600', bg: 'bg-blue-500/10', icon: Award },
+            { label: 'AI Priority Accuracy', val: '98.4%', desc: '1.2s response latency', color: 'text-emerald-600', bg: 'bg-emerald-500/10', icon: Sparkles },
+            { label: 'Pipeline Velocity Boost', val: '3.4x', desc: 'Saves 8.2 hrs / rep / wk', color: 'text-pink-600', bg: 'bg-pink-500/10', icon: Zap }
+          ].map((stat, idx) => {
+            const Icon = stat.icon;
+            return (
+              <div key={idx} className="space-y-1.5 p-5 bg-slate-50 border border-slate-200/50 rounded-2xl relative group overflow-hidden transition-all hover:border-slate-300">
+                <div className={`absolute top-0 right-0 h-10 w-10 rounded-bl-3xl ${stat.bg} flex items-center justify-center text-slate-700`}>
+                  <Icon className="h-4 w-4 opacity-75" />
+                </div>
+                <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide block">{stat.label}</span>
+                <span className={`text-2xl md:text-3xl font-sans font-black ${stat.color} block tracking-tight`}>{stat.val}</span>
+                <span className="text-[9.5px] text-slate-500 font-bold block">{stat.desc}</span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 4. Interactive Product Suite Grid (Zoho-style App Showcase) */}
+      <section id="suite" className="py-20 bg-white flex flex-col items-center justify-center px-6 md:px-12 border-b border-slate-200/50 z-10">
         <div className="w-full max-w-6xl space-y-12">
           
           {/* Header Title */}
@@ -450,38 +482,242 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         </div>
       </section>
 
-      {/* 4. Pricing / CTA Section */}
-      <section id="pricing" className="py-20 bg-slate-900 text-white flex flex-col items-center justify-center px-6 md:px-12">
-        <div className="w-full max-w-4xl text-center space-y-6">
-          <h2 className="text-3xl font-sans font-black tracking-tight text-white">
-            Simple, Transparent Pricing for Teams of All Sizes
-          </h2>
-          <p className="text-xs md:text-sm text-slate-400 font-bold max-w-xl mx-auto leading-relaxed">
-            Get unlimited access to Pulse CRM, all app integrations, and the PulseAI Copilot for one simple subscription model.
-          </p>
-          
-          {/* Mock Pricing Card */}
-          <div className="bg-slate-800 border border-slate-700/60 p-8 rounded-3xl max-w-md mx-auto shadow-2xl flex flex-col items-center space-y-4">
-            <span className="text-[10px] font-extrabold uppercase text-brand-accent tracking-widest bg-brand-accent/15 border border-brand-accent/20 px-3 py-1 rounded-full">Enterprise Plan</span>
-            <div className="flex items-baseline space-x-1">
-              <span className="text-4xl font-sans font-black text-white">$29</span>
-              <span className="text-slate-400 text-xs font-bold">/ user / month</span>
-            </div>
-            <span className="text-[11px] text-slate-400 font-bold">Billed annually, or $35 billed monthly</span>
-            
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="w-full py-3 bg-brand-accent hover:bg-brand-accent-hover text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer"
-            >
-              Start Free Trial
-            </button>
-            <span className="text-[9.5px] text-slate-500 font-black">14-day free trial • Cancel anytime • No setup fees</span>
+      {/* 5. Visual Features Showcase Grid (Adding color, graphs, and variety) */}
+      <section id="features" className="py-20 bg-slate-50 border-b border-slate-200/50 flex flex-col items-center justify-center px-6 md:px-12 relative overflow-hidden z-10">
+        
+        {/* Floating gradient blur background accent */}
+        <div className="absolute top-[40%] left-[5%] w-80 h-80 bg-brand-accent/5 blur-[90px] rounded-full pointer-events-none"></div>
+        
+        <div className="w-full max-w-6xl space-y-12 relative z-10">
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-sans font-black tracking-tight text-brand-heading">
+              Engineered for Hyper-Growth Sales Teams
+            </h2>
+            <p className="text-xs md:text-sm text-slate-500 font-bold max-w-xl mx-auto leading-relaxed">
+              Unlock maximum data visibility, automated pipelines, and intelligent assistant workflows with responsive graphing dashboards.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                title: 'Visual Revenue Growth',
+                desc: 'Live financial forecasting and deal pacing charts dynamically updated from raw client touchpoints.',
+                color: 'from-violet-500/10 to-indigo-500/10 border-violet-500/20',
+                iconColor: 'text-violet-600',
+                badge: 'Pacing Analytics',
+                chart: (
+                  <svg className="w-full h-24 mt-4 select-none" viewBox="0 0 120 40">
+                    <rect x="10" y="20" width="8" height="20" rx="1.5" fill="#c7d2fe" />
+                    <rect x="25" y="15" width="8" height="25" rx="1.5" fill="#a5b4fc" />
+                    <rect x="40" y="8" width="8" height="32" rx="1.5" fill="#818cf8" />
+                    <rect x="55" y="24" width="8" height="16" rx="1.5" fill="#6366f1" />
+                    <rect x="70" y="10" width="8" height="30" rx="1.5" fill="#4f46e5" />
+                    <rect x="85" y="4" width="8" height="36" rx="1.5" fill="#7957fb" />
+                    <rect x="100" y="2" width="8" height="38" rx="1.5" fill="#6448dc" />
+                  </svg>
+                )
+              },
+              {
+                title: 'Priority Deal Probability',
+                desc: 'AI algorithms score leads and deals from 0 to 100 based on buyer engagement and response speed.',
+                color: 'from-emerald-500/10 to-teal-500/10 border-emerald-500/20',
+                iconColor: 'text-emerald-600',
+                badge: 'Predictive Scoring',
+                chart: (
+                  <div className="flex items-center justify-center space-x-6 mt-4 h-24 select-none">
+                    <div className="relative h-20 w-20 flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 40 40">
+                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="#e2e8f0" strokeWidth="3.5" />
+                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="#10B981" strokeWidth="3.5" strokeDasharray="100.5" strokeDashoffset="14" strokeLinecap="round" />
+                      </svg>
+                      <span className="absolute text-xs font-black text-slate-800">86%</span>
+                    </div>
+                    <div className="space-y-1 text-[9.5px] font-bold text-slate-500 text-left">
+                      <div className="flex items-center space-x-1.5">
+                        <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span>High Conversion</span>
+                      </div>
+                      <div className="flex items-center space-x-1.5">
+                        <span className="h-2 w-2 rounded-full bg-slate-300 shrink-0"></span>
+                        <span>Industry Avg: 24%</span>
+                      </div>
+                    </div>
+                  </div>
+                )
+              },
+              {
+                title: 'Rep Performance Tracking',
+                desc: 'Leaderboards monitor reps revenue milestones and logs in real-time, encouraging friendly competition.',
+                color: 'from-pink-500/10 to-rose-500/10 border-pink-500/20',
+                iconColor: 'text-pink-600',
+                badge: 'Milestone Tracking',
+                chart: (
+                  <div className="space-y-2 mt-4 h-24 flex flex-col justify-center select-none">
+                    {[
+                      { name: 'Alex J.', val: 'w-[90%]', rev: '$1.2M', bg: 'bg-pink-500' },
+                      { name: 'Sarah J.', val: 'w-[75%]', rev: '$980K', bg: 'bg-rose-400' },
+                      { name: 'David W.', val: 'w-[55%]', rev: '$750K', bg: 'bg-slate-300' }
+                    ].map((rep, i) => (
+                      <div key={i} className="flex items-center justify-between text-[9px] font-extrabold text-slate-600">
+                        <span className="w-12 truncate text-left">{rep.name}</span>
+                        <div className="flex-1 mx-2.5 bg-slate-200 h-2 rounded-full overflow-hidden">
+                          <div className={`h-full ${rep.val} ${rep.bg} rounded-full`}></div>
+                        </div>
+                        <span className="w-8 text-right font-black">{rep.rev}</span>
+                      </div>
+                    ))}
+                  </div>
+                )
+              }
+            ].map((feature, idx) => (
+              <div key={idx} className={`bg-gradient-to-br ${feature.color} border border-slate-200/60 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between h-[300px]`}>
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className={`text-[9px] font-black uppercase tracking-wider ${feature.iconColor} px-2.5 py-0.5 rounded-full bg-white border border-slate-200/50`}>
+                      {feature.badge}
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-black text-brand-heading text-left">{feature.title}</h3>
+                  <p className="text-[11px] text-slate-500 font-bold leading-normal mt-2 text-left">{feature.desc}</p>
+                </div>
+                <div className="w-full shrink-0">
+                  {feature.chart}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 5. Footer */}
-      <footer className="bg-slate-950 text-slate-500 py-10 px-6 md:px-12 select-none border-t border-slate-900">
+      {/* 6. Pricing Section (Three-Tier structured options) */}
+      <section id="pricing" className="py-20 bg-slate-900 text-white flex flex-col items-center justify-center px-6 md:px-12 z-10">
+        <div className="w-full max-w-6xl space-y-12">
+          
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-sans font-black tracking-tight text-white">
+              Simple, Transparent Plans for Every Team
+            </h2>
+            <p className="text-xs md:text-sm text-slate-400 font-bold max-w-xl mx-auto leading-relaxed">
+              No hidden fees, no onboarding setups. Select a plan and start scaling your customer relationships in minutes.
+            </p>
+          </div>
+          
+          {/* Pricing Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
+            
+            {/* Tier 1: Starter */}
+            <div className="bg-slate-800/50 border border-slate-700/50 p-8 rounded-3xl flex flex-col justify-between space-y-6 text-left">
+              <div className="space-y-4">
+                <span className="text-[8px] font-extrabold uppercase text-slate-400 tracking-widest border border-slate-700 px-2.5 py-1 rounded-full">Starter Tier</span>
+                <div className="flex items-baseline space-x-1">
+                  <span className="text-3xl font-sans font-black text-white">$15</span>
+                  <span className="text-slate-400 text-xs font-bold">/ user / mo</span>
+                </div>
+                <p className="text-[11.5px] text-slate-400 font-bold leading-normal">Perfect for solo sales representatives and newly launched startups looking to organize their pipeline.</p>
+                <hr className="border-slate-700/60" />
+                <ul className="space-y-2 text-[10.5px] font-bold text-slate-300">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Up to 3 Active Pipelines</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Basic Gmail Sync Timeline</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Standard Reports & Filters</span>
+                  </li>
+                </ul>
+              </div>
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="w-full py-2.5 bg-slate-700 hover:bg-slate-650 text-white font-bold rounded-xl text-xs shadow-sm transition-all cursor-pointer border-0"
+              >
+                Start Starter Trial
+              </button>
+            </div>
+
+            {/* Tier 2: Growth (Highlighted/Popular) */}
+            <div className="bg-slate-800 border-2 border-brand-accent p-8 rounded-3xl flex flex-col justify-between space-y-6 text-left relative transform md:-translate-y-2 shadow-2xl">
+              <div className="absolute top-0 right-6 -translate-y-1/2 bg-brand-accent text-white text-[8px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
+                Most Popular
+              </div>
+              <div className="space-y-4">
+                <span className="text-[8px] font-extrabold uppercase text-brand-accent tracking-widest bg-brand-accent/15 border border-brand-accent/20 px-2.5 py-1 rounded-full inline-block">Growth Plan</span>
+                <div className="flex items-baseline space-x-1">
+                  <span className="text-4xl font-sans font-black text-white">$29</span>
+                  <span className="text-slate-400 text-xs font-bold">/ user / mo</span>
+                </div>
+                <p className="text-[11.5px] text-slate-300 font-bold leading-normal">Optimized for expanding teams requiring deep email automation and intelligent CRM forecasts.</p>
+                <hr className="border-slate-700/60" />
+                <ul className="space-y-2 text-[10.5px] font-bold text-slate-200">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Unlimited Deal Pipelines</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Real-time AI Co-pilot Access</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Git-Style Rep Heatmap Widgets</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Advanced Conversion Funnels</span>
+                  </li>
+                </ul>
+              </div>
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="w-full py-3 bg-brand-accent hover:bg-brand-accent-hover text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer border-0"
+              >
+                Activate Free Trial
+              </button>
+            </div>
+
+            {/* Tier 3: Enterprise */}
+            <div className="bg-slate-800/50 border border-slate-700/50 p-8 rounded-3xl flex flex-col justify-between space-y-6 text-left">
+              <div className="space-y-4">
+                <span className="text-[8px] font-extrabold uppercase text-slate-400 tracking-widest border border-slate-700 px-2.5 py-1 rounded-full">Scale Tier</span>
+                <div className="flex items-baseline space-x-1">
+                  <span className="text-3xl font-sans font-black text-white">$59</span>
+                  <span className="text-slate-400 text-xs font-bold">/ user / mo</span>
+                </div>
+                <p className="text-[11.5px] text-slate-400 font-bold leading-normal">Tailored for large organizations requiring custom roles, SSO integrations, and premium API throughput.</p>
+                <hr className="border-slate-700/60" />
+                <ul className="space-y-2 text-[10.5px] font-bold text-slate-300">
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Everything in Growth Plan</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>SAML / SSO Security Gateways</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
+                    <span>Dedicated Support Manager</span>
+                  </li>
+                </ul>
+              </div>
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="w-full py-2.5 bg-slate-700 hover:bg-slate-650 text-white font-bold rounded-xl text-xs shadow-sm transition-all cursor-pointer border-0"
+              >
+                Contact Sales Demo
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Footer */}
+      <footer className="bg-slate-950 text-slate-500 py-10 px-6 md:px-12 select-none border-t border-slate-900 z-10">
         <div className="w-full max-w-6xl flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-bold">
           <span>&copy; {new Date().getFullYear()} Pulse CRM Inc. All rights reserved.</span>
           <div className="flex space-x-6">
@@ -493,7 +729,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         </div>
       </footer>
 
-      {/* 6. Authentic Glassmorphic Login Modal Dialog */}
+      {/* 8. Authentic Glassmorphic Login Modal Dialog */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop blur overlay */}
