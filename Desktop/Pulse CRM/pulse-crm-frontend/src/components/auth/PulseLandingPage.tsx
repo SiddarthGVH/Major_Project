@@ -248,9 +248,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
           
           {/* Left Column: Core Value Pitch */}
           <div className="lg:col-span-7 space-y-6 text-left">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-brand-accent/10 border border-brand-accent/20 rounded-full text-brand-accent text-[10px] font-extrabold uppercase tracking-wide">
-              <span>✨ Introducing Pulse v2.0</span>
-            </div>
+            
             
             <h1 className="text-4xl md:text-5xl font-sans font-black tracking-tight text-brand-heading leading-tight max-w-2xl">
               The Operating System for{' '}
