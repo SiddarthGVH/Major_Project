@@ -8,7 +8,12 @@ import {
   Sparkles, 
   Layers, 
   Activity, 
-  Loader2 
+  Loader2,
+  X,
+  LayoutDashboard,
+  CheckCircle2,
+  Lock,
+  ChevronRight
 } from 'lucide-react';
 
 interface PulseLandingPageProps {
@@ -18,6 +23,10 @@ interface PulseLandingPageProps {
 export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Interactive Product Suite Tab State
+  const [activeTab, setActiveTab] = useState(0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,149 +35,484 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      setIsModalOpen(false);
       onLogin();
-    }, 1200); // Simulated 1.2s loading state
+    }, 1200); // Simulated loading
   };
 
   const handleGoogleLogin = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      setIsModalOpen(false);
       onLogin();
     }, 1200);
   };
 
-  return (
-    <div className="min-h-screen w-full bg-[url('/pulse_login_bg.png')] bg-cover bg-center flex items-center justify-center p-4 md:p-8 relative">
-      {/* Soft overlay for legibility and theme mixing */}
-      <div className="absolute inset-0 bg-slate-900/5 backdrop-blur-xs z-0" />
-
-      {/* Main Container */}
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center relative z-10">
-        
-        {/* Left Column: Brand Info & App Integrations */}
-        <div className="lg:col-span-7 space-y-6 text-left p-4">
-          
-          {/* Logo row */}
-          <div className="flex items-center space-x-3">
-            <div className="h-9 w-9 rounded-xl bg-brand-accent flex items-center justify-center border border-brand-border-purple/30 shadow-md">
-              <svg className="h-5 w-5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
+  // Zoho-style product tabs definitions
+  const productSuites = [
+    {
+      title: 'Sales & Pipeline',
+      icon: LayoutDashboard,
+      badge: 'Revenue Acceleration',
+      heading: 'Manage deals and automate your sales stages',
+      desc: 'Move deals through customizable funnel columns, coordinate sales reps on a live revenue leaderboard, and instantly log updates.',
+      features: [
+        'Interactive kanban deal pipeline boards',
+        'Sales rep revenue leaderboards',
+        'Win/loss analysis reason codes'
+      ],
+      color: 'from-violet-500 to-indigo-600',
+      mockup: (
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Sales Pipeline</span>
+            <div className="flex space-x-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-yellow-500"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
             </div>
-            <span className="font-sans font-black text-xl text-brand-heading tracking-wider uppercase">
-              PULSE
-            </span>
           </div>
-
-          {/* Heading */}
-          <h1 className="text-4xl md:text-5xl font-sans font-black tracking-tight text-brand-heading leading-tight max-w-xl">
-            Pulse makes your life{' '}
-            <span className="relative inline-block text-brand-accent">
-              easy and fast.
-              <svg className="absolute top-[90%] left-0 w-full h-2 text-brand-accent/50" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none">
-                <path d="M1 5C25 8 75 2 99 5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-              </svg>
-            </span>
-          </h1>
-
-          {/* Description */}
-          <p className="text-xs md:text-sm text-brand-text/75 leading-relaxed font-bold max-w-xl">
-            PULSE is your all-in-one productivity hub that brings your tools, tasks, and insights together — so you can focus on what matters most.
-          </p>
-
-          {/* Integrations Apps Row */}
-          <div className="flex items-center space-x-4 py-2">
+          {/* Mock Kanban Board */}
+          <div className="grid grid-cols-3 gap-2 flex-1 mt-3">
             {[
-              {
-                name: 'Gmail',
-                icon: (
-                  <svg className="h-5.5 w-5.5" viewBox="0 0 24 24">
-                    <path fill="#EA4335" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
-                    <path fill="#34A853" d="M22 6l-10 6.25L2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6z" />
-                    <path fill="#FBBC05" d="M22 6L12 12.25 2 6v1.5l10 6.25 10-6.25V6z" />
-                    <path fill="#4285F4" d="M12 12.25L2 6v1.5l10 6.25 10-6.25V6L12 12.25z" />
-                  </svg>
-                )
-              },
-              {
-                name: 'Calendar',
-                icon: (
-                  <svg className="h-5.5 w-5.5" viewBox="0 0 24 24" fill="none" stroke="#4285F4" strokeWidth="2.25">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                )
-              },
-              {
-                name: 'Notion',
-                icon: (
-                  <span className="font-extrabold text-xs text-slate-800">N</span>
-                )
-              },
-              {
-                name: 'Meet',
-                icon: (
-                  <svg className="h-5.5 w-5.5" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M23 7a2 2 0 0 0-2.45-1.45L16 7V5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2l4.55 1.45A2 2 0 0 0 23 17V7z" />
-                  </svg>
-                )
-              }
-            ].map((app) => (
-              <div key={app.name} className="flex flex-col items-center space-y-1">
-                <div className="h-10 w-10 bg-white/95 rounded-2xl shadow-sm/5 border border-brand-border-purple/20 flex items-center justify-center shrink-0">
-                  {app.icon}
-                </div>
-                <span className="text-[10px] text-slate-400 font-extrabold tracking-wide">{app.name}</span>
+              { col: 'Qualified', name: 'Acme Corp', val: '$120K' },
+              { col: 'Proposal', name: 'Initech Inc', val: '$85K' },
+              { col: 'Negotiation', name: 'Stark Ind.', val: '$230K' }
+            ].map((card, i) => (
+              <div key={i} className="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/50 flex flex-col justify-between">
+                <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wide">{card.col}</span>
+                <span className="text-[10px] font-black text-white mt-1.5 block truncate">{card.name}</span>
+                <span className="text-[9px] text-brand-accent font-extrabold mt-1 block">{card.val}</span>
               </div>
             ))}
           </div>
-
-          {/* Highlights glassmorphism info blocks */}
-          <div className="bg-white/80 border border-brand-border-purple/20 rounded-2xl p-5 space-y-4 shadow-sm/5 max-w-xl">
+        </div>
+      )
+    },
+    {
+      title: 'Smart Emails',
+      icon: Mail,
+      badge: 'Unified Communications',
+      heading: 'Integrated inbox syncing and automated drafts',
+      desc: 'Keep client communications linked natively to deals. Sync thread timelines automatically and utilize templates to reach contacts faster.',
+      features: [
+        'Real-time background Gmail syncing',
+        'Thread timeline logging by deal and contact',
+        'Templates and rapid-fire replies'
+      ],
+      color: 'from-blue-500 to-sky-600',
+      mockup: (
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Communication Timeline</span>
+            <span className="text-[9px] text-emerald-400 font-extrabold">Active Sync</span>
+          </div>
+          <div className="space-y-2 mt-3 flex-1 overflow-hidden">
             {[
-              {
-                title: 'What is PULSE?',
-                desc: 'Pulse brings your essential apps into one simple workspace and helps you get more done, effortlessly.',
-                icon: Layers,
-                color: 'bg-brand-blue/15 text-brand-blue border-brand-blue/20'
-              },
-              {
-                title: 'Why use PULSE?',
-                desc: 'AI-powered summaries, smart prioritization, and a clean dashboard that saves you time every day.',
-                icon: Sparkles,
-                color: 'bg-brand-accent/15 text-brand-accent border-brand-accent/20'
-              },
-              {
-                title: 'Purpose of PULSE',
-                desc: "Pulse's purpose is to simplify your work life by bringing clarity, speed, and focus to everything you do.",
-                icon: Activity,
-                color: 'bg-brand-secondary-accent/15 text-brand-secondary-accent border-brand-secondary-accent/20'
-              }
-            ].map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <div key={idx} className="flex items-start space-x-3.5">
-                  <div className={`mt-0.5 h-8.5 w-8.5 rounded-lg flex items-center justify-center shrink-0 border ${item.color}`}>
-                    <Icon className="h-4.5 w-4.5" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-black text-brand-heading">{item.title}</h4>
-                    <p className="text-[11px] text-slate-500 mt-1 font-bold leading-normal">{item.desc}</p>
+              { from: 'Alex Johnson', sub: 'Proposal revisions finalized', time: '10m ago' },
+              { from: 'Initech Inc', sub: 'Inquiry regarding migration SLAs', time: '1h ago' },
+              { from: 'Acme Corp', sub: 'Contract signed & dispatched', time: '3h ago' }
+            ].map((mail, i) => (
+              <div key={i} className="bg-slate-800/50 p-2 rounded-lg border border-slate-700/30 flex justify-between items-center text-[10px]">
+                <div className="min-w-0 flex-1 pr-2">
+                  <span className="font-black text-white truncate block">{mail.from}</span>
+                  <span className="text-[9px] text-slate-400 truncate block mt-0.5">{mail.sub}</span>
+                </div>
+                <span className="text-[8px] text-slate-500 shrink-0 font-extrabold">{mail.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    },
+    {
+      title: 'AI Co-pilot',
+      icon: Sparkles,
+      badge: 'Sales Intelligence',
+      heading: 'Automated deal forecasts and priority insights',
+      desc: 'Get smart suggestions, draft custom client responses, look up deal progress, and compute forecasting models with a floating Copilot.',
+      features: [
+        'Interactive AI chat prompt actions',
+        'Automated priority rankings for leads',
+        'Live summary generators for deals timeline'
+      ],
+      color: 'from-purple-500 to-pink-600',
+      mockup: (
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase">PulseAI Copilot</span>
+            <Sparkles className="h-3.5 w-3.5 text-violet-400 animate-pulse" />
+          </div>
+          <div className="space-y-2 mt-3 flex-1 text-[9.5px]">
+            <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/30 text-slate-300">
+              Draft a follow-up email to Acme Corp.
+            </div>
+            <div className="bg-brand-accent/15 p-2.5 rounded-lg border border-brand-accent/20 text-white font-bold leading-normal">
+              ✨ Here is a draft: "Hi Sarah, following up on our proposal. We have slots open for professional migration next week..."
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: 'Advanced Analytics',
+      icon: Activity,
+      badge: 'Real-time Telemetry',
+      heading: 'Git-style logs and conversion tracking',
+      desc: 'Visualize team contributions with contribution activity matrices. Trace conversion metrics across your pipeline step-by-step.',
+      features: [
+        'Sales rep activity heatmap widget',
+        'Stepped radial progress rings chart',
+        'Custom report builder dashboard grids'
+      ],
+      color: 'from-emerald-500 to-teal-600',
+      mockup: (
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Analytics Matrix</span>
+            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+          </div>
+          <div className="mt-3 flex-1 flex flex-col justify-between">
+            <div className="text-[9px] text-slate-400 font-extrabold">Qualified prospects conversion rings:</div>
+            {/* SVG Ring preview */}
+            <div className="flex items-center space-x-3.5 mt-2">
+              <div className="h-12 w-12 rounded-full border-4 border-slate-800 border-t-emerald-500 animate-spin-slow flex items-center justify-center text-[9px] font-black text-white">
+                71%
+              </div>
+              <div className="space-y-1 text-[9px]">
+                <div className="flex items-center space-x-1.5">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+                  <span className="text-slate-300 font-bold">Requirement Analysis</span>
+                </div>
+                <div className="text-slate-400 font-bold ml-3.5">86 deals (-29% drop)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  ];
+
+  return (
+    <div className="min-h-screen w-full bg-slate-50 text-slate-950 font-sans flex flex-col overflow-x-hidden">
+      
+      {/* 1. Header Navigation Bar */}
+      <header className="sticky top-0 bg-white/95 backdrop-blur-md border-b border-slate-200/80 z-40 h-16 w-full flex items-center justify-between px-6 md:px-12 select-none shadow-sm/5">
+        <div className="flex items-center space-x-2.5">
+          <div className="h-8 w-8 rounded-lg bg-brand-accent flex items-center justify-center shadow-md">
+            <svg className="h-4.5 w-4.5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span className="font-sans font-black text-lg text-brand-heading tracking-wider uppercase">
+            PULSE
+          </span>
+        </div>
+        
+        {/* Navigation Links */}
+        <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500">
+          <a href="#features" className="hover:text-brand-accent transition-colors">Features</a>
+          <a href="#suite" className="hover:text-brand-accent transition-colors">Unified Suite</a>
+          <a href="#pricing" className="hover:text-brand-accent transition-colors">Pricing</a>
+          <a href="#integrations" className="hover:text-brand-accent transition-colors">Integrations</a>
+        </nav>
+
+        {/* Action Buttons */}
+        <div className="flex items-center space-x-4">
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="text-xs font-bold text-brand-heading hover:text-brand-accent transition-colors cursor-pointer bg-transparent border-0"
+          >
+            Sign In
+          </button>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="px-4 py-2 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-lg text-xs font-bold shadow-sm transition-all cursor-pointer"
+          >
+            Start Free Trial
+          </button>
+        </div>
+      </header>
+
+      {/* 2. Hero Section (Above the Fold) */}
+      <section className="relative w-full py-16 md:py-24 bg-gradient-to-b from-white to-slate-50 flex items-center justify-center px-6 md:px-12 border-b border-slate-200/50">
+        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Left Column: Core Value Pitch */}
+          <div className="lg:col-span-7 space-y-6 text-left">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-brand-accent/10 border border-brand-accent/20 rounded-full text-brand-accent text-[10px] font-extrabold uppercase tracking-wide">
+              <span>✨ Introducing Pulse v2.0</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl font-sans font-black tracking-tight text-brand-heading leading-tight max-w-2xl">
+              The Operating System for{' '}
+              <span className="relative inline-block text-brand-accent">
+                Sales & CRM.
+                <svg className="absolute top-[90%] left-0 w-full h-2 text-brand-accent/50" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none">
+                  <path d="M1 5C25 8 75 2 99 5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+              </span>
+            </h1>
+
+            <p className="text-xs md:text-sm text-slate-500 font-bold leading-relaxed max-w-xl">
+              Pulse brings your sales pipelines, client communications, activity grids, and real-time AI insights into a single unified workspace. Empower your team to close deals faster and automate daily workflows effortlessly.
+            </p>
+
+            {/* CTA action buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-3 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-2 cursor-pointer"
+              >
+                <span>Activate Free Trial</span>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-3 bg-white border border-slate-300 hover:border-slate-400 text-slate-600 rounded-xl text-xs font-bold shadow-sm/5 transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+              >
+                <span>Watch Live Demo</span>
+              </button>
+            </div>
+
+            {/* Trust bullet parameters */}
+            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10.5px] font-black text-slate-400 select-none pt-2">
+              <li className="flex items-center space-x-1.5">
+                <CheckCircle2 className="h-4 w-4 text-brand-accent" />
+                <span>Free for 14 Days</span>
+              </li>
+              <li className="flex items-center space-x-1.5">
+                <CheckCircle2 className="h-4 w-4 text-brand-accent" />
+                <span>No Credit Card Required</span>
+              </li>
+              <li className="flex items-center space-x-1.5">
+                <CheckCircle2 className="h-4 w-4 text-brand-accent" />
+                <span>Instant Set-up</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Right Column: Floating Interactive Dashboard Mockup */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end">
+            <div className="w-full max-w-md bg-white border border-slate-200 p-4 rounded-3xl shadow-xl flex flex-col justify-between select-none relative group transition-transform hover:-translate-y-1 duration-300">
+              
+              {/* Visual Mock Window header */}
+              <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+                <div className="flex space-x-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
+                </div>
+                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest">Workspace Dashboard</span>
+                <span className="h-3.5 w-3.5 rounded bg-brand-accent/15 border border-brand-accent/20"></span>
+              </div>
+
+              {/* Inside Mock Layout */}
+              <div className="grid grid-cols-12 gap-3 mt-4 h-64">
+                {/* Mini Sidebar */}
+                <div className="col-span-3 bg-slate-50 border border-slate-100 rounded-xl p-2 flex flex-col space-y-2">
+                  <div className="h-4 w-full bg-brand-accent/10 border border-brand-accent/15 rounded flex items-center justify-center text-[7px] font-black text-brand-accent">CRM</div>
+                  <div className="space-y-1 flex-1">
+                    {[1, 2, 3, 4].map((item) => (
+                      <div key={item} className={`h-2.5 rounded ${item === 1 ? 'bg-slate-200/90' : 'bg-slate-200/40'} w-full`}></div>
+                    ))}
                   </div>
                 </div>
+
+                {/* Main Content Area */}
+                <div className="col-span-9 space-y-3 flex flex-col justify-between">
+                  {/* Cards Row */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { l: 'Revenue', n: '$1.2M', c: 'border-brand-accent/15' },
+                      { l: 'Deals', n: '432', c: 'border-slate-100' },
+                      { l: 'AI Priority', n: '86%', c: 'border-slate-100' }
+                    ].map((card, i) => (
+                      <div key={i} className={`bg-white border ${card.c} p-2 rounded-xl text-left shadow-sm/5`}>
+                        <span className="text-[7px] text-slate-400 font-extrabold block uppercase tracking-wide">{card.l}</span>
+                        <span className="text-[11.5px] font-black text-brand-heading mt-0.5 block">{card.n}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Graph Area */}
+                  <div className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl p-3 flex flex-col justify-between relative overflow-hidden">
+                    <span className="text-[7.5px] text-slate-400 font-extrabold uppercase">Monthly Performance</span>
+                    
+                    {/* SVG Line curve */}
+                    <svg className="w-full h-16 mt-2" viewBox="0 0 100 40">
+                      <path d="M 0 35 Q 25 38 40 20 T 80 10 T 100 5" fill="none" stroke="#7957fb" strokeWidth="2.5" strokeLinecap="round" />
+                      <path d="M 0 35 Q 25 38 40 20 T 80 10 T 100 5 L 100 40 L 0 40 Z" fill="url(#grad)" opacity="0.1" />
+                      <defs>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#7957fb" />
+                          <stop offset="100%" stopColor="#7957fb" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    
+                    {/* Animated Chat Prompt Bubble */}
+                    <div className="absolute bottom-2 right-2 bg-slate-900 text-white rounded-lg p-1.5 shadow-md flex items-center space-x-1 border border-slate-700/50 scale-90 group-hover:scale-95 transition-transform duration-300">
+                      <Sparkles className="h-2.5 w-2.5 text-violet-400 animate-pulse" />
+                      <span className="text-[7.5px] font-bold">Copilot Active</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 3. Interactive Product Suite Grid (Zoho-style App Showcase) */}
+      <section id="suite" className="py-20 bg-white flex flex-col items-center justify-center px-6 md:px-12 border-b border-slate-200/50">
+        <div className="w-full max-w-6xl space-y-12">
+          
+          {/* Header Title */}
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-sans font-black tracking-tight text-brand-heading">
+              A Unified Suite to Run Your Entire Sales Cycle
+            </h2>
+            <p className="text-xs md:text-sm text-slate-500 font-bold max-w-xl mx-auto leading-relaxed">
+              Ditch the fragmented tools. Pulse unites everything in one seamless dashboard, from pipeline triggers to real-time AI assistance.
+            </p>
+          </div>
+
+          {/* Interactive tabs navigation */}
+          <div className="flex flex-wrap justify-center gap-2 pb-4 border-b border-slate-200/60 select-none">
+            {productSuites.map((suite, idx) => {
+              const Icon = suite.icon;
+              const isActive = activeTab === idx;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setActiveTab(idx)}
+                  className={`flex items-center space-x-2.5 px-4.5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+                    isActive 
+                      ? 'bg-slate-900 border-slate-900 text-white shadow-md' 
+                      : 'bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <Icon className={`h-4.5 w-4.5 ${isActive ? 'text-brand-accent' : 'text-slate-400'}`} />
+                  <span>{suite.title}</span>
+                </button>
               );
             })}
           </div>
 
-        </div>
-
-        {/* Right Column: Interactive Login Container Card */}
-        <div className="lg:col-span-5 flex justify-center lg:justify-end">
-          <div className="w-full max-w-md bg-white/95 border border-brand-border-purple/25 rounded-3xl p-8 shadow-2xl flex flex-col justify-between text-brand-text">
+          {/* Active Tab Preview Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pt-6">
             
+            {/* Left Column: Selected Feature Copy */}
+            <div className="lg:col-span-6 space-y-6 text-left animate-in fade-in slide-in-from-left-2 duration-300">
+              <span className={`inline-block px-3 py-0.5 rounded text-[9.5px] font-black uppercase tracking-wide bg-gradient-to-r ${productSuites[activeTab].color} text-white`}>
+                {productSuites[activeTab].badge}
+              </span>
+              <h3 className="text-2xl font-sans font-black text-brand-heading">
+                {productSuites[activeTab].heading}
+              </h3>
+              <p className="text-xs text-slate-500 font-bold leading-relaxed">
+                {productSuites[activeTab].desc}
+              </p>
+              
+              {/* Feature bullet list */}
+              <ul className="space-y-3 pt-2 text-xs font-bold text-slate-600">
+                {productSuites[activeTab].features.map((feature, i) => (
+                  <li key={i} className="flex items-center space-x-3">
+                    <CheckCircle2 className="h-4.5 w-4.5 text-brand-accent shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Activate button */}
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="mt-4 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg flex items-center space-x-1.5 cursor-pointer shadow-sm"
+              >
+                <span>Activate {productSuites[activeTab].title}</span>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Right Column: Selected Dynamic Preview Mockup */}
+            <div className="lg:col-span-6 flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-2 duration-300">
+              <div className="w-full max-w-md h-64 relative flex items-center justify-center p-1 bg-slate-50 border border-slate-200/80 rounded-2xl shadow-inner">
+                {productSuites[activeTab].mockup}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. Pricing / CTA Section */}
+      <section id="pricing" className="py-20 bg-slate-900 text-white flex flex-col items-center justify-center px-6 md:px-12">
+        <div className="w-full max-w-4xl text-center space-y-6">
+          <h2 className="text-3xl font-sans font-black tracking-tight text-white">
+            Simple, Transparent Pricing for Teams of All Sizes
+          </h2>
+          <p className="text-xs md:text-sm text-slate-400 font-bold max-w-xl mx-auto leading-relaxed">
+            Get unlimited access to Pulse CRM, all app integrations, and the PulseAI Copilot for one simple subscription model.
+          </p>
+          
+          {/* Mock Pricing Card */}
+          <div className="bg-slate-800 border border-slate-700/60 p-8 rounded-3xl max-w-md mx-auto shadow-2xl flex flex-col items-center space-y-4">
+            <span className="text-[10px] font-extrabold uppercase text-brand-accent tracking-widest bg-brand-accent/15 border border-brand-accent/20 px-3 py-1 rounded-full">Enterprise Plan</span>
+            <div className="flex items-baseline space-x-1">
+              <span className="text-4xl font-sans font-black text-white">$29</span>
+              <span className="text-slate-400 text-xs font-bold">/ user / month</span>
+            </div>
+            <span className="text-[11px] text-slate-400 font-bold">Billed annually, or $35 billed monthly</span>
+            
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="w-full py-3 bg-brand-accent hover:bg-brand-accent-hover text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer"
+            >
+              Start Free Trial
+            </button>
+            <span className="text-[9.5px] text-slate-500 font-black">14-day free trial • Cancel anytime • No setup fees</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Footer */}
+      <footer className="bg-slate-950 text-slate-500 py-10 px-6 md:px-12 select-none border-t border-slate-900">
+        <div className="w-full max-w-6xl flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-bold">
+          <span>&copy; {new Date().getFullYear()} Pulse CRM Inc. All rights reserved.</span>
+          <div className="flex space-x-6">
+            <a href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-slate-400 transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-slate-400 transition-colors">Security Standards</a>
+          </div>
+          <span>Powered by <span className="text-brand-heading">Kalnet</span></span>
+        </div>
+      </footer>
+
+      {/* 6. Authentic Glassmorphic Login Modal Dialog */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop blur overlay */}
+          <div 
+            onClick={() => setIsModalOpen(false)}
+            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm cursor-pointer"
+          />
+          
+          {/* Modal Container Card */}
+          <div className="w-full max-w-md bg-white border border-brand-border-purple/20 rounded-3xl p-8 shadow-2xl flex flex-col justify-between text-brand-text relative z-10 animate-in zoom-in-95 duration-200">
+            {/* Close trigger */}
+            <button 
+              onClick={() => setIsModalOpen(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer border-0 bg-transparent"
+              aria-label="Close modal"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
             {/* Header titles */}
             <div className="text-left mb-6">
               <h2 className="font-sans text-2xl font-black text-brand-heading">Welcome back!</h2>
@@ -266,8 +610,8 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
 
           </div>
         </div>
+      )}
 
-      </div>
     </div>
   );
 }
