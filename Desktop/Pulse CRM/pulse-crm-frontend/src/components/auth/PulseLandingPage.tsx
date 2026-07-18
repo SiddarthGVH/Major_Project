@@ -244,7 +244,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       </header>
 
       {/* 2. Hero Section */}
-      <section className="relative w-full py-16 md:py-24 bg-gradient-to-b from-white to-slate-50 flex items-center justify-center px-6 md:px-12 border-b border-slate-200/50 z-10">
+      <section className="relative w-full py-16 md:py-24 bg-transparent flex items-center justify-center px-6 md:px-12 border-b border-slate-200/5 z-10">
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Column: Core Value Pitch */}
@@ -376,7 +376,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       </section>
 
       {/* 3. Metrics Statistics Band (Adding real data & color variety) */}
-      <section id="metrics" className="py-12 bg-white border-b border-slate-200/60 relative overflow-hidden select-none z-10">
+      <section id="metrics" className="py-12 bg-transparent border-b border-slate-200/5 relative overflow-hidden select-none z-10">
         <div className="w-full max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { label: 'Active Business Seats', val: '14,820+', desc: '+18.4% this qtr', color: 'text-violet-600', bg: 'bg-violet-500/10', icon: Users },
@@ -400,7 +400,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       </section>
 
       {/* 4. Interactive Product Suite Grid (Zoho-style App Showcase) */}
-      <section id="suite" className="py-20 bg-white flex flex-col items-center justify-center px-6 md:px-12 border-b border-slate-200/50 z-10">
+      <section id="suite" className="py-20 bg-transparent flex flex-col items-center justify-center px-6 md:px-12 border-b border-slate-200/5 z-10">
         <div className="w-full max-w-6xl space-y-12">
           
           {/* Header Title */}
@@ -483,7 +483,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       </section>
 
       {/* 5. Visual Features Showcase Grid (Adding color, graphs, and variety) */}
-      <section id="features" className="py-20 bg-slate-50 border-b border-slate-200/50 flex flex-col items-center justify-center px-6 md:px-12 relative overflow-hidden z-10">
+      <section id="features" className="py-20 bg-transparent border-b border-slate-200/5 flex flex-col items-center justify-center px-6 md:px-12 relative overflow-hidden z-10">
         
         {/* Floating gradient blur background accent */}
         <div className="absolute top-[40%] left-[5%] w-80 h-80 bg-brand-accent/5 blur-[90px] rounded-full pointer-events-none"></div>
