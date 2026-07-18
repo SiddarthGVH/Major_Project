@@ -476,12 +476,12 @@ export default function ReportsView() {
                       );
                     })}
                   </svg>
-                  {/* Center percentage label */}
-                  <div className="absolute text-center flex flex-col items-center">
-                    <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide">Overall</span>
-                    <span className="text-lg font-black text-brand-heading leading-none mt-1">19.0%</span>
-                    <span className="text-[8px] text-emerald-600 font-black uppercase tracking-wider mt-1">Conversion</span>
-                  </div>
+                </div>
+
+                {/* Overall Summary Label */}
+                <div className="text-center select-none flex flex-col items-center -mt-1">
+                  <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide">Overall Conversion Rate</span>
+                  <span className="text-base font-black text-brand-heading mt-0.5">19.0%</span>
                 </div>
 
                 {/* Right: Detailed Legend list */}
