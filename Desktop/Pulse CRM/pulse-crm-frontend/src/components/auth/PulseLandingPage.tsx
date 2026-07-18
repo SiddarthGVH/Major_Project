@@ -199,9 +199,9 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 text-slate-950 font-sans flex flex-col overflow-x-hidden relative">
-      
-      {/* Background radial glow accents to add color depth */}
+    <div className="min-h-screen w-full bg-[url('/pulse_3d_bg.png')] bg-cover bg-center bg-no-repeat bg-attachment-fixed flex flex-col overflow-x-hidden text-slate-950 font-sans relative">
+      {/* Soft overlay for legibility and theme mixing */}
+      <div className="absolute inset-0 bg-slate-900/5 backdrop-blur-xs z-0" />
       <div className="absolute top-10 left-[10%] w-96 h-96 bg-brand-accent/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
       <div className="absolute top-[40%] right-[5%] w-80 h-80 bg-brand-blue/5 blur-[100px] rounded-full pointer-events-none z-0"></div>
       
