@@ -22,9 +22,10 @@ interface HeaderProps {
   onNewReportClick: () => void;
   onTabChange?: (tab: string) => void;
   onOpenCommandPalette?: () => void;
+  onSignOut?: () => void;
 }
 
-export default function Header({ collapsed, setCollapsed, onNewReportClick, onTabChange, onOpenCommandPalette }: HeaderProps) {
+export default function Header({ collapsed, setCollapsed, onNewReportClick, onTabChange, onOpenCommandPalette, onSignOut }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -276,7 +277,13 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
                 </button>
               </div>
               <div className="border-t border-brand-border-purple/15 py-1 bg-slate-50/50">
-                <button className="flex items-center space-x-2 w-full px-4 py-2 text-xs text-rose-600 hover:bg-rose-55 hover:text-rose-700 transition-colors text-left cursor-pointer">
+                <button 
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    if (onSignOut) onSignOut();
+                  }}
+                  className="flex items-center space-x-2 w-full px-4 py-2 text-xs text-rose-600 hover:bg-rose-55 hover:text-rose-700 transition-colors text-left cursor-pointer"
+                >
                   <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
                   <span>Sign Out</span>
                 </button>

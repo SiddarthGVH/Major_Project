@@ -8,6 +8,7 @@ import Charts from '@/components/dashboard/Charts';
 import Widgets from '@/components/dashboard/Widgets';
 import RightPanel from '@/components/dashboard/RightPanel';
 import ReportBuilderModal from '@/components/dashboard/ReportBuilderModal';
+import PulseLandingPage from '@/components/auth/PulseLandingPage';
 import LeadsView from '@/components/dashboard/LeadsView';
 import CompaniesView from '@/components/dashboard/CompaniesView';
 import ContactsView from '@/components/dashboard/ContactsView';
@@ -26,9 +27,28 @@ import CommandPalette from '@/components/dashboard/CommandPalette';
 import AICopilotChat from '@/components/dashboard/AICopilotChat';
 import DashboardCustomizer from '@/components/dashboard/DashboardCustomizer';
 import ActivityHeatmap from '@/components/dashboard/ActivityHeatmap';
-import { Calendar, Filter, ChevronDown, Check, Settings2 } from 'lucide-react';
+import { Calendar, Filter, ChevronDown, Check, Settings2, Loader2 } from 'lucide-react';
 
 export default function DashboardHome() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const auth = sessionStorage.getItem('pulse-crm-auth') === 'true';
+    setIsAuthenticated(auth);
+    setIsAuthLoading(false);
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    sessionStorage.setItem('pulse-crm-auth', 'true');
+  };
+
+  const handleSignOut = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('pulse-crm-auth');
+  };
+
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [dashboardSubTab, setDashboardSubTab] = useState('overview');
@@ -124,6 +144,18 @@ export default function DashboardHome() {
     { name: 'Custom Reports', key: 'custom' },
   ];
 
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+        <Loader2 className="h-8 w-8 text-brand-accent animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <PulseLandingPage onLogin={handleLogin} />;
+  }
+
   return (
     <div className="flex bg-white h-screen overflow-hidden font-sans text-brand-text antialiased">
       {/* Sidebar navigation - toned down background */}
@@ -144,6 +176,7 @@ export default function DashboardHome() {
           onNewReportClick={() => setIsReportModalOpen(true)} 
           onTabChange={(tab) => setActiveTab(tab)}
           onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
+          onSignOut={handleSignOut}
         />
 
         {/* Dashboard inner scroll view with increased whitespace */}
