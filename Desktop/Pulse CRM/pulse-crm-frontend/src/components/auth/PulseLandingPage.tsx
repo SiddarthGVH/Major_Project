@@ -223,7 +223,6 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
           <a href="#metrics" className="hover:text-brand-accent transition-colors">Performance</a>
           <a href="#suite" className="hover:text-brand-accent transition-colors">Unified Suite</a>
           <a href="#features" className="hover:text-brand-accent transition-colors">Features</a>
-          <a href="#pricing" className="hover:text-brand-accent transition-colors">Pricing</a>
         </nav>
 
         {/* Action Buttons */}
@@ -590,131 +589,6 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         </div>
       </section>
 
-      {/* 6. Pricing Section (Three-Tier structured options) */}
-      <section id="pricing" className="py-20 bg-slate-900 text-white flex flex-col items-center justify-center px-6 md:px-12 z-10">
-        <div className="w-full max-w-6xl space-y-12">
-          
-          <div className="text-center space-y-3">
-            <h2 className="text-3xl font-sans font-black tracking-tight text-white">
-              Simple, Transparent Plans for Every Team
-            </h2>
-            <p className="text-xs md:text-sm text-slate-400 font-bold max-w-xl mx-auto leading-relaxed">
-              No hidden fees, no onboarding setups. Select a plan and start scaling your customer relationships in minutes.
-            </p>
-          </div>
-          
-          {/* Pricing Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
-            
-            {/* Tier 1: Starter */}
-            <div className="bg-slate-800/50 border border-slate-700/50 p-8 rounded-3xl flex flex-col justify-between space-y-6 text-left">
-              <div className="space-y-4">
-                <span className="text-[8px] font-extrabold uppercase text-slate-400 tracking-widest border border-slate-700 px-2.5 py-1 rounded-full">Starter Tier</span>
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-3xl font-sans font-black text-white">$15</span>
-                  <span className="text-slate-400 text-xs font-bold">/ user / mo</span>
-                </div>
-                <p className="text-[11.5px] text-slate-400 font-bold leading-normal">Perfect for solo sales representatives and newly launched startups looking to organize their pipeline.</p>
-                <hr className="border-slate-700/60" />
-                <ul className="space-y-2 text-[10.5px] font-bold text-slate-300">
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Up to 3 Active Pipelines</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Basic Gmail Sync Timeline</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Standard Reports & Filters</span>
-                  </li>
-                </ul>
-              </div>
-              <button 
-                onClick={() => setIsModalOpen(true)}
-                className="w-full py-2.5 bg-slate-700 hover:bg-slate-650 text-white font-bold rounded-xl text-xs shadow-sm transition-all cursor-pointer border-0"
-              >
-                Start Starter Trial
-              </button>
-            </div>
-
-            {/* Tier 2: Growth (Highlighted/Popular) */}
-            <div className="bg-slate-800 border-2 border-brand-accent p-8 rounded-3xl flex flex-col justify-between space-y-6 text-left relative transform md:-translate-y-2 shadow-2xl">
-              <div className="absolute top-0 right-6 -translate-y-1/2 bg-brand-accent text-white text-[8px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-                Most Popular
-              </div>
-              <div className="space-y-4">
-                <span className="text-[8px] font-extrabold uppercase text-brand-accent tracking-widest bg-brand-accent/15 border border-brand-accent/20 px-2.5 py-1 rounded-full inline-block">Growth Plan</span>
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-4xl font-sans font-black text-white">$29</span>
-                  <span className="text-slate-400 text-xs font-bold">/ user / mo</span>
-                </div>
-                <p className="text-[11.5px] text-slate-300 font-bold leading-normal">Optimized for expanding teams requiring deep email automation and intelligent CRM forecasts.</p>
-                <hr className="border-slate-700/60" />
-                <ul className="space-y-2 text-[10.5px] font-bold text-slate-200">
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Unlimited Deal Pipelines</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Real-time AI Co-pilot Access</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Git-Style Rep Heatmap Widgets</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Advanced Conversion Funnels</span>
-                  </li>
-                </ul>
-              </div>
-              <button 
-                onClick={() => setIsModalOpen(true)}
-                className="w-full py-3 bg-brand-accent hover:bg-brand-accent-hover text-white font-bold rounded-xl text-xs shadow-md transition-all cursor-pointer border-0"
-              >
-                Activate Free Trial
-              </button>
-            </div>
-
-            {/* Tier 3: Enterprise */}
-            <div className="bg-slate-800/50 border border-slate-700/50 p-8 rounded-3xl flex flex-col justify-between space-y-6 text-left">
-              <div className="space-y-4">
-                <span className="text-[8px] font-extrabold uppercase text-slate-400 tracking-widest border border-slate-700 px-2.5 py-1 rounded-full">Scale Tier</span>
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-3xl font-sans font-black text-white">$59</span>
-                  <span className="text-slate-400 text-xs font-bold">/ user / mo</span>
-                </div>
-                <p className="text-[11.5px] text-slate-400 font-bold leading-normal">Tailored for large organizations requiring custom roles, SSO integrations, and premium API throughput.</p>
-                <hr className="border-slate-700/60" />
-                <ul className="space-y-2 text-[10.5px] font-bold text-slate-300">
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Everything in Growth Plan</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>SAML / SSO Security Gateways</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-brand-accent shrink-0" />
-                    <span>Dedicated Support Manager</span>
-                  </li>
-                </ul>
-              </div>
-              <button 
-                onClick={() => setIsModalOpen(true)}
-                className="w-full py-2.5 bg-slate-700 hover:bg-slate-650 text-white font-bold rounded-xl text-xs shadow-sm transition-all cursor-pointer border-0"
-              >
-                Contact Sales Demo
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* 7. Footer */}
       <footer className="bg-slate-950 text-slate-500 py-10 px-6 md:px-12 select-none border-t border-slate-900 z-10">
