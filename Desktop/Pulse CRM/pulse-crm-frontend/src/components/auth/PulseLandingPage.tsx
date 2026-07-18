@@ -68,7 +68,30 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       ],
       color: 'from-violet-500 to-indigo-600',
       mockup: (
-        <img src="/pulse_tab_sales.png" alt="Sales Pipeline board" className="w-full h-full rounded-xl object-cover shadow-lg border border-slate-200" />
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Sales Pipeline</span>
+            <div className="flex space-x-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-yellow-500"></span>
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+            </div>
+          </div>
+          {/* Mock Kanban Board */}
+          <div className="grid grid-cols-3 gap-2 flex-1 mt-3">
+            {[
+              { col: 'Qualified', name: 'Acme Corp', val: '₹120K' },
+              { col: 'Proposal', name: 'Initech Inc', val: '₹85K' },
+              { col: 'Negotiation', name: 'Stark Ind.', val: '₹230K' }
+            ].map((card, i) => (
+              <div key={i} className="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/50 flex flex-col justify-between">
+                <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wide">{card.col}</span>
+                <span className="text-[10px] font-black text-white mt-1.5 block truncate">{card.name}</span>
+                <span className="text-[9px] text-brand-accent font-extrabold mt-1 block">{card.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       )
     },
     {
@@ -91,19 +114,14 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
           </div>
           <div className="space-y-2 mt-3 flex-1 overflow-hidden">
             {[
-              { from: 'Alex Johnson', sub: 'Proposal revisions finalized', time: '10m ago', color: 'bg-violet-500' },
-              { from: 'Initech Inc', sub: 'Inquiry regarding migration SLAs', time: '1h ago', color: 'bg-emerald-500' },
-              { from: 'Acme Corp', sub: 'Contract signed & dispatched', time: '3h ago', color: 'bg-pink-500' }
+              { from: 'Alex Johnson', sub: 'Proposal revisions finalized', time: '10m ago' },
+              { from: 'Initech Inc', sub: 'Inquiry regarding migration SLAs', time: '1h ago' },
+              { from: 'Acme Corp', sub: 'Contract signed & dispatched', time: '3h ago' }
             ].map((mail, i) => (
               <div key={i} className="bg-slate-800/50 p-2 rounded-lg border border-slate-700/30 flex justify-between items-center text-[10px]">
-                <div className="flex items-center space-x-2 min-w-0 flex-1 pr-2">
-                  <span className={`h-5 w-5 rounded-full flex items-center justify-center text-[8px] font-black text-white shrink-0 ${mail.color}`}>
-                    {mail.from[0]}
-                  </span>
-                  <div className="min-w-0">
-                    <span className="font-black text-white truncate block">{mail.from}</span>
-                    <span className="text-[9px] text-slate-400 truncate block mt-0.5">{mail.sub}</span>
-                  </div>
+                <div className="min-w-0 flex-1 pr-2">
+                  <span className="font-black text-white truncate block">{mail.from}</span>
+                  <span className="text-[9px] text-slate-400 truncate block mt-0.5">{mail.sub}</span>
                 </div>
                 <span className="text-[8px] text-slate-500 shrink-0 font-extrabold">{mail.time}</span>
               </div>
@@ -125,7 +143,20 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       ],
       color: 'from-purple-500 to-pink-600',
       mockup: (
-        <img src="/pulse_tab_copilot.png" alt="AI Co-pilot conversation" className="w-full h-full rounded-xl object-cover shadow-lg border border-slate-200" />
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase">PulseAI Copilot</span>
+            <Sparkles className="h-3.5 w-3.5 text-violet-400 animate-pulse" />
+          </div>
+          <div className="space-y-2 mt-3 flex-1 text-[9.5px]">
+            <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/30 text-slate-300">
+              Draft a follow-up email to Acme Corp.
+            </div>
+            <div className="bg-brand-accent/15 p-2.5 rounded-lg border border-brand-accent/20 text-white font-bold leading-normal">
+              ✨ Here is a draft: "Hi Sarah, following up on our proposal. We have slots open for professional migration next week..."
+            </div>
+          </div>
+        </div>
       )
     },
     {
@@ -141,7 +172,43 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       ],
       color: 'from-emerald-500 to-teal-600',
       mockup: (
-        <img src="/pulse_tab_analytics.png" alt="Advanced Analytics graphs" className="w-full h-full rounded-xl object-cover shadow-lg border border-slate-200" />
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
+          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Analytics Matrix</span>
+            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+          </div>
+          <div className="mt-3 flex-1 flex flex-col justify-between">
+            <div className="text-[9px] text-slate-400 font-extrabold">Qualified prospects conversion rings:</div>
+            {/* SVG Ring preview */}
+            <div className="flex items-center space-x-6 mt-2">
+              <svg className="h-16 w-16 transform -rotate-90 select-none shrink-0" viewBox="0 0 36 36">
+                {/* Background tracks */}
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#1e293b" strokeWidth="2.5" />
+                <circle cx="18" cy="18" r="10.5" fill="none" stroke="#1e293b" strokeWidth="2.5" />
+                <circle cx="18" cy="18" r="7" fill="none" stroke="#1e293b" strokeWidth="2.5" />
+                
+                {/* Colored progress rings */}
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#7957fb" strokeWidth="2.5" strokeDasharray="87.9" strokeDashoffset="25.5" strokeLinecap="round" />
+                <circle cx="18" cy="18" r="10.5" fill="none" stroke="#ec4899" strokeWidth="2.5" strokeDasharray="65.9" strokeDashoffset="34.3" strokeLinecap="round" />
+                <circle cx="18" cy="18" r="7" fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="43.9" strokeDashoffset="30.7" strokeLinecap="round" />
+              </svg>
+              <div className="space-y-1 text-[9px] text-left">
+                <div className="flex items-center space-x-1.5">
+                  <span className="h-2 w-2 rounded-full bg-brand-accent shrink-0"></span>
+                  <span className="text-slate-300 font-bold">Analysis: 71%</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <span className="h-2 w-2 rounded-full bg-pink-500 shrink-0"></span>
+                  <span className="text-slate-300 font-bold">Proposal: 48%</span>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0"></span>
+                  <span className="text-slate-300 font-bold">Negotiation: 30%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
   ];
@@ -246,10 +313,82 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
             </ul>
           </div>
 
-          {/* Right Column: Floating 3D Hero Illustration Photo */}
+          {/* Right Column: Floating Interactive Dashboard Mockup */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <div className="w-full max-w-md bg-white/40 border border-white/20 backdrop-blur-md p-3.5 rounded-3xl shadow-xl flex items-center justify-center select-none relative group transition-transform hover:-translate-y-1 duration-300">
-              <img src="/pulse_hero_main.png" alt="Pulse 3D Sales & CRM Hub" className="w-full h-auto rounded-2xl object-cover shadow-md" />
+            <div className="w-full max-w-md bg-white border border-slate-200 p-4 rounded-3xl shadow-xl flex flex-col justify-between select-none relative group transition-transform hover:-translate-y-1 duration-300">
+              
+              {/* Visual Mock Window header */}
+              <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+                <div className="flex space-x-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
+                </div>
+                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest">Workspace Dashboard</span>
+                <span className="h-3.5 w-3.5 rounded bg-brand-accent/15 border border-brand-accent/20"></span>
+              </div>
+
+              {/* Inside Mock Layout */}
+              <div className="grid grid-cols-12 gap-3 mt-4 h-64">
+                {/* Mini Sidebar */}
+                <div className="col-span-3 bg-slate-50 border border-slate-100 rounded-xl p-2 flex flex-col space-y-2">
+                  <div className="h-4 w-full bg-brand-accent/10 border border-brand-accent/15 rounded flex items-center justify-center text-[7px] font-black text-brand-accent">CRM</div>
+                  <div className="space-y-1 flex-1">
+                    {[1, 2, 3, 4].map((item) => (
+                      <div key={item} className={`h-2.5 rounded ${item === 1 ? 'bg-slate-200/90' : 'bg-slate-200/40'} w-full`}></div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Main Content Area */}
+                <div className="col-span-9 space-y-3 flex flex-col justify-between">
+                  {/* Cards Row */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { l: 'Revenue', n: '₹1.2M', c: 'border-brand-accent/15' },
+                      { l: 'Deals', n: '432', c: 'border-slate-100' },
+                      { l: 'AI Priority', n: '86%', c: 'border-slate-100' }
+                    ].map((card, i) => (
+                      <div key={i} className={`bg-white border ${card.c} p-2 rounded-xl text-left shadow-sm/5`}>
+                        <span className="text-[7px] text-slate-400 font-extrabold block uppercase tracking-wide">{card.l}</span>
+                        <span className="text-[11.5px] font-black text-brand-heading mt-0.5 block">{card.n}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Graph Area */}
+                  <div className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl p-3 flex flex-col justify-between relative overflow-hidden">
+                    <span className="text-[7.5px] text-slate-400 font-extrabold uppercase">Monthly Performance</span>
+                    
+                    {/* SVG Line curve */}
+                    <svg className="w-full h-16 mt-2" viewBox="0 0 100 40">
+                      <defs>
+                        <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#7957fb" />
+                          <stop offset="50%" stopColor="#ec4899" />
+                          <stop offset="100%" stopColor="#f59e0b" />
+                        </linearGradient>
+                        <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#7957fb" stopOpacity="0.15" />
+                          <stop offset="100%" stopColor="#7957fb" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M 0 35 Q 25 38 40 20 T 80 10 T 100 5" fill="none" stroke="url(#strokeGrad)" strokeWidth="2.5" strokeLinecap="round" />
+                      <path d="M 0 35 Q 25 38 40 20 T 80 10 T 100 5 L 100 40 L 0 40 Z" fill="url(#grad)" />
+                      <circle cx="40" cy="20" r="2" fill="#f59e0b" stroke="#ffffff" strokeWidth="0.5" />
+                      <circle cx="80" cy="10" r="2" fill="#ec4899" stroke="#ffffff" strokeWidth="0.5" />
+                      <circle cx="100" cy="5" r="2" fill="#7957fb" stroke="#ffffff" strokeWidth="0.5" />
+                    </svg>
+                    
+                    {/* Animated Chat Prompt Bubble */}
+                    <div className="absolute bottom-2 right-2 bg-slate-900 text-white rounded-lg p-1.5 shadow-md flex items-center space-x-1 border border-slate-700/50 scale-90 group-hover:scale-95 transition-transform duration-300">
+                      <Sparkles className="h-2.5 w-2.5 text-violet-400 animate-pulse" />
+                      <span className="text-[7.5px] font-bold">Copilot Active</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -389,13 +528,22 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                 badge: 'Pacing Analytics',
                 chart: (
                   <svg className="w-full h-24 mt-4 select-none" viewBox="0 0 120 40">
-                    <rect x="10" y="20" width="8" height="20" rx="1.5" fill="#c7d2fe" />
-                    <rect x="25" y="15" width="8" height="25" rx="1.5" fill="#a5b4fc" />
-                    <rect x="40" y="8" width="8" height="32" rx="1.5" fill="#818cf8" />
-                    <rect x="55" y="24" width="8" height="16" rx="1.5" fill="#6366f1" />
-                    <rect x="70" y="10" width="8" height="30" rx="1.5" fill="#4f46e5" />
-                    <rect x="85" y="4" width="8" height="36" rx="1.5" fill="#7957fb" />
-                    <rect x="100" y="2" width="8" height="38" rx="1.5" fill="#6448dc" />
+                    <defs>
+                      <linearGradient id="barGrad1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#8b5cf6" /><stop offset="100%" stopColor="#c084fc" /></linearGradient>
+                      <linearGradient id="barGrad2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#3b82f6" /><stop offset="100%" stopColor="#60a5fa" /></linearGradient>
+                      <linearGradient id="barGrad3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#10b981" /><stop offset="100%" stopColor="#34d399" /></linearGradient>
+                      <linearGradient id="barGrad4" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#f59e0b" /><stop offset="100%" stopColor="#fbbf24" /></linearGradient>
+                      <linearGradient id="barGrad5" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#f43f5e" /><stop offset="100%" stopColor="#fb7185" /></linearGradient>
+                      <linearGradient id="barGrad6" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#06b6d4" /><stop offset="100%" stopColor="#22d3ee" /></linearGradient>
+                      <linearGradient id="barGrad7" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#d946ef" /><stop offset="100%" stopColor="#f472b6" /></linearGradient>
+                    </defs>
+                    <rect x="10" y="20" width="8" height="20" rx="1.5" fill="url(#barGrad1)" />
+                    <rect x="25" y="15" width="8" height="25" rx="1.5" fill="url(#barGrad2)" />
+                    <rect x="40" y="8" width="8" height="32" rx="1.5" fill="url(#barGrad3)" />
+                    <rect x="55" y="24" width="8" height="16" rx="1.5" fill="url(#barGrad4)" />
+                    <rect x="70" y="10" width="8" height="30" rx="1.5" fill="url(#barGrad5)" />
+                    <rect x="85" y="4" width="8" height="36" rx="1.5" fill="url(#barGrad6)" />
+                    <rect x="100" y="2" width="8" height="38" rx="1.5" fill="url(#barGrad7)" />
                   </svg>
                 )
               },
@@ -409,19 +557,27 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                   <div className="flex items-center justify-center space-x-6 mt-4 h-24 select-none">
                     <div className="relative h-20 w-20 flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 40 40">
-                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="#e2e8f0" strokeWidth="3.5" />
-                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="#10B981" strokeWidth="3.5" strokeDasharray="100.5" strokeDashoffset="14" strokeLinecap="round" />
+                        <defs>
+                          <linearGradient id="donutEmerald" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#059669" /><stop offset="100%" stopColor="#34d399" /></linearGradient>
+                          <linearGradient id="donutPink" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#db2777" /><stop offset="100%" stopColor="#f472b6" /></linearGradient>
+                        </defs>
+                        {/* Background rings */}
+                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="#e2e8f0" strokeWidth="2.5" />
+                        <circle cx="20" cy="20" r="11.5" fill="transparent" stroke="#e2e8f0" strokeWidth="2.5" />
+                        {/* Progress tracks */}
+                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="url(#donutEmerald)" strokeWidth="2.5" strokeDasharray="100.5" strokeDashoffset="14" strokeLinecap="round" />
+                        <circle cx="20" cy="20" r="11.5" fill="transparent" stroke="url(#donutPink)" strokeWidth="2.5" strokeDasharray="72.2" strokeDashoffset="34.6" strokeLinecap="round" />
                       </svg>
-                      <span className="absolute text-xs font-black text-slate-800">86%</span>
+                      <span className="absolute text-[10px] font-black text-slate-800">86%</span>
                     </div>
-                    <div className="space-y-1 text-[9.5px] font-bold text-slate-500 text-left">
+                    <div className="space-y-1 text-[9px] font-bold text-slate-500 text-left">
                       <div className="flex items-center space-x-1.5">
                         <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"></span>
-                        <span>High Conversion</span>
+                        <span>Priority A: 86%</span>
                       </div>
                       <div className="flex items-center space-x-1.5">
-                        <span className="h-2 w-2 rounded-full bg-slate-300 shrink-0"></span>
-                        <span>Industry Avg: 24%</span>
+                        <span className="h-2 w-2 rounded-full bg-pink-500 shrink-0"></span>
+                        <span>Priority B: 52%</span>
                       </div>
                     </div>
                   </div>
@@ -436,13 +592,13 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                 chart: (
                   <div className="space-y-2 mt-4 h-24 flex flex-col justify-center select-none">
                     {[
-                      { name: 'Alex J.', val: 'w-[90%]', rev: '₹1.2M', bg: 'bg-pink-500' },
-                      { name: 'Sarah J.', val: 'w-[75%]', rev: '₹980K', bg: 'bg-rose-400' },
-                      { name: 'David W.', val: 'w-[55%]', rev: '₹750K', bg: 'bg-slate-300' }
+                      { name: 'Alex J.', val: 'w-[90%]', rev: '₹1.2M', bg: 'bg-gradient-to-r from-violet-500 to-fuchsia-500' },
+                      { name: 'Sarah J.', val: 'w-[75%]', rev: '₹980K', bg: 'bg-gradient-to-r from-emerald-400 to-teal-500' },
+                      { name: 'David W.', val: 'w-[55%]', rev: '₹750K', bg: 'bg-gradient-to-r from-amber-400 to-orange-500' }
                     ].map((rep, i) => (
                       <div key={i} className="flex items-center justify-between text-[9px] font-extrabold text-slate-600">
                         <span className="w-12 truncate text-left">{rep.name}</span>
-                        <div className="flex-1 mx-2.5 bg-slate-200 h-2 rounded-full overflow-hidden">
+                        <div className="flex-1 mx-2.5 bg-slate-200/80 h-2 rounded-full overflow-hidden">
                           <div className={`h-full ${rep.val} ${rep.bg} rounded-full`}></div>
                         </div>
                         <span className="w-8 text-right font-black">{rep.rev}</span>
