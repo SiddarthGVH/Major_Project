@@ -74,11 +74,11 @@ export default function ReportsView() {
 
   // 5. Pipeline Funnel Chart Data
   const funnelStages = [
-    { name: "Qualified Prospects", count: 120, pct: 100, dropoff: "0%", bg: "bg-brand-blue" },
-    { name: "Requirement Analysis", count: 86, pct: 71, dropoff: "-29%", bg: "bg-brand-light-blue" },
-    { name: "Proposal Sent", count: 40, pct: 33, dropoff: "-53%", bg: "bg-brand-blue/80" },
-    { name: "Negotiation Stage", count: 28, pct: 23, dropoff: "-30%", bg: "bg-brand-light-blue/85" },
-    { name: "Deals Won", count: 23, pct: 19, dropoff: "-17%", bg: "bg-brand-accent animate-pulse-slow text-white" }
+    { name: "Qualified Prospects", count: 120, pct: 100, dropoff: "0%", bg: "bg-brand-blue", color: "#79a7e8" },
+    { name: "Requirement Analysis", count: 86, pct: 71, dropoff: "-29%", bg: "bg-brand-light-blue", color: "#6ec2de" },
+    { name: "Proposal Sent", count: 40, pct: 33, dropoff: "-53%", bg: "bg-brand-blue/80", color: "#7e8cf1" },
+    { name: "Negotiation Stage", count: 28, pct: 23, dropoff: "-30%", bg: "bg-brand-light-blue/85", color: "#7e71f9" },
+    { name: "Deals Won", count: 23, pct: 19, dropoff: "-17%", bg: "bg-brand-accent text-white", color: "#7957fb" }
   ];
 
   // 6. Ranks Sales Reps (Leaderboard Metric Toggles)
@@ -438,52 +438,77 @@ export default function ReportsView() {
                 <Layers className="h-4.5 w-4.5 text-slate-400" />
               </div>
 
-              {/* Center-aligned Trapezoidal Funnel Grid */}
-              <div className="space-y-2 mt-5 flex flex-col">
-                {funnelStages.map((stage, idx) => {
-                  const wTop = stage.pct;
-                  const wBottom = idx === funnelStages.length - 1 ? 12 : funnelStages[idx + 1].pct;
-                  
-                  const xTopLeft = (100 - wTop) / 2;
-                  const xTopRight = (100 + wTop) / 2;
-                  const xBottomRight = (100 + wBottom) / 2;
-                  const xBottomLeft = (100 - wBottom) / 2;
-                  
-                  const clipPath = `polygon(${xTopLeft}% 0%, ${xTopRight}% 0%, ${xBottomRight}% 100%, ${xBottomLeft}% 100%)`;
-                  
-                  return (
-                    <div key={idx} className="w-full flex items-center h-10 text-[11px] font-bold">
-                      {/* 1. Stage Name (Left column) */}
-                      <span className="w-36 text-left text-brand-heading truncate pr-2 select-none" title={stage.name}>
-                        {stage.name}
-                      </span>
-                      
-                      {/* 2. Deals Count (Left-middle column) */}
-                      <span className="w-20 text-right text-brand-text/85 tabular-nums pr-3.5 select-none shrink-0">
-                        {stage.count} deals
-                      </span>
-                      
-                      {/* 3. Funnel Shape (Center visual column) */}
-                      <div className="flex-1 h-full relative">
+              {/* Radial Progress Funnel Rings */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mt-4">
+                {/* Left: SVG Radial Rings */}
+                <div className="w-44 h-44 shrink-0 relative flex items-center justify-center select-none">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                    {funnelStages.map((stage, idx) => {
+                      const radius = 82 - idx * 12;
+                      const circumference = 2 * Math.PI * radius;
+                      const offset = circumference - (stage.pct / 100) * circumference;
+                      return (
+                        <g key={idx}>
+                          {/* Background Track */}
+                          <circle
+                            cx="100"
+                            cy="100"
+                            r={radius}
+                            fill="transparent"
+                            stroke={stage.color || "#e2e8f0"}
+                            strokeWidth="8"
+                            opacity="0.12"
+                          />
+                          {/* Active Progress Arc */}
+                          <circle
+                            cx="100"
+                            cy="100"
+                            r={radius}
+                            fill="transparent"
+                            stroke={stage.color || "#3b82f6"}
+                            strokeWidth="8"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={offset}
+                            strokeLinecap="round"
+                            className="transition-all duration-500"
+                          />
+                        </g>
+                      );
+                    })}
+                  </svg>
+                  {/* Center percentage label */}
+                  <div className="absolute text-center flex flex-col items-center">
+                    <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide">Overall</span>
+                    <span className="text-lg font-black text-brand-heading leading-none mt-1">19.0%</span>
+                    <span className="text-[8px] text-emerald-600 font-black uppercase tracking-wider mt-1">Conversion</span>
+                  </div>
+                </div>
+
+                {/* Right: Detailed Legend list */}
+                <div className="flex-1 space-y-2.5 w-full select-none">
+                  {funnelStages.map((stage, idx) => (
+                    <div key={idx} className="flex items-center justify-between text-[11px] font-semibold border-b border-brand-border-purple/10 pb-1.5 last:border-b-0 last:pb-0">
+                      <div className="flex items-center space-x-2.5 min-w-0">
+                        {/* Legend swatch */}
                         <div 
-                          className={`h-full ${stage.bg} shadow-sm/5 transition-all duration-200 hover:brightness-95 cursor-pointer`}
-                          style={{ clipPath }}
-                          title={`${stage.name}: ${stage.count} deals (${stage.pct}% conversion)`}
+                          className="h-2.5 w-2.5 rounded-full shrink-0" 
+                          style={{ backgroundColor: stage.color }}
                         />
+                        <span className="text-brand-heading truncate w-28 md:w-32" title={stage.name}>
+                          {stage.name}
+                        </span>
                       </div>
-                      
-                      {/* 4. Conversion Percentage (Right-middle column) */}
-                      <span className="w-24 text-left text-brand-text font-black tabular-nums pl-4 select-none shrink-0">
-                        {stage.pct}% conv.
-                      </span>
-                      
-                      {/* 5. Dropoff Rate (Right column) */}
-                      <span className="w-20 text-right select-none shrink-0 tabular-nums text-[9.5px] text-rose-500 font-black">
-                        {stage.dropoff === '0%' ? 'Baseline' : `${stage.dropoff} drop`}
-                      </span>
+                      <div className="text-right flex flex-col shrink-0">
+                        <span className="text-brand-text font-black tabular-nums">
+                          {stage.count} deals ({stage.pct}%)
+                        </span>
+                        <span className="text-[9.5px] text-rose-500 font-black mt-0.5 tabular-nums">
+                          {stage.dropoff === '0%' ? 'Baseline' : `${stage.dropoff} drop`}
+                        </span>
+                      </div>
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
             </div>
             
