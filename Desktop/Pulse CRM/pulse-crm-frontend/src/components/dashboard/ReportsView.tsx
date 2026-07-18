@@ -438,23 +438,52 @@ export default function ReportsView() {
                 <Layers className="h-4.5 w-4.5 text-slate-400" />
               </div>
 
-              {/* Funnel Layout */}
-              <div className="space-y-2 mt-4">
-                {funnelStages.map((stage, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-[11px] font-semibold">
-                    <span className="w-24 text-brand-heading truncate" title={stage.name}>{stage.name}</span>
-                    <div className="flex-1 flex justify-center px-2">
-                      <div 
-                        className={`h-7 flex items-center justify-between px-3 rounded-lg ${stage.bg} text-[10px] font-extrabold shadow-sm/5 w-full relative group`}
-                        style={{ width: `${stage.pct}%`, minWidth: '80px' }}
-                      >
-                        <span className="text-brand-text font-bold tabular-nums">{stage.count}</span>
-                        <span className="text-[9px] opacity-75 font-semibold shrink-0">{stage.dropoff}</span>
+              {/* Center-aligned Trapezoidal Funnel Grid */}
+              <div className="space-y-2 mt-5 flex flex-col">
+                {funnelStages.map((stage, idx) => {
+                  const wTop = stage.pct;
+                  const wBottom = idx === funnelStages.length - 1 ? 12 : funnelStages[idx + 1].pct;
+                  
+                  const xTopLeft = (100 - wTop) / 2;
+                  const xTopRight = (100 + wTop) / 2;
+                  const xBottomRight = (100 + wBottom) / 2;
+                  const xBottomLeft = (100 - wBottom) / 2;
+                  
+                  const clipPath = `polygon(${xTopLeft}% 0%, ${xTopRight}% 0%, ${xBottomRight}% 100%, ${xBottomLeft}% 100%)`;
+                  
+                  return (
+                    <div key={idx} className="w-full flex items-center h-10 text-[11px] font-bold">
+                      {/* 1. Stage Name (Left column) */}
+                      <span className="w-36 text-left text-brand-heading truncate pr-2 select-none" title={stage.name}>
+                        {stage.name}
+                      </span>
+                      
+                      {/* 2. Deals Count (Left-middle column) */}
+                      <span className="w-20 text-right text-brand-text/85 tabular-nums pr-3.5 select-none shrink-0">
+                        {stage.count} deals
+                      </span>
+                      
+                      {/* 3. Funnel Shape (Center visual column) */}
+                      <div className="flex-1 h-full relative">
+                        <div 
+                          className={`h-full ${stage.bg} shadow-sm/5 transition-all duration-200 hover:brightness-95 cursor-pointer`}
+                          style={{ clipPath }}
+                          title={`${stage.name}: ${stage.count} deals (${stage.pct}% conversion)`}
+                        />
                       </div>
+                      
+                      {/* 4. Conversion Percentage (Right-middle column) */}
+                      <span className="w-24 text-left text-brand-text font-black tabular-nums pl-4 select-none shrink-0">
+                        {stage.pct}% conv.
+                      </span>
+                      
+                      {/* 5. Dropoff Rate (Right column) */}
+                      <span className="w-20 text-right select-none shrink-0 tabular-nums text-[9.5px] text-rose-500 font-black">
+                        {stage.dropoff === '0%' ? 'Baseline' : `${stage.dropoff} drop`}
+                      </span>
                     </div>
-                    <span className="w-8 text-right text-brand-text font-bold tabular-nums">{stage.pct}%</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
             
