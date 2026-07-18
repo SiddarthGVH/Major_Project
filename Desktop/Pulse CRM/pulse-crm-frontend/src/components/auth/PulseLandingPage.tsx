@@ -56,24 +56,24 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="font-sans font-black text-xl text-brand-heading tracking-wider uppercase">
+            <span className="font-sans font-black text-xl text-white tracking-wider uppercase">
               PULSE
             </span>
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl md:text-5xl font-sans font-black tracking-tight text-brand-heading leading-tight max-w-xl">
+          <h1 className="text-4xl md:text-5xl font-sans font-black tracking-tight text-white leading-tight max-w-xl">
             Pulse makes your life{' '}
             <span className="relative inline-block text-brand-accent">
               easy and fast.
-              <svg className="absolute top-[90%] left-0 w-full h-2 text-brand-accent/50" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none">
+              <svg className="absolute top-[90%] left-0 w-full h-2 text-brand-accent/70" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none">
                 <path d="M1 5C25 8 75 2 99 5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
               </svg>
             </span>
           </h1>
 
           {/* Description */}
-          <p className="text-xs md:text-sm text-brand-text/75 leading-relaxed font-bold max-w-xl">
+          <p className="text-xs md:text-sm text-white/90 leading-relaxed font-bold max-w-xl">
             PULSE is your all-in-one productivity hub that brings your tools, tasks, and insights together — so you can focus on what matters most.
           </p>
 
@@ -121,31 +121,31 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                 <div className="h-10 w-10 bg-white/95 dark:bg-slate-900/95 rounded-2xl shadow-sm/5 border border-brand-border-purple/20 flex items-center justify-center shrink-0">
                   {app.icon}
                 </div>
-                <span className="text-[10px] text-slate-400 font-extrabold tracking-wide">{app.name}</span>
+                <span className="text-[10px] text-white/80 font-extrabold tracking-wide">{app.name}</span>
               </div>
             ))}
           </div>
 
           {/* Highlights glassmorphism info blocks */}
-          <div className="bg-white/70 dark:bg-slate-900/60 backdrop-blur-md border border-brand-border-purple/20 rounded-2xl p-5 space-y-4 shadow-sm/5 max-w-xl">
+          <div className="bg-slate-950/40 dark:bg-slate-950/50 backdrop-blur-md border border-white/10 rounded-2xl p-5 space-y-4 shadow-lg max-w-xl">
             {[
               {
                 title: 'What is PULSE?',
                 desc: 'Pulse brings your essential apps into one simple workspace and helps you get more done, effortlessly.',
                 icon: Layers,
-                color: 'bg-brand-blue/15 text-brand-blue border-brand-blue/20'
+                color: 'bg-brand-blue/15 text-blue-300 border-brand-blue/20'
               },
               {
                 title: 'Why use PULSE?',
                 desc: 'AI-powered summaries, smart prioritization, and a clean dashboard that saves you time every day.',
                 icon: Sparkles,
-                color: 'bg-brand-accent/15 text-brand-accent border-brand-accent/20'
+                color: 'bg-brand-accent/15 text-violet-300 border-brand-accent/20'
               },
               {
                 title: 'Purpose of PULSE',
                 desc: "Pulse's purpose is to simplify your work life by bringing clarity, speed, and focus to everything you do.",
                 icon: Activity,
-                color: 'bg-brand-secondary-accent/15 text-brand-secondary-accent border-brand-secondary-accent/20'
+                color: 'bg-brand-secondary-accent/15 text-emerald-300 border-brand-secondary-accent/20'
               }
             ].map((item, idx) => {
               const Icon = item.icon;
@@ -155,8 +155,8 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                     <Icon className="h-4.5 w-4.5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-black text-brand-heading">{item.title}</h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 font-bold leading-normal">{item.desc}</p>
+                    <h4 className="text-xs font-black text-white">{item.title}</h4>
+                    <p className="text-[11px] text-white/75 mt-1 font-bold leading-normal">{item.desc}</p>
                   </div>
                 </div>
               );
