@@ -446,7 +446,7 @@ export default function ReportsView() {
                     <div className="flex-1 flex justify-center px-2">
                       <div 
                         className={`h-7 flex items-center justify-between px-3 rounded-lg ${stage.bg} text-[10px] font-extrabold shadow-sm/5 w-full relative group`}
-                        style={{ width: `${stage.pct}%` }}
+                        style={{ width: `${stage.pct}%`, minWidth: '80px' }}
                       >
                         <span className="text-brand-text font-bold tabular-nums">{stage.count}</span>
                         <span className="text-[9px] opacity-75 font-semibold shrink-0">{stage.dropoff}</span>

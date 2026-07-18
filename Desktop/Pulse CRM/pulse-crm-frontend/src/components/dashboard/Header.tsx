@@ -11,7 +11,9 @@ import {
   User,
   ShieldAlert,
   Settings,
-  LogOut
+  LogOut,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -27,6 +29,32 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
+  
+  // Theme state and persistence logic
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('pulse-crm-theme') as 'light' | 'dark' || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('pulse-crm-theme', nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    if (nextTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
   
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -123,6 +151,20 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
         >
           <Plus className="h-3.5 w-3.5" strokeWidth={2} />
           <span>New Report</span>
+        </button>
+
+        {/* Theme Switcher Button */}
+        <button
+          onClick={toggleTheme}
+          className="p-1.5 text-slate-400 hover:text-brand-text rounded-lg hover:bg-slate-50 transition-all cursor-pointer relative"
+          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          aria-label="Toggle dark mode"
+        >
+          {theme === 'light' ? (
+            <Moon className="h-4.5 w-4.5" strokeWidth={1.75} />
+          ) : (
+            <Sun className="h-4.5 w-4.5 text-amber-500" strokeWidth={1.75} />
+          )}
         </button>
 
         {/* Notifications Trigger */}

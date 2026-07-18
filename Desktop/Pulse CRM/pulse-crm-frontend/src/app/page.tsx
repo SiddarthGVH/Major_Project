@@ -23,7 +23,10 @@ import DocumentsView from '@/components/dashboard/DocumentsView';
 import ReportsView from '@/components/dashboard/ReportsView';
 import WorkflowsView from '@/components/dashboard/WorkflowsView';
 import CommandPalette from '@/components/dashboard/CommandPalette';
-import { Calendar, Filter, ChevronDown, Check } from 'lucide-react';
+import AICopilotChat from '@/components/dashboard/AICopilotChat';
+import DashboardCustomizer from '@/components/dashboard/DashboardCustomizer';
+import ActivityHeatmap from '@/components/dashboard/ActivityHeatmap';
+import { Calendar, Filter, ChevronDown, Check, Settings2 } from 'lucide-react';
 
 export default function DashboardHome() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -31,6 +34,34 @@ export default function DashboardHome() {
   const [dashboardSubTab, setDashboardSubTab] = useState('overview');
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  
+  // Layout Customization States
+  const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
+  const [layoutSettings, setLayoutSettings] = useState({
+    statCards: true,
+    charts: true,
+    heatmap: true,
+    leaderboard: true,
+    productivity: true,
+    rightPanel: true
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('pulse-crm-layout');
+    if (saved) {
+      try {
+        setLayoutSettings(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse layout settings', e);
+      }
+    }
+  }, []);
+
+  const handleToggleLayoutSetting = (key: keyof typeof layoutSettings) => {
+    const updated = { ...layoutSettings, [key]: !layoutSettings[key] };
+    setLayoutSettings(updated);
+    localStorage.setItem('pulse-crm-layout', JSON.stringify(updated));
+  };
 
   // Global listener for Ctrl+K
   useEffect(() => {
@@ -218,34 +249,61 @@ export default function DashboardHome() {
                       </div>
                     )}
                   </div>
+
+                  <button 
+                    onClick={() => setIsCustomizerOpen(true)}
+                    className="inline-flex items-center space-x-1.5 bg-white border border-brand-border-purple/35 hover:border-brand-border-purple active:bg-slate-50 px-3.5 py-1.5 rounded-lg text-xs font-bold text-brand-text/80 transition-all duration-200 cursor-pointer shadow-sm/5"
+                  >
+                    <Settings2 className="h-3.5 w-3.5 text-slate-400" strokeWidth={1.75} />
+                    <span>Customize Layout</span>
+                  </button>
                 </div>
               </div>
 
               {/* KPI Stat Cards (Spans full horizontal width above grid split) */}
-              <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
+              {layoutSettings.statCards && (
+                <StatCards timeFilter={dashboardSubTab} loading={isLoading} />
+              )}
 
               {/* 12-Column Dashboard Grid Layout */}
               <div className="grid grid-cols-12 gap-6">
                 
                 {/* Left section (9 Columns of 12): Charts & Widgets */}
-                <div className="col-span-12 lg:col-span-9 space-y-6">
-                  
-                  {/* Charts (Revenue, stage funnel, source donuts) */}
-                  <Charts loading={isLoading} empty={isEmpty} />
+                {(layoutSettings.charts || layoutSettings.heatmap || layoutSettings.leaderboard || layoutSettings.productivity) && (
+                  <div className={`col-span-12 ${layoutSettings.rightPanel ? 'lg:col-span-9' : 'col-span-12'} space-y-6`}>
+                    
+                    {/* Charts (Revenue, stage funnel, source donuts) */}
+                    {layoutSettings.charts && (
+                      <Charts loading={isLoading} empty={isEmpty} />
+                    )}
 
-                  {/* Widgets (Leaderboard & Activity Logs) */}
-                  <Widgets loading={isLoading} />
+                    {/* Sales Activity Heatmap */}
+                    {layoutSettings.heatmap && (
+                      <ActivityHeatmap />
+                    )}
 
-                </div>
+                    {/* Widgets (Leaderboard & Activity Logs) */}
+                    {(layoutSettings.leaderboard || layoutSettings.productivity) && (
+                      <Widgets 
+                        loading={isLoading} 
+                        showLeaderboard={layoutSettings.leaderboard}
+                        showProductivity={layoutSettings.productivity}
+                      />
+                    )}
+
+                  </div>
+                )}
 
                 {/* Right section (3 Columns of 12): Report Builder, Key Metrics, Recent Reports */}
-                <div className="col-span-12 lg:col-span-3 space-y-6">
-                  <RightPanel 
-                    onNewReportClick={() => setIsReportModalOpen(true)} 
-                    recentReports={recentReports}
-                    loading={isLoading}
-                  />
-                </div>
+                {layoutSettings.rightPanel && (
+                  <div className={`col-span-12 ${(layoutSettings.charts || layoutSettings.heatmap || layoutSettings.leaderboard || layoutSettings.productivity) ? 'lg:col-span-3' : 'col-span-12'} space-y-6`}>
+                    <RightPanel 
+                      onNewReportClick={() => setIsReportModalOpen(true)} 
+                      recentReports={recentReports}
+                      loading={isLoading}
+                    />
+                  </div>
+                )}
 
               </div>
             </>
@@ -266,6 +324,17 @@ export default function DashboardHome() {
         onClose={() => setIsCommandPaletteOpen(false)}
         setActiveTab={setActiveTab}
         onNewReportClick={() => setIsReportModalOpen(true)}
+      />
+
+      {/* Floating AI Copilot Chatbot */}
+      <AICopilotChat />
+
+      {/* Dashboard Customizer Drawer */}
+      <DashboardCustomizer
+        isOpen={isCustomizerOpen}
+        onClose={() => setIsCustomizerOpen(false)}
+        settings={layoutSettings}
+        onToggleSetting={handleToggleLayoutSetting}
       />
     </div>
   );

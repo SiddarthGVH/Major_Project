@@ -13,9 +13,15 @@ import {
 
 interface WidgetsProps {
   loading?: boolean;
+  showLeaderboard?: boolean;
+  showProductivity?: boolean;
 }
 
-export default function Widgets({ loading = false }: WidgetsProps) {
+export default function Widgets({ 
+  loading = false,
+  showLeaderboard = true,
+  showProductivity = true
+}: WidgetsProps) {
   const teamMembers = [
     {
       name: "Alex Johnson",
@@ -78,11 +84,14 @@ export default function Widgets({ loading = false }: WidgetsProps) {
     );
   }
 
+  if (!showLeaderboard && !showProductivity) return null;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       
       {/* Team Performance Leaderboard */}
-      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 lg:col-span-2 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
+      {showLeaderboard && (
+        <div className={`bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 ${showProductivity ? 'lg:col-span-2' : 'lg:col-span-3'} flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300`}>
         <div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-bold text-brand-heading text-sm">Team performance</h3>
@@ -152,10 +161,12 @@ export default function Widgets({ loading = false }: WidgetsProps) {
             <ArrowUpRight className="h-3 w-3" strokeWidth={2} />
           </a>
         </div>
-      </div>
+        </div>
+      )}
 
       {/* Activity Overview */}
-      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300">
+      {showProductivity && (
+        <div className={`bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 ${showLeaderboard ? 'lg:col-span-1' : 'lg:col-span-3'} flex flex-col justify-between hover:-translate-y-0.5 hover:shadow-md hover:border-brand-border-purple/40 transition-all duration-300`}>
         <div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-bold text-brand-heading text-sm">Activity overview</h3>
@@ -203,7 +214,8 @@ export default function Widgets({ loading = false }: WidgetsProps) {
             <ArrowUpRight className="h-3 w-3" strokeWidth={2} />
           </a>
         </div>
-      </div>
+        </div>
+      )}
 
     </div>
   );

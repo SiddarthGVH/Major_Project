@@ -185,7 +185,7 @@ def startup_event():
         if db.query(models.Lead).first() is None:
             leads = [
                 models.Lead(
-                    id=UUID('l1f80c42-b0c6-4767-88ea-d4b68e9f2950'),
+                    id=UUID('a1f80c42-b0c6-4767-88ea-d4b68e9f2950'),
                     contact_id=UUID('c1f80c42-b0c6-4767-88ea-d4b68e9f2940'),
                     title='SSO Config Approved & Security Review',
                     description='We reviewed the SSO guidelines you sent. Our compliance team approved the SAML setup but they have some questions regarding custom SLAs and liability limits.',
@@ -194,7 +194,7 @@ def startup_event():
                     source='Website'
                 ),
                 models.Lead(
-                    id=UUID('l2f80c42-b0c6-4767-88ea-d4b68e9f2951'),
+                    id=UUID('a2f80c42-b0c6-4767-88ea-d4b68e9f2951'),
                     contact_id=UUID('c2f80c42-b0c6-4767-88ea-d4b68e9f2941'),
                     title='Pricing Inquiry - Custom Enterprise Tier',
                     description='I was looking over the custom analytics dashboard tiers on your pricing page. We have around 40 designers who need priority SLA support.',
@@ -211,7 +211,7 @@ def startup_event():
             deals = [
                 models.Deal(
                     id=UUID('d1f80c42-b0c6-4767-88ea-d4b68e9f2960'),
-                    lead_id=UUID('l1f80c42-b0c6-4767-88ea-d4b68e9f2950'),
+                    lead_id=UUID('a1f80c42-b0c6-4767-88ea-d4b68e9f2950'),
                     company_id=UUID('e1f80c42-b0c6-4767-88ea-d4b68e9f2930'),
                     contact_id=UUID('c1f80c42-b0c6-4767-88ea-d4b68e9f2940'),
                     stage_id=UUID('d1f60c42-b0c6-4767-88ea-d4b68e9f2918'),
@@ -222,7 +222,7 @@ def startup_event():
                 ),
                 models.Deal(
                     id=UUID('d2f80c42-b0c6-4767-88ea-d4b68e9f2961'),
-                    lead_id=UUID('l2f80c42-b0c6-4767-88ea-d4b68e9f2951'),
+                    lead_id=UUID('a2f80c42-b0c6-4767-88ea-d4b68e9f2951'),
                     company_id=UUID('e2f80c42-b0c6-4767-88ea-d4b68e9f2931'),
                     contact_id=UUID('c2f80c42-b0c6-4767-88ea-d4b68e9f2941'),
                     stage_id=UUID('e2f50c42-b0c6-4767-88ea-d4b68e9f2919'),
