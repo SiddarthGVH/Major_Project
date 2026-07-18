@@ -86,9 +86,9 @@ export default function ActivityHeatmap() {
     return cell.allCount;
   };
 
-  // Determine background color weight dynamically
+  // Determine background color weight dynamically (Green-Red alert scale)
   const getCellColor = (count: number) => {
-    if (count === 0) return 'bg-slate-100 dark:bg-slate-800';
+    if (count === 0) return 'bg-red-100/70 dark:bg-red-950/20 border-red-200/50';
     
     // Scale color density based on filter type threshold
     let limit = 8;
@@ -97,10 +97,10 @@ export default function ActivityHeatmap() {
 
     const intensity = Math.min(count / limit, 1);
     
-    if (intensity <= 0.25) return 'bg-brand-accent/20 border-brand-accent/15';
-    if (intensity <= 0.5) return 'bg-brand-accent/40 border-brand-accent/30';
-    if (intensity <= 0.75) return 'bg-brand-accent/70 border-brand-accent/60';
-    return 'bg-brand-accent border-transparent';
+    if (intensity <= 0.25) return 'bg-red-300/60 dark:bg-red-900/40 border-red-300/40';
+    if (intensity <= 0.5) return 'bg-amber-400/50 dark:bg-amber-600/40 border-amber-400/30';
+    if (intensity <= 0.75) return 'bg-emerald-400/60 dark:bg-emerald-600/40 border-emerald-400/40';
+    return 'bg-emerald-600 dark:bg-emerald-500 border-transparent';
   };
 
   const handleMouseEnter = (e: React.MouseEvent, cell: ActivityCell) => {
@@ -209,11 +209,11 @@ export default function ActivityHeatmap() {
         </div>
         <div className="flex items-center space-x-1.5">
           <span>Less</span>
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-slate-100 dark:bg-slate-800" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent/20" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent/40" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent/70" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent" />
+          <div className="h-2.5 w-2.5 rounded-[2px] bg-red-100/70 dark:bg-red-950/20 border border-red-200/50" />
+          <div className="h-2.5 w-2.5 rounded-[2px] bg-red-300/60 dark:bg-red-900/40" />
+          <div className="h-2.5 w-2.5 rounded-[2px] bg-amber-400/50 dark:bg-amber-600/40" />
+          <div className="h-2.5 w-2.5 rounded-[2px] bg-emerald-400/60 dark:bg-emerald-600/40" />
+          <div className="h-2.5 w-2.5 rounded-[2px] bg-emerald-600" />
           <span>More</span>
         </div>
       </div>
