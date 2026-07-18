@@ -87,20 +87,28 @@ export default function ActivityHeatmap() {
   };
 
   // Determine background color weight dynamically
-  const getCellColor = (count: number) => {
-    if (count === 0) return 'bg-slate-100 dark:bg-slate-800';
+  const getCellColor = (count: number, dateStr: string) => {
+    // Parse the date to determine weekends
+    const date = new Date(dateStr);
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+
+    if (count === 0) {
+      if (isWeekend) return 'bg-slate-100 dark:bg-slate-800/60 border-slate-200/20';
+      // Inactive weekday -> GitHub-style red deletion warning background
+      return 'bg-red-100 dark:bg-red-950/20 border-red-200/50';
+    }
     
-    // Scale color density based on filter type threshold
+    // Active day -> GitHub-style green contribution shades
     let limit = 8;
     if (filterType === 'meetings') limit = 3;
     else if (filterType === 'calls') limit = 6;
 
     const intensity = Math.min(count / limit, 1);
     
-    if (intensity <= 0.25) return 'bg-brand-accent/20 border-brand-accent/15';
-    if (intensity <= 0.5) return 'bg-brand-accent/40 border-brand-accent/30';
-    if (intensity <= 0.75) return 'bg-brand-accent/70 border-brand-accent/60';
-    return 'bg-brand-accent border-transparent';
+    if (intensity <= 0.25) return 'bg-green-100 dark:bg-green-950/30 border-green-200/40';
+    if (intensity <= 0.5) return 'bg-green-300 dark:bg-green-800/50 border-green-400/30';
+    if (intensity <= 0.75) return 'bg-green-500 dark:bg-green-700 border-green-600/50';
+    return 'bg-green-700 dark:bg-green-600 border-transparent';
   };
 
   const handleMouseEnter = (e: React.MouseEvent, cell: ActivityCell) => {
@@ -190,7 +198,7 @@ export default function ActivityHeatmap() {
                         key={rowIdx}
                         onMouseEnter={(e) => handleMouseEnter(e, cell)}
                         onMouseLeave={handleMouseLeave}
-                        className={`h-3 w-3 rounded-[3px] border border-black/5 dark:border-white/5 transition-all duration-150 cursor-pointer hover:scale-120 ${getCellColor(count)}`}
+                        className={`h-3 w-3 rounded-[3px] border border-black/5 dark:border-white/5 transition-all duration-150 cursor-pointer hover:scale-120 ${getCellColor(count, cell.dateStr)}`}
                       />
                     );
                   })}
@@ -207,14 +215,20 @@ export default function ActivityHeatmap() {
           <Info className="h-3.5 w-3.5 text-slate-400" />
           <span>Intensity shifts depending on filtered actions count.</span>
         </div>
-        <div className="flex items-center space-x-1.5">
-          <span>Less</span>
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-slate-100 dark:bg-slate-800" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent/20" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent/40" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent/70" />
-          <div className="h-2.5 w-2.5 rounded-[2px] bg-brand-accent" />
-          <span>More</span>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-1">
+            <div className="h-2.5 w-2.5 rounded-[2px] bg-red-100 dark:bg-red-950/20 border border-red-200/50" />
+            <span>Missed Weekday</span>
+          </div>
+          <div className="flex items-center space-x-1.5">
+            <span>Less</span>
+            <div className="h-2.5 w-2.5 rounded-[2px] bg-slate-100 dark:bg-slate-800/60 border border-slate-200/20" />
+            <div className="h-2.5 w-2.5 rounded-[2px] bg-green-100 dark:bg-green-950/30" />
+            <div className="h-2.5 w-2.5 rounded-[2px] bg-green-300 dark:bg-green-800/50" />
+            <div className="h-2.5 w-2.5 rounded-[2px] bg-green-500 dark:bg-green-700" />
+            <div className="h-2.5 w-2.5 rounded-[2px] bg-green-700 dark:bg-green-600" />
+            <span>More</span>
+          </div>
         </div>
       </div>
 
