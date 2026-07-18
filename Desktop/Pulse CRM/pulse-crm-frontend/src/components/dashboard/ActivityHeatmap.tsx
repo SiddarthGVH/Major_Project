@@ -47,12 +47,16 @@ export default function ActivityHeatmap() {
 
       // Determine typical CRM activity profiles
       const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
-      let emailWeight = isWeekend ? 0 : Math.floor(random() * 8);
-      let callWeight = isWeekend ? 0 : Math.floor(random() * 6);
-      let meetingWeight = isWeekend ? 0 : (random() > 0.7 ? Math.floor(random() * 3) : 0);
+      
+      // Deliberately simulate missed weekdays (15% chance) to show red warnings
+      const isMissedWeekday = !isWeekend && (random() > 0.82);
 
-      // Occasionally add highly active spike days
-      if (!isWeekend && random() > 0.9) {
+      let emailWeight = (isWeekend || isMissedWeekday) ? 0 : Math.floor(random() * 8);
+      let callWeight = (isWeekend || isMissedWeekday) ? 0 : Math.floor(random() * 6);
+      let meetingWeight = (isWeekend || isMissedWeekday) ? 0 : (random() > 0.7 ? Math.floor(random() * 3) : 0);
+
+      // Occasionally add highly active spike days (only if not missed)
+      if (!isWeekend && !isMissedWeekday && random() > 0.9) {
         emailWeight += 8;
         callWeight += 5;
         meetingWeight += 2;
