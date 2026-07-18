@@ -439,7 +439,7 @@ export default function ReportsView() {
               </div>
 
               {/* Radial Progress Funnel Rings */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mt-4">
+              <div className="flex flex-col items-center gap-5 mt-4">
                 {/* Left: SVG Radial Rings */}
                 <div className="w-44 h-44 shrink-0 relative flex items-center justify-center select-none">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
