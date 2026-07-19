@@ -67,10 +67,10 @@ export default function PipelineView() {
     if (deal.stage === 'Proposal' && deal.priority === 'High') {
       return "Critical Deal: Proposal sent 3 days ago. Schedule a proposal review session immediately.";
     }
-    if (deal.stage === 'Negotiation') {
+    if (deal.stage === 'Under Review') {
       return "Close Date approaching. Send the contract agreement link to confirm legal alignment.";
     }
-    if (deal.priority === 'Low' && deal.stage === 'Lead') {
+    if (deal.priority === 'Low' && deal.stage === 'Qualified') {
       return "Nurture track: Send standard developer sandboxing API resources.";
     }
     return "Check in with stakeholders to maintain deal velocity.";

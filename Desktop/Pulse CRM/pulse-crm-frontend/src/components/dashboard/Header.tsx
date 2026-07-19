@@ -23,9 +23,18 @@ interface HeaderProps {
   onTabChange?: (tab: string) => void;
   onOpenCommandPalette?: () => void;
   onSignOut?: () => void;
+  userRole: 'representative' | 'manager' | 'admin';
 }
 
-export default function Header({ collapsed, setCollapsed, onNewReportClick, onTabChange, onOpenCommandPalette, onSignOut }: HeaderProps) {
+export default function Header({ 
+  collapsed, 
+  setCollapsed, 
+  onNewReportClick, 
+  onTabChange, 
+  onOpenCommandPalette, 
+  onSignOut,
+  userRole
+}: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -96,12 +105,32 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
     { id: 4, text: "New report 'Q3 Sales Forecast' ready for review.", type: "report", time: "5h ago" },
   ];
 
-  const searchResults = [
-    { title: "Alex Johnson (User)", type: "Team", link: "#" },
-    { title: "Acme Corp (Company)", type: "Companies", link: "#" },
-    { title: "Enterprise SaaS Upgrade (Deal)", type: "Deals", link: "#" },
-    { title: "Q3 Strategy Planning (Task)", type: "Tasks", link: "#" },
-  ].filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  // Dynamic profile details mapping
+  const getUserProfile = () => {
+    switch (userRole) {
+      case 'admin':
+        return {
+          name: "System Admin",
+          email: "admin@pulse.crm",
+          avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&fit=crop&q=80"
+        };
+      case 'manager':
+        return {
+          name: "Alex Johnson",
+          email: "alex.johnson@pulse.crm",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80"
+        };
+      case 'representative':
+      default:
+        return {
+          name: "Sarah Johnson",
+          email: "sarah.johnson@pulse.crm",
+          avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80"
+        };
+    }
+  };
+
+  const profile = getUserProfile();
 
   return (
     <header className="h-16 bg-white border-b border-brand-border-purple/20 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm/5 text-brand-text">
@@ -145,6 +174,14 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
 
       {/* Top Bar Actions Cluster - Light Themed */}
       <div className="flex items-center space-x-3.5">
+        {/* Role Badge (Static) */}
+        <div className="flex items-center space-x-1.5 bg-slate-50 border border-brand-border-purple/10 px-2.5 py-1.5 rounded-lg text-xs font-bold text-brand-text shadow-sm/5 select-none">
+          <span className="text-[9px] text-slate-400 font-extrabold uppercase">Role:</span>
+          <span className="text-brand-heading font-extrabold capitalize">
+            {userRole === 'representative' ? 'Sales Rep' : userRole === 'manager' ? 'Sales Manager' : 'Admin'}
+          </span>
+        </div>
+
         {/* + New Report CTA in Medium Purple */}
         <button
           onClick={onNewReportClick}
@@ -237,19 +274,19 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
           >
             <div className="h-7 w-7 rounded-full bg-slate-200 overflow-hidden border border-brand-border-purple/20">
               <img 
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80" 
-                alt="Alex Johnson Avatar" 
+                src={profile.avatar} 
+                alt={`${profile.name} Avatar`} 
                 className="h-full w-full object-cover"
               />
             </div>
-            <span className="text-xs font-bold text-brand-text hidden md:inline-block">Alex Johnson</span>
+            <span className="text-xs font-bold text-brand-text hidden md:inline-block">{profile.name}</span>
           </button>
 
           {showProfileMenu && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-brand-border-purple/35 rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="px-4 py-2.5 bg-slate-50 border-b border-brand-border-purple/15 text-left">
-                <p className="text-xs font-bold text-brand-text">Alex Johnson</p>
-                <p className="text-[10px] text-slate-400 truncate mt-0.5 font-bold">alex.johnson@pulse.com</p>
+                <p className="text-xs font-bold text-brand-text">{profile.name}</p>
+                <p className="text-[10px] text-slate-450 truncate mt-0.5 font-bold">{profile.email}</p>
               </div>
               <div className="py-1">
                 <button 
@@ -282,7 +319,7 @@ export default function Header({ collapsed, setCollapsed, onNewReportClick, onTa
                     setShowProfileMenu(false);
                     if (onSignOut) onSignOut();
                   }}
-                  className="flex items-center space-x-2 w-full px-4 py-2 text-xs text-rose-600 hover:bg-rose-55 hover:text-rose-700 transition-colors text-left cursor-pointer"
+                  className="flex items-center space-x-2 w-full px-4 py-2 text-xs text-rose-650 hover:bg-rose-50 hover:text-rose-700 transition-colors text-left cursor-pointer"
                 >
                   <LogOut className="h-3.5 w-3.5" strokeWidth={1.75} />
                   <span>Sign Out</span>

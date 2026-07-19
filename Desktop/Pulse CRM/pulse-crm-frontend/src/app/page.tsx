@@ -27,6 +27,17 @@ import CommandPalette from '@/components/dashboard/CommandPalette';
 import AICopilotChat from '@/components/dashboard/AICopilotChat';
 import DashboardCustomizer from '@/components/dashboard/DashboardCustomizer';
 import ActivityHeatmap from '@/components/dashboard/ActivityHeatmap';
+import CalendarView from '@/components/dashboard/CalendarView';
+import ManagerDashboardView from '@/components/dashboard/ManagerDashboardView';
+import ForecastView from '@/components/dashboard/ForecastView';
+import TeamPerformanceView from '@/components/dashboard/TeamPerformanceView';
+import AdminDashboardView from '@/components/dashboard/AdminDashboardView';
+import UsersView from '@/components/dashboard/UsersView';
+import RolesPermissionsView from '@/components/dashboard/RolesPermissionsView';
+import IntegrationsView from '@/components/dashboard/IntegrationsView';
+import AutomationView from '@/components/dashboard/AutomationView';
+import AIModelsView from '@/components/dashboard/AIModelsView';
+import AuditLogsView from '@/components/dashboard/AuditLogsView';
 import { Calendar, Filter, ChevronDown, Check, Settings2, Loader2 } from 'lucide-react';
 
 export default function DashboardHome() {
@@ -39,9 +50,11 @@ export default function DashboardHome() {
     setIsAuthLoading(false);
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = (role: 'representative' | 'manager' | 'admin') => {
     setIsAuthenticated(true);
     sessionStorage.setItem('pulse-crm-auth', 'true');
+    setUserRole(role);
+    localStorage.setItem('pulse-crm-role', role);
   };
 
   const handleSignOut = () => {
@@ -55,6 +68,21 @@ export default function DashboardHome() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   
+  // User Role State
+  const [userRole, setUserRole] = useState<'representative' | 'manager' | 'admin'>('manager');
+
+  useEffect(() => {
+    const savedRole = localStorage.getItem('pulse-crm-role') as any;
+    if (savedRole && ['representative', 'manager', 'admin'].includes(savedRole)) {
+      setUserRole(savedRole);
+    }
+  }, []);
+
+  const handleSetUserRole = (role: 'representative' | 'manager' | 'admin') => {
+    setUserRole(role);
+    localStorage.setItem('pulse-crm-role', role);
+  };
+
   // Layout Customization States
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [layoutSettings, setLayoutSettings] = useState({
@@ -164,6 +192,7 @@ export default function DashboardHome() {
         setActiveTab={setActiveTab} 
         collapsed={sidebarCollapsed} 
         setCollapsed={setSidebarCollapsed} 
+        userRole={userRole}
       />
 
       {/* Main dashboard content container */}
@@ -177,6 +206,7 @@ export default function DashboardHome() {
           onTabChange={(tab) => setActiveTab(tab)}
           onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
           onSignOut={handleSignOut}
+          userRole={userRole}
         />
 
         {/* Dashboard inner scroll view with increased whitespace */}
@@ -187,7 +217,7 @@ export default function DashboardHome() {
             <ContactsView />
           ) : activeTab === 'companies' ? (
             <CompaniesView />
-          ) : (activeTab === 'deals' || activeTab === 'pipeline') ? (
+          ) : (activeTab === 'deals' || activeTab === 'pipeline' || activeTab === 'team pipeline') ? (
             <PipelineView />
           ) : activeTab === 'products' ? (
             <ProductsView />
@@ -209,6 +239,28 @@ export default function DashboardHome() {
             <ProfileView />
           ) : activeTab === 'notifications' ? (
             <NotificationsView />
+          ) : activeTab === 'calendar' ? (
+            <CalendarView />
+          ) : activeTab === 'forecast' ? (
+            <ForecastView />
+          ) : activeTab === 'team performance' ? (
+            <TeamPerformanceView />
+          ) : activeTab === 'users' ? (
+            <UsersView />
+          ) : activeTab === 'roles & permissions' ? (
+            <RolesPermissionsView />
+          ) : activeTab === 'integrations' ? (
+            <IntegrationsView />
+          ) : activeTab === 'automation' ? (
+            <AutomationView />
+          ) : activeTab === 'ai models' ? (
+            <AIModelsView />
+          ) : activeTab === 'audit logs' ? (
+            <AuditLogsView />
+          ) : activeTab === 'dashboard' && userRole === 'manager' ? (
+            <ManagerDashboardView onTabChange={setActiveTab} />
+          ) : activeTab === 'dashboard' && userRole === 'admin' ? (
+            <AdminDashboardView />
           ) : (
             <>
               {/* Header block with improved contrast & page title visual prominence */}
@@ -321,6 +373,7 @@ export default function DashboardHome() {
                         loading={isLoading} 
                         showLeaderboard={layoutSettings.leaderboard}
                         showProductivity={layoutSettings.productivity}
+                        onTabChange={setActiveTab}
                       />
                     )}
 

@@ -14,6 +14,8 @@ export interface Lead {
   owner: string;
   ownerAvatar: string;
   notes: string;
+  value?: string | number;
+  source?: string;
   timeline: { id: number; type: string; title: string; desc: string; time: string }[];
   emails: { id: number; subject: string; body: string; time: string }[];
   calls: { id: number; outcome: string; notes: string; time: string }[];
@@ -45,6 +47,7 @@ export interface Company {
   owner: string;
   ownerAvatar: string;
   notes: string;
+  domain?: string;
   timeline: { id: number; title: string; time: string }[];
   emails: { id: number; subject: string; time: string }[];
   files: { id: number; name: string; size: string }[];
@@ -75,6 +78,7 @@ export const MOCK_LEADS: Lead[] = [
     owner: "Sarah Johnson",
     ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80",
     notes: "Met at TechEx 2025. Interested in migrating their legacy database to our unified SaaS solution. Has a budget of ₹120K. Ready for proposal stage next week.",
+    source: "Referral",
     timeline: [
       { id: 1, type: "creation", title: "Lead Ingestion", desc: "Lead created from TechEx 2025 conference scan.", time: "4 days ago" },
       { id: 2, type: "call", title: "Discovery Call Logged", desc: "Spoke to Alex. Confirmed decision matrix and budget availability.", time: "2 days ago" }
@@ -99,6 +103,7 @@ export const MOCK_LEADS: Lead[] = [
     owner: "Alex Johnson",
     ownerAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&fit=crop&q=80",
     notes: "Currently evaluating competitor pricing. Emphasized compliance standards (HIPAA/GDPR) as critical factors. Scheduled a follow-up demo.",
+    source: "Website",
     timeline: [
       { id: 1, type: "creation", title: "Lead Form Submission", desc: "Lead created from inbound marketing landing page.", time: "6 days ago" },
       { id: 2, type: "email", title: "Introduction Email Sent", desc: "Shared introduction and pricing tiers overview.", time: "5 days ago" }
@@ -121,6 +126,7 @@ export const MOCK_LEADS: Lead[] = [
     owner: "Sarah Johnson",
     ownerAvatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&fit=crop&q=80",
     notes: "Inbound contact request. Enterprise customer asking about custom SSO support and priority SLA details. Immediate response required.",
+    source: "LinkedIn",
     timeline: [
       { id: 1, type: "creation", title: "Inbound Request Recieved", desc: "Submitted custom enterprise contact form.", time: "10 hours ago" }
     ],
@@ -140,6 +146,7 @@ export const MOCK_LEADS: Lead[] = [
     owner: "David Wilson",
     ownerAvatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&fit=crop&q=80",
     notes: "Small business prospect. Rejected pricing packages as out of scope for budget limit. Keep in cold nurturing list for low-tier launch.",
+    source: "Cold Email",
     timeline: [
       { id: 1, type: "creation", title: "API Ingestion", desc: "Lead created through automated developer partner API.", time: "10 days ago" },
       { id: 2, type: "call", title: "Call Outcome: Busy", desc: "Tried logging call, prospect rejected due to resource limits.", time: "8 days ago" }
@@ -310,7 +317,7 @@ export async function getLeads(): Promise<Lead[]> {
         ...fallback, // Inherit all mock fields (timeline, emails, calls, meetings, owner, score)
         id: dl.id,
         status: dl.status || fallback.status,
-        value: String(dl.value || fallback.value),
+        value: String(dl.value || fallback.value || ''),
         notes: dl.description || fallback.notes
       };
     });
@@ -374,7 +381,7 @@ export async function getCompanies(): Promise<Company[]> {
         ...fallback, // Inherit mock contacts, timeline, emails, files
         id: dc.id,
         name: dc.name,
-        domain: dc.domain || fallback.domain,
+        domain: dc.domain || fallback.domain || '',
         industry: dc.industry || fallback.industry
       };
     });

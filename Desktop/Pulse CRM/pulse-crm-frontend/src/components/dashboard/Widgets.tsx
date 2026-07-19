@@ -15,12 +15,14 @@ interface WidgetsProps {
   loading?: boolean;
   showLeaderboard?: boolean;
   showProductivity?: boolean;
+  onTabChange?: (tab: string) => void;
 }
 
 export default function Widgets({ 
   loading = false,
   showLeaderboard = true,
-  showProductivity = true
+  showProductivity = true,
+  onTabChange
 }: WidgetsProps) {
   const teamMembers = [
     {
@@ -153,13 +155,13 @@ export default function Widgets({
 
         {/* Action Link */}
         <div className="mt-4 pt-3 border-t border-brand-border-purple/15 text-center">
-          <a 
-            href="#" 
-            className="inline-flex items-center space-x-1 text-xs font-bold text-brand-accent hover:text-brand-accent-hover transition-colors"
+          <button 
+            onClick={() => onTabChange?.('reports')}
+            className="inline-flex items-center space-x-1 text-xs font-bold text-brand-accent hover:text-brand-accent-hover transition-colors bg-transparent border-0 cursor-pointer"
           >
             <span>View full leaderboard</span>
             <ArrowUpRight className="h-3 w-3" strokeWidth={2} />
-          </a>
+          </button>
         </div>
         </div>
       )}
@@ -206,13 +208,13 @@ export default function Widgets({
 
         {/* Action Link */}
         <div className="mt-4 pt-3 border-t border-brand-border-purple/15 text-center">
-          <a 
-            href="#" 
-            className="inline-flex items-center space-x-1 text-xs font-bold text-brand-accent hover:text-brand-accent-hover transition-colors"
+          <button 
+            onClick={() => onTabChange?.('reports')}
+            className="inline-flex items-center space-x-1 text-xs font-bold text-brand-accent hover:text-brand-accent-hover transition-colors bg-transparent border-0 cursor-pointer"
           >
-            <span>View activity report</span>
+            <span>View all reports</span>
             <ArrowUpRight className="h-3 w-3" strokeWidth={2} />
-          </a>
+          </button>
         </div>
         </div>
       )}

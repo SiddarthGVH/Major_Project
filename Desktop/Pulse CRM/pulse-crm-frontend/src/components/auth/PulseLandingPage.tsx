@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 
 interface PulseLandingPageProps {
-  onLogin: () => void;
+  onLogin: (role: 'representative' | 'manager' | 'admin') => void;
 }
 
 export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
@@ -31,6 +31,9 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
   
   // Interactive Product Suite Tab State
   const [activeTab, setActiveTab] = useState(0);
+  
+  // Login Role Selection State
+  const [selectedRole, setSelectedRole] = useState<'representative' | 'manager' | 'admin'>('manager');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +43,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
     setTimeout(() => {
       setIsLoading(false);
       setIsModalOpen(false);
-      onLogin();
+      onLogin(selectedRole);
     }, 1200); // Simulated loading
   };
 
@@ -49,7 +52,7 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
     setTimeout(() => {
       setIsLoading(false);
       setIsModalOpen(false);
-      onLogin();
+      onLogin(selectedRole);
     }, 1200);
   };
 
@@ -561,10 +564,8 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                           <linearGradient id="donutEmerald" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#059669" /><stop offset="100%" stopColor="#34d399" /></linearGradient>
                           <linearGradient id="donutPink" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#db2777" /><stop offset="100%" stopColor="#f472b6" /></linearGradient>
                         </defs>
-                        {/* Background rings */}
                         <circle cx="20" cy="20" r="16" fill="transparent" stroke="#e2e8f0" strokeWidth="2.5" />
                         <circle cx="20" cy="20" r="11.5" fill="transparent" stroke="#e2e8f0" strokeWidth="2.5" />
-                        {/* Progress tracks */}
                         <circle cx="20" cy="20" r="16" fill="transparent" stroke="url(#donutEmerald)" strokeWidth="2.5" strokeDasharray="100.5" strokeDashoffset="14" strokeLinecap="round" />
                         <circle cx="20" cy="20" r="11.5" fill="transparent" stroke="url(#donutPink)" strokeWidth="2.5" strokeDasharray="72.2" strokeDashoffset="34.6" strokeLinecap="round" />
                       </svg>
@@ -604,6 +605,56 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                         <span className="w-8 text-right font-black">{rep.rev}</span>
                       </div>
                     ))}
+                  </div>
+                )
+              },
+              {
+                title: 'Tailored Workspace Roles',
+                desc: 'Log in as Sales Rep, Sales Manager, or System Admin to dynamically load custom views, permission grids, and workflows.',
+                color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/20',
+                iconColor: 'text-blue-600',
+                badge: 'Role RBAC Security',
+                chart: (
+                  <div className="flex items-center justify-center space-x-2 mt-6 h-24 select-none">
+                    <span className="px-2 py-1 rounded text-[8px] font-black uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-150 shadow-sm/5">Admin</span>
+                    <span className="px-2 py-1 rounded text-[8px] font-black uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-150 shadow-sm/5">Manager</span>
+                    <span className="px-2 py-1 rounded text-[8px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-150 shadow-sm/5">Sales Rep</span>
+                  </div>
+                )
+              },
+              {
+                title: 'Visual Automation Designer',
+                desc: 'Build complex automations inside an interactive builder canvas. Bind trigger actions, criteria conditions, and webhook notifications.',
+                color: 'from-amber-500/10 to-orange-500/10 border-amber-500/20',
+                iconColor: 'text-amber-600',
+                badge: 'No-Code Pipelines',
+                chart: (
+                  <div className="flex items-center justify-center space-x-2 mt-6 h-24 select-none">
+                    <div className="bg-white border border-slate-200 p-2 rounded-lg text-[8px] font-black text-slate-800 shadow-sm flex items-center space-x-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"/>
+                      <span>Trigger Event</span>
+                    </div>
+                    <div className="h-0.5 w-5 bg-slate-200 relative">
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 border-y-3 border-l-3 border-y-transparent border-l-slate-350"/>
+                    </div>
+                    <div className="bg-white border border-slate-200 p-2 rounded-lg text-[8px] font-black text-slate-800 shadow-sm flex items-center space-x-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-blue-500"/>
+                      <span>Execute Action</span>
+                    </div>
+                  </div>
+                )
+              },
+              {
+                title: 'ML Feature Engineering',
+                desc: 'Compute leads engagement levels, reply velocity rates, touchpoint recency days, and quality indexes in real-time.',
+                color: 'from-purple-500/10 to-fuchsia-500/10 border-purple-500/20',
+                iconColor: 'text-purple-600',
+                badge: 'Feature Profiling',
+                chart: (
+                  <div className="space-y-1.5 mt-4 h-24 flex flex-col justify-center select-none text-[8px] font-bold text-slate-500 px-1">
+                    <div className="flex justify-between border-b border-slate-100 pb-0.5"><span>Engagement Level</span><span className="text-emerald-600 font-extrabold uppercase">High (55 pts)</span></div>
+                    <div className="flex justify-between border-b border-slate-100 pb-0.5"><span>Response Velocity</span><span className="text-blue-600 font-extrabold uppercase">Fast (82%)</span></div>
+                    <div className="flex justify-between border-b border-slate-100 pb-0.5"><span>Interaction Recency</span><span className="text-purple-600 font-extrabold uppercase">2 Days Ago</span></div>
                   </div>
                 )
               }
@@ -687,6 +738,22 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                     className="w-full pl-10 pr-4 py-2 border border-brand-border-purple/35 rounded-xl text-xs text-brand-text bg-slate-50/50 placeholder-slate-400 focus:outline-none focus:border-brand-accent transition-colors shadow-sm/5"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-extrabold text-brand-heading uppercase tracking-wider mb-2">
+                  Workspace Access Role
+                </label>
+                <select
+                  disabled={isLoading}
+                  value={selectedRole}
+                  onChange={(e) => setSelectedRole(e.target.value as any)}
+                  className="w-full px-3.5 py-2 border border-brand-border-purple/35 rounded-xl text-xs text-brand-text bg-slate-50/50 focus:outline-none focus:border-brand-accent transition-colors shadow-sm/5 font-extrabold cursor-pointer"
+                >
+                  <option value="representative">Sales Representative</option>
+                  <option value="manager">Sales Manager</option>
+                  <option value="admin">System Administrator</option>
+                </select>
               </div>
 
               {/* Login Submit Button */}
