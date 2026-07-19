@@ -18,16 +18,18 @@ from features import (
 
 import pandas as pd
 
+SOURCE = "database"  # Change to "mock" for mock data
+def build_feature_vectors(source=SOURCE):
 
-def build_feature_vectors():
-
-    # -----------------------------
-    # Load Data
-    # -----------------------------
-    leads = get_leads(source="mock")
-    companies = get_companies(source="mock")
-    activities = get_activities(source="mock")
-    emails = get_emails(source="mock")
+    leads = get_leads(source)
+    companies = get_companies(source)
+    activities = get_activities(source)
+    # Temporary: database emails table is empty.
+    # Use mock emails until backend populates email data.
+    if source == "mock":
+        emails = get_emails("mock")
+    else:
+        emails = get_emails("database")
 
     
 
@@ -37,9 +39,6 @@ def build_feature_vectors():
 
     feature_vectors = []
 
-    # -----------------------------
-    # Build Features
-    # -----------------------------
     for _, lead in merged.iterrows():
 
         lead_id = lead["lead_id"]
@@ -61,7 +60,7 @@ def build_feature_vectors():
         )
 
         engagement = engagement_score(
-            lead_activities
+            lead_emails
         )
 
         engagement_status = engagement_level(
@@ -116,12 +115,10 @@ def build_feature_vectors():
 
 if __name__ == "__main__":
 
-    features_df = build_feature_vectors()
-    save_feature_vectors(features_df)
+    features_df = build_feature_vectors(source=SOURCE)
 
-    print("\nGenerated Feature Vectors\n")
-
-    print(features_df)
+    print("\n===== FEATURE VECTORS =====\n")
+    print(features_df.to_string(index=False))
 
     features_df.to_csv(
         "ai/mock_data/feature_vectors.csv",

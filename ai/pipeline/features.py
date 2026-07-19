@@ -34,26 +34,34 @@ def source_quality(source):
     return mapping.get(source,50)
 
 
-def engagement_score(activities):
+'''def engagement_score(emails):
 
     score = 0
 
-    for _, row in activities.iterrows():
+    if emails.empty:
+        return score
 
-        if row["type"] == "email" and row["status"] == "sent":
+    for _, row in emails.iterrows():
+
+        direction = str(row.get("direction", "")).lower()
+
+        if direction == "outbound":
             score += 5
 
-        elif row["type"] == "email" and row["status"] == "replied":
+        elif direction == "inbound":
             score += 15
 
-        elif row["type"] == "call":
-            score += 10
+    return score'''
+def engagement_score(emails):
 
-        elif row["type"] == "meeting":
-            score += 20
+    score = 0
 
-        elif row["type"] == "proposal":
-            score += 25
+    for _, row in emails.iterrows():
+
+        score += 5  # email exists
+
+        if row["replied"] == "Yes":
+            score += 15
 
     return score
 
@@ -94,17 +102,33 @@ def reply_level(rate):
 
     return "NO RESPONSE"
 
-from datetime import datetime
+import pandas as pd
 
-def recency_days(activity_df):
 
-    if activity_df.empty:
+def recency_days(activities):
+
+    if activities.empty:
         return 999
 
-    latest = pd.to_datetime(
-        activity_df["created_at"]
-    ).max()
+    # Database uses activity timeline
+    if "created_at" in activities.columns:
+        latest = pd.to_datetime(
+            activities["created_at"]
+        ).max()
 
-    today = pd.Timestamp.today()
+    # Mock data uses activity_date
+    elif "activity_date" in activities.columns:
+        latest = pd.to_datetime(
+            activities["activity_date"]
+        ).max()
+
+    else:
+        return 999
+
+    # Convert timezone-aware timestamp to timezone-naive
+    if latest.tzinfo is not None:
+        latest = latest.tz_localize(None)
+
+    today = pd.Timestamp.now()
 
     return (today - latest).days
