@@ -2,412 +2,614 @@
 
 import React, { useState } from 'react';
 import { 
-  Users, 
-  Database, 
-  Activity, 
-  Cpu, 
-  Settings2, 
-  HardDrive,
-  CheckCircle,
-  AlertTriangle,
-  Play,
-  TrendingUp,
-  Info,
-  Clock
+  TrendingUp, 
+  TrendingDown, 
+  Menu, 
+  Bookmark, 
+  ArrowRight, 
+  Wallet, 
+  Target, 
+  ShoppingBag, 
+  DollarSign
 } from 'lucide-react';
 
 export default function AdminDashboardView() {
-  const [hoveredApiIndex, setHoveredApiIndex] = useState<number | null>(null);
-  const [hoveredStorageIndex, setHoveredStorageIndex] = useState<number | null>(null);
+  const [hoveredMonthIdx, setHoveredMonthIdx] = useState<number | null>(null);
+  const [hoveredTrafficIdx, setHoveredTrafficIdx] = useState<number | null>(null);
+  const [hoveredKpiIdx, setHoveredKpiIdx] = useState<number | null>(null);
 
-  const systemMetrics = {
-    totalUsers: 45,
-    activeUsers: 38,
-    storageUsed: 7.2, // GB
-    storageMax: 10,
-    crmUsageRate: 92, // %
-    apiLatency: 145 // ms
+  // 1. Top Row: 4 KPI Cards with Sparklines
+  const kpiCards = [
+    {
+      title: "Sales",
+      value: "₹45.5k",
+      lastYear: "(₹17.4k Last Year)",
+      change: "142.11%",
+      isPositive: true,
+      sparkline: "M 4 28 C 25 28, 40 18, 60 20 C 80 22, 95 8, 116 8",
+      color: "#10b981"
+    },
+    {
+      title: "Purchase",
+      value: "₹19.5k",
+      lastYear: "(₹16.4k Last Year)",
+      change: "12.11%",
+      isPositive: false,
+      sparkline: "M 4 8 C 25 8, 40 18, 60 16 C 80 14, 95 28, 116 28",
+      color: "#ef4444"
+    },
+    {
+      title: "Return",
+      value: "₹450",
+      lastYear: "(₹10.4k Last Year)",
+      change: "42.11%",
+      isPositive: true,
+      sparkline: "M 4 26 C 25 26, 40 14, 60 18 C 80 20, 95 8, 116 8",
+      color: "#10b981"
+    },
+    {
+      title: "Marketing",
+      value: "₹8.5k",
+      lastYear: "(₹11.4k Last Year)",
+      change: "27.11%",
+      isPositive: false,
+      sparkline: "M 4 8 C 25 8, 40 16, 60 14 C 80 12, 95 28, 116 28",
+      color: "#ef4444"
+    }
+  ];
+
+  // 2. Profit & Sales Overview Data
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"];
+  const onlineData = [10, 40, 95, 68, 88, 72, 110, 75, 125, 115];
+  const inStoreData = [10, 65, 35, 105, 50, 85, 55, 92, 40, 50];
+
+  // Helper to calculate Y coordinate for 0-160K range in SVG (viewBox 540x220)
+  const getY = (val: number) => 190 - (val / 160) * 125;
+
+  // Dynamic smooth path generator that guarantees line passes EXACTLY through point coordinates
+  const buildSmoothPath = (data: number[]) => {
+    const points = data.map((val, i) => ({
+      x: 50 + i * 46,
+      y: 190 - (val / 160) * 125
+    }));
+
+    if (points.length === 0) return '';
+    let d = `M ${points[0].x} ${points[0].y}`;
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i];
+      const p1 = points[i + 1];
+      const cp1x = p0.x + (p1.x - p0.x) / 2;
+      const cp1y = p0.y;
+      const cp2x = p0.x + (p1.x - p0.x) / 2;
+      const cp2y = p1.y;
+      d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p1.x} ${p1.y}`;
+    }
+    return d;
   };
 
-  const integrations = [
-    { name: "Gmail Sync API", status: "Healthy", type: "email" },
-    { name: "Outlook OAuth", status: "Healthy", type: "email" },
-    { name: "Calendar Daemon", status: "Healthy", type: "calendar" },
-    { name: "WhatsApp Gateway", status: "Pending", type: "messenger" }
-  ];
-
-  const aiStatus = [
-    { model: "Lead Scoring (XGBoost)", status: "Active", accuracy: "91.2%", latency: "85ms" },
-    { model: "Recommendation Engine", status: "Active", accuracy: "86.5%", latency: "120ms" },
-    { model: "Conv. Intelligence (LLM)", status: "Active", accuracy: "94.8%", latency: "245ms" }
-  ];
-
-  // Daily API Traffic Data (7 Days)
-  const apiTrafficData = [
-    { day: "Mon", requests: 12400, x: 50, y: 150 },
-    { day: "Tue", requests: 15800, x: 120, y: 120 },
-    { day: "Wed", requests: 14200, x: 190, y: 135 },
-    { day: "Thu", requests: 21000, x: 260, y: 80 },
-    { day: "Fri", requests: 19500, x: 330, y: 95 },
-    { day: "Sat", requests: 8400,  x: 400, y: 180 },
-    { day: "Sun", requests: 9200,  x: 470, y: 170 }
-  ];
-
-  // Storage Distribution Categories
-  const storageBreakdown = [
-    { name: "CRM Records (DB)", size: "2.88 GB", pct: 40, color: "#7957fb" },
-    { name: "Uploaded Attachments", size: "2.52 GB", pct: 35, color: "#7e71f9" },
-    { name: "System Audit Logs", size: "1.08 GB", pct: 15, color: "#7e8cf1" },
-    { name: "Redis Caching", size: "0.72 GB", pct: 10, color: "#6ec2de" }
-  ];
-
-  // AI Inference Latency data
-  const latencyModels = [
-    { name: "Lead Scoring", latency: 85, color: "#6ec2de", height: 50 },
-    { name: "Recommendations", latency: 120, color: "#7e8cf1", height: 80 },
-    { name: "Conv. Intel.", latency: 245, color: "#7957fb", height: 160 }
-  ];
-
-  // Helper to draw donut segments for storage breakdown
-  const getDonutSegments = (data: typeof storageBreakdown, radius = 50) => {
-    let currentAngle = -90;
-    const cx = 80;
-    const cy = 80;
-    
-    return data.map((item) => {
-      const angle = (item.pct / 100) * 360;
-      const startAngleRad = (currentAngle * Math.PI) / 180;
-      const endAngleRad = ((currentAngle + angle) * Math.PI) / 180;
-      
-      const x1 = cx + radius * Math.cos(startAngleRad);
-      const y1 = cy + radius * Math.sin(startAngleRad);
-      const x2 = cx + radius * Math.cos(endAngleRad);
-      const y2 = cy + radius * Math.sin(endAngleRad);
-      
-      const largeArcFlag = angle > 180 ? 1 : 0;
-      
-      const pathData = `
-        M ${x1} ${y1}
-        A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}
-      `;
-      
-      currentAngle += angle;
-      return { path: pathData, color: item.color };
-    });
+  const buildAreaPath = (data: number[]) => {
+    const line = buildSmoothPath(data);
+    const lastX = 50 + (data.length - 1) * 46;
+    return `${line} L ${lastX} 190 L 50 190 Z`;
   };
 
-  const storageSegments = getDonutSegments(storageBreakdown);
+  // 3. User Traffic Donut Data (Total = 100%, 3 Distinct Colors)
+  const rawChannels = [
+    { name: "Direct CRM", pct: "35%", raw: 35, color: "#3b82f6" },       // Bright Royal Blue
+    { name: "Inbound Web", pct: "22%", raw: 22, color: "#ec4899" },      // Vibrant Hot Pink
+    { name: "Partner Referral", pct: "43%", raw: 43, color: "#10b981" }   // Emerald Green
+  ];
+
+  const CIRCUMFERENCE = 2 * Math.PI * 60; // r = 60 => ~376.991
+
+  let currentAccumulatedPercent = 0;
+  const trafficChannels = rawChannels.map(item => {
+    const dashLength = (item.raw / 100) * CIRCUMFERENCE;
+    const strokeDasharray = `${dashLength} ${CIRCUMFERENCE}`;
+    const strokeDashoffset = -((currentAccumulatedPercent / 100) * CIRCUMFERENCE);
+    currentAccumulatedPercent += item.raw;
+    return {
+      ...item,
+      strokeDasharray,
+      strokeDashoffset
+    };
+  });
+
+  // 4. Overview Bottom Summary Bar Metrics
+  const overviewMetrics = [
+    { label: "Account Balance", value: "₹800", icon: Wallet, iconBg: "bg-emerald-50 text-emerald-600" },
+    { label: "Ads Earning", value: "₹400", icon: Target, iconBg: "bg-amber-50 text-amber-600" },
+    { label: "Sales", value: "₹900", icon: ShoppingBag, iconBg: "bg-indigo-50 text-indigo-600" },
+    { label: "Total Earning", value: "₹80", icon: DollarSign, iconBg: "bg-cyan-50 text-cyan-600" }
+  ];
+
+  // 5. Recent Deals / New Arrivals Table Data
+  const newArrivals = [
+    {
+      id: 1,
+      product: "Enterprise DB License",
+      subtitle: "Pharetra, Nulla, Nec, Aliquet",
+      iconBg: "bg-amber-100 text-amber-700",
+      price: "Paid ₹45,800k",
+      deposit: "Paid ₹45k",
+      agentName: "Sophia",
+      agentSub: "Pharetra",
+      status: "Approved",
+      statusClass: "bg-indigo-50 text-indigo-600 border-indigo-200"
+    },
+    {
+      id: 2,
+      product: "Real-time AI Co-pilot Seats",
+      subtitle: "Pharetra, Nulla, Nec, Aliquet",
+      iconBg: "bg-pink-100 text-pink-700",
+      price: "Paid ₹45,800k",
+      deposit: "Paid ₹45k",
+      agentName: "Sophia",
+      agentSub: "Pharetra",
+      status: "In Progress",
+      statusClass: "bg-amber-50 text-amber-600 border-amber-200"
+    },
+    {
+      id: 3,
+      product: "Compliance & Security SLAs",
+      subtitle: "Pharetra, Nulla, Nec, Aliquet",
+      iconBg: "bg-cyan-100 text-cyan-700",
+      price: "Paid ₹45,800k",
+      deposit: "Paid ₹45k",
+      agentName: "Sophia",
+      agentSub: "Pharetra",
+      status: "Success",
+      statusClass: "bg-emerald-50 text-emerald-600 border-emerald-200"
+    },
+    {
+      id: 4,
+      product: "SSO Migration Portal",
+      subtitle: "Pharetra, Nulla, Nec, Aliquet",
+      iconBg: "bg-slate-200 text-slate-700",
+      price: "Paid ₹45,800k",
+      deposit: "Paid ₹45k",
+      agentName: "Sophia",
+      agentSub: "Pharetra",
+      status: "Rejected",
+      statusClass: "bg-rose-50 text-rose-600 border-rose-200"
+    }
+  ];
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div>
         <h1 className="text-3xl font-sans text-brand-heading tracking-tight font-bold">
           Admin Dashboard
         </h1>
         <p className="text-xs md:text-sm text-brand-text/75 mt-1 font-medium tracking-wide">
-          Monitor system diagnostics, database allocation, background integrations, and AI pipelines.
+          Monitor system diagnostics, revenue performance, channel distribution, and transaction logs.
         </p>
       </div>
 
-      {/* KPI Core Row */}
+      {/* 1. TOP ROW: 4 KPI Cards with Sparklines */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total Users */}
-        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-1.5 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-          <div className="flex justify-between items-center">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Total System Users</span>
-            <Users className="h-4 w-4 text-brand-accent" />
-          </div>
-          <h4 className="text-2xl font-bold text-brand-heading">{systemMetrics.totalUsers}</h4>
-          <span className="text-[9px] text-slate-400 font-bold block mt-1">
-            Across 3 authorization roles
-          </span>
-        </div>
-
-        {/* Active Users */}
-        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-1.5 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-          <div className="flex justify-between items-center">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Active Concurrent Sessions</span>
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-          <h4 className="text-2xl font-bold text-brand-heading">{systemMetrics.activeUsers}</h4>
-          <span className="text-[9px] text-emerald-600 font-extrabold block mt-1">
-            {(systemMetrics.activeUsers / systemMetrics.totalUsers * 100).toFixed(0)}% Activity Ratio
-          </span>
-        </div>
-
-        {/* Storage */}
-        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-2 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-          <div className="flex justify-between items-center">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Storage Consumption</span>
-            <Database className="h-4 w-4 text-brand-blue" />
-          </div>
-          <h4 className="text-2xl font-bold text-brand-heading">
-            {((systemMetrics.storageUsed / systemMetrics.storageMax) * 100).toFixed(0)}%
-          </h4>
-          <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-            <div className="h-full bg-brand-accent rounded-full" style={{ width: `${(systemMetrics.storageUsed / systemMetrics.storageMax) * 100}%` }} />
-          </div>
-        </div>
-
-        {/* System Health */}
-        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-1.5 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-          <div className="flex justify-between items-center">
-            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Core System Health</span>
-            <Activity className="h-4 w-4 text-emerald-500" />
-          </div>
-          <div className="flex items-center space-x-1.5">
-            <h4 className="text-2xl font-bold text-brand-heading">Online</h4>
-          </div>
-          <span className="text-[9px] text-slate-400 font-bold block mt-1">
-            API latency average: {systemMetrics.apiLatency}ms
-          </span>
-        </div>
-      </div>
-
-      {/* CHARTS GRID (2 Columns: API load area chart & storage allocation donut) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Daily API Request Load Area Chart (2 Cols) */}
-        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 lg:col-span-2 flex flex-col justify-between hover:border-brand-border-purple/45 hover:shadow-md transition-all duration-300">
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center space-x-2">
-                <h3 className="font-bold text-brand-heading text-sm">CRM Request Traffic</h3>
-                <span title="Operational query traffic logged across all API endpoints in the last 7 days.">
-                  <Info className="h-3.5 w-3.5 text-slate-400 cursor-help" />
+        {kpiCards.map((kpi, idx) => {
+          const isCardHovered = hoveredKpiIdx === idx;
+          return (
+            <div 
+              key={idx} 
+              onMouseEnter={() => setHoveredKpiIdx(idx)}
+              onMouseLeave={() => setHoveredKpiIdx(null)}
+              className={`bg-white border rounded-2xl p-5 shadow-2xs transition-all duration-300 flex flex-col justify-between select-none relative overflow-hidden cursor-pointer ${
+                isCardHovered ? 'border-indigo-300 shadow-md -translate-y-1' : 'border-slate-200/90'
+              }`}
+            >
+              <div>
+                <span className="text-xs font-semibold text-slate-500 block text-center">
+                  {kpi.title}
+                </span>
+                <h2 className="text-3xl font-black text-indigo-900 text-center mt-1 font-sans tracking-tight">
+                  {kpi.value}
+                </h2>
+                <span className="text-[10px] text-slate-400 font-medium block text-center mt-0.5">
+                  {kpi.lastYear}
                 </span>
               </div>
-              <span className="text-[10px] font-extrabold bg-brand-sidebar-hover/60 text-brand-text px-2 py-1 rounded">
-                Daily API Queries
-              </span>
+
+              {/* Sparkline & Percentage Badge Row */}
+              <div className="flex items-end justify-between mt-4">
+                <div className="flex items-center space-x-1">
+                  {kpi.isPositive ? (
+                    <TrendingUp className="h-3.5 w-3.5 text-emerald-500" />
+                  ) : (
+                    <TrendingDown className="h-3.5 w-3.5 text-rose-500" />
+                  )}
+                  <span className={`text-xs font-bold ${kpi.isPositive ? 'text-emerald-500' : 'text-rose-500'}`}>
+                    {kpi.change}
+                  </span>
+                </div>
+
+                {/* Sparkline SVG Container */}
+                <div className="w-24 h-8 shrink-0 overflow-hidden flex items-center justify-end">
+                  <svg className="w-full h-full p-0.5" viewBox="0 0 120 36" preserveAspectRatio="none">
+                    <path 
+                      d={kpi.sparkline} 
+                      fill="none" 
+                      stroke={kpi.color} 
+                      strokeWidth={isCardHovered ? "3" : "2.5"} 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                      className="transition-all duration-200"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 2. MIDDLE ROW: 2/3 Profit & Sales Overview Chart + 1/3 User Traffic Donut Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Left (8 Cols): Profit & Sales Overview */}
+        <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs flex flex-col justify-between hover:shadow-md transition-all duration-300 relative">
+          <div>
+            {/* Title & Legend Header */}
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-extrabold text-slate-900 text-base">Profit &amp; Sales Overview</h3>
+              <div className="flex items-center space-x-6 text-xs font-semibold">
+                <div className="flex items-center space-x-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                  <span className="text-slate-600">Online</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-rose-500" />
+                  <span className="text-slate-600">In Store</span>
+                </div>
+                <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer border-0 bg-transparent">
+                  <Menu className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
-            {/* SVG Area Chart */}
-            <div className="relative h-56 w-full mt-4">
-              <svg className="w-full h-full" viewBox="0 0 520 200" preserveAspectRatio="none">
+            {/* Main Multi-Curve Area Chart */}
+            <div className="h-64 w-full relative mt-4 select-none">
+              <svg className="w-full h-full" viewBox="0 0 540 220" preserveAspectRatio="none">
                 <defs>
-                  <linearGradient id="admin-api-gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#7957fb" stopOpacity="0.15" />
-                    <stop offset="100%" stopColor="#7957fb" stopOpacity="0.0" />
+                  {/* Fill Gradients */}
+                  <linearGradient id="onlineFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+                  </linearGradient>
+                  <linearGradient id="storeFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#f43f5e" stopOpacity="0.0" />
                   </linearGradient>
                 </defs>
 
-                {/* Horizontal Gridlines */}
-                <line x1="40" y1="30" x2="500" y2="30" stroke="#7e8cf1" strokeOpacity="0.1" strokeWidth="1" />
-                <line x1="40" y1="80" x2="500" y2="80" stroke="#7e8cf1" strokeOpacity="0.1" strokeWidth="1" />
-                <line x1="40" y1="130" x2="500" y2="130" stroke="#7e8cf1" strokeOpacity="0.1" strokeWidth="1" />
-                <line x1="40" y1="180" x2="500" y2="180" stroke="#7e8cf1" strokeOpacity="0.15" strokeWidth="1.5" />
+                {/* Y-Axis Gridlines & Labels */}
+                {[
+                  { y: 30, label: "160K" },
+                  { y: 70, label: "120K" },
+                  { y: 110, label: "80K" },
+                  { y: 150, label: "40K" },
+                  { y: 190, label: "0K" }
+                ].map((g, i) => (
+                  <g key={i}>
+                    <line x1="40" y1={g.y} x2="520" y2={g.y} stroke="#f1f5f9" strokeWidth="1" />
+                    <text x="5" y={g.y + 4} className="text-[9px] font-bold fill-slate-400 font-sans">{g.label}</text>
+                  </g>
+                ))}
 
-                {/* Axis Labels */}
-                <text x="10" y="34" className="text-[9px] font-bold fill-slate-400 tabular-nums">25K</text>
-                <text x="10" y="84" className="text-[9px] font-bold fill-slate-400 tabular-nums">15K</text>
-                <text x="10" y="134" className="text-[9px] font-bold fill-slate-400 tabular-nums">5K</text>
-
-                {/* Shaded Area */}
+                {/* Dual Area Fill Curves */}
                 <path 
-                  d={`M 50 180 L 50 150 Q 85 135 120 120 T 190 135 T 260 80 T 330 95 T 400 180 T 470 170 L 470 180 Z`} 
-                  fill="url(#admin-api-gradient)"
+                  d={buildAreaPath(onlineData)} 
+                  fill="url(#onlineFill)" 
+                />
+                <path 
+                  d={buildAreaPath(inStoreData)} 
+                  fill="url(#storeFill)" 
                 />
 
-                {/* Chart Line Path */}
+                {/* Stroke Lines */}
                 <path 
-                  d="M 50 150 Q 85 135 120 120 T 190 135 T 260 80 T 330 95 T 400 180 T 470 170" 
+                  d={buildSmoothPath(onlineData)} 
                   fill="none" 
-                  stroke="#7957fb" 
+                  stroke="#f59e0b" 
                   strokeWidth="2.5" 
-                  strokeLinecap="round"
+                />
+                <path 
+                  d={buildSmoothPath(inStoreData)} 
+                  fill="none" 
+                  stroke="#f43f5e" 
+                  strokeWidth="2.5" 
                 />
 
-                {/* Interactive Points */}
-                {apiTrafficData.map((pt, idx) => {
-                  const isHovered = hoveredApiIndex === idx;
+                {/* Active Hover Column Highlights & Dots */}
+                {months.map((m, i) => {
+                  const cx = 50 + i * 46;
+                  const isHovered = hoveredMonthIdx === i;
+                  const onlineY = getY(onlineData[i]);
+                  const storeY = getY(inStoreData[i]);
+
                   return (
-                    <g key={idx}>
+                    <g key={i}>
+                      {/* Vertical Hover Line Guide */}
+                      {isHovered && (
+                        <line 
+                          x1={cx} 
+                          y1={20} 
+                          x2={cx} 
+                          y2={190} 
+                          stroke="#cbd5e1" 
+                          strokeWidth="1.5" 
+                          strokeDasharray="3 3" 
+                        />
+                      )}
+
+                      {/* Online Dot Point */}
                       <circle 
-                        cx={pt.x} 
-                        cy={pt.y} 
-                        r={isHovered ? 6 : 3.5} 
-                        fill={isHovered ? "#fff" : "#7957fb"} 
-                        stroke="#7957fb" 
-                        strokeWidth={isHovered ? 3.5 : 0} 
-                        className="cursor-pointer transition-all duration-150"
-                        onMouseEnter={() => setHoveredApiIndex(idx)}
-                        onMouseLeave={() => setHoveredApiIndex(null)}
+                        cx={cx} 
+                        cy={onlineY} 
+                        r={isHovered ? "5.5" : "3"} 
+                        fill="#ffffff" 
+                        stroke="#f59e0b" 
+                        strokeWidth={isHovered ? "3" : "2"} 
+                        className="transition-all duration-150"
                       />
-                      <text x={pt.x - 8} y="195" className="text-[9px] font-bold fill-slate-450">{pt.day}</text>
+
+                      {/* In Store Dot Point */}
+                      <circle 
+                        cx={cx} 
+                        cy={storeY} 
+                        r={isHovered ? "5.5" : "3"} 
+                        fill="#ffffff" 
+                        stroke="#f43f5e" 
+                        strokeWidth={isHovered ? "3" : "2"} 
+                        className="transition-all duration-150"
+                      />
+
+                      {/* X-Axis Month Labels */}
+                      <text 
+                        x={cx} 
+                        y="210" 
+                        textAnchor="middle" 
+                        className={`text-[9.5px] font-bold font-sans transition-colors ${
+                          isHovered ? 'fill-indigo-600 font-extrabold' : 'fill-slate-400'
+                        }`}
+                      >
+                        {m}
+                      </text>
+
+                      {/* Full Column Hit Target Overlay */}
+                      <rect 
+                        x={cx - 20} 
+                        y={10} 
+                        width={40} 
+                        height={195} 
+                        fill="transparent" 
+                        className="cursor-pointer"
+                        onMouseEnter={() => setHoveredMonthIdx(i)}
+                        onMouseLeave={() => setHoveredMonthIdx(null)}
+                      />
                     </g>
                   );
                 })}
               </svg>
 
-              {/* Hover Tooltip */}
-              {hoveredApiIndex !== null && (
+              {/* Dynamic Non-Blocking Hover Tooltip */}
+              {hoveredMonthIdx !== null && (
                 <div 
-                  className="absolute bg-slate-900 text-white rounded-lg p-2 text-[10px] font-bold shadow-xl border border-slate-700 pointer-events-none transition-all duration-150 animate-in fade-in"
+                  className="absolute bg-slate-900 border border-slate-800 rounded-xl p-3 text-white shadow-2xl text-xs space-y-1.5 transition-all duration-150 z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full"
                   style={{ 
-                    left: `${(apiTrafficData[hoveredApiIndex].x / 520) * 100}%`, 
-                    top: `${(apiTrafficData[hoveredApiIndex].y / 200) * 100 - 25}%`,
-                    transform: 'translateX(-50%)'
+                    left: `${((50 + hoveredMonthIdx * 46) / 540) * 100}%`, 
+                    top: `${Math.min(getY(onlineData[hoveredMonthIdx]), getY(inStoreData[hoveredMonthIdx])) / 220 * 100 - 4}%`
                   }}
                 >
-                  <p className="whitespace-nowrap">{apiTrafficData[hoveredApiIndex].requests.toLocaleString()} queries</p>
+                  <span className="font-extrabold text-[10px] text-slate-300 uppercase tracking-wider block border-b border-slate-800 pb-1">
+                    {months[hoveredMonthIdx]} Performance
+                  </span>
+                  <div className="space-y-1 pt-0.5 text-[11px]">
+                    <div className="flex justify-between items-center gap-4">
+                      <span className="text-slate-400 flex items-center space-x-1.5 font-medium">
+                        <span className="h-2 w-2 rounded-full bg-amber-500 inline-block"/>
+                        <span>Online:</span>
+                      </span>
+                      <span className="font-extrabold text-amber-400">
+                        ₹{onlineData[hoveredMonthIdx]}.0k
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center gap-4">
+                      <span className="text-slate-400 flex items-center space-x-1.5 font-medium">
+                        <span className="h-2 w-2 rounded-full bg-rose-500 inline-block"/>
+                        <span>In Store:</span>
+                      </span>
+                      <span className="font-extrabold text-rose-400">
+                        ₹{inStoreData[hoveredMonthIdx]}.0k
+                      </span>
+                    </div>
+                    <div className="border-t border-slate-800 pt-1 flex justify-between items-center gap-4">
+                      <span className="text-slate-300 font-bold">Total:</span>
+                      <span className="font-black text-white">
+                        ₹{onlineData[hoveredMonthIdx] + inStoreData[hoveredMonthIdx]}.0k
+                      </span>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Bottom Summary Bar Metrics */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-100">
+            {overviewMetrics.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div key={idx} className="flex items-center space-x-3">
+                  <div className={`h-9 w-9 rounded-xl ${item.iconBg} flex items-center justify-center shrink-0`}>
+                    <Icon className="h-4.5 w-4.5" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-black text-slate-900 block leading-none">{item.value}</span>
+                    <span className="text-[10px] font-semibold text-slate-400 mt-1 block">{item.label}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Database Storage Allocation breakdown Donut Chart (1 Col) */}
-        <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 flex flex-col justify-between hover:border-brand-border-purple/45 hover:shadow-md transition-all duration-300">
+        {/* Right (4 Cols): User Traffic Donut Chart */}
+        <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs flex flex-col justify-between hover:shadow-md transition-all duration-300">
           <div>
-            <h3 className="font-bold text-brand-heading text-sm mb-4">Storage Allocation</h3>
+            <h3 className="font-extrabold text-slate-900 text-base mb-4">User Traffic</h3>
             
-            {/* Donut Canvas */}
-            <div className="relative h-36 w-36 mx-auto mt-4">
-              <svg className="w-full h-full" viewBox="0 0 160 160">
-                {storageSegments.map((seg, idx) => {
-                  const isHovered = hoveredStorageIndex === idx;
+            {/* Donut Ring Graphic */}
+            <div className="relative h-48 w-48 mx-auto mt-2 flex items-center justify-center select-none">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
+                {/* Background Ring Track */}
+                <circle cx="80" cy="80" r="60" fill="none" stroke="#f1f5f9" strokeWidth="18" />
+
+                {trafficChannels.map((c, idx) => {
+                  const isHovered = hoveredTrafficIdx === idx;
                   return (
-                    <path
+                    <circle 
                       key={idx}
-                      d={seg.path}
-                      fill="none"
-                      stroke={seg.color}
-                      strokeWidth={isHovered ? "18" : "14"}
-                      className="cursor-pointer transition-all duration-150"
-                      onMouseEnter={() => setHoveredStorageIndex(idx)}
-                      onMouseLeave={() => setHoveredStorageIndex(null)}
+                      cx="80" 
+                      cy="80" 
+                      r="60" 
+                      fill="none" 
+                      stroke={c.color} 
+                      strokeWidth={isHovered ? "24" : "18"} 
+                      strokeDasharray={c.strokeDasharray} 
+                      strokeDashoffset={c.strokeDashoffset}
+                      className="cursor-pointer transition-all duration-200"
+                      onMouseEnter={() => setHoveredTrafficIdx(idx)}
+                      onMouseLeave={() => setHoveredTrafficIdx(null)}
                     />
                   );
                 })}
               </svg>
-              {/* Central text displaying total */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center select-none pointer-events-none">
-                <span className="text-base font-extrabold text-brand-heading tabular-nums">7.2 GB</span>
-                <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Allocated</span>
-              </div>
-            </div>
-
-            {/* Legends list */}
-            <div className="mt-4 space-y-1.5">
-              {storageBreakdown.map((item, idx) => (
-                <div 
-                  key={idx}
-                  className={`flex justify-between items-center p-1 rounded transition-colors ${
-                    hoveredStorageIndex === idx ? 'bg-slate-50' : ''
-                  }`}
-                  onMouseEnter={() => setHoveredStorageIndex(idx)}
-                  onMouseLeave={() => setHoveredStorageIndex(null)}
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-[10px] font-bold text-brand-text/80">{item.name}</span>
-                  </div>
-                  <span className="text-[10px] font-extrabold text-brand-heading tabular-nums">{item.size} ({item.pct}%)</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Lower Row: AI Models Latencies (Chart) & Micro-Services List */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        {/* AI Inference Latency Chart (Col 6) */}
-        <div className="col-span-12 lg:col-span-6 bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-4 hover:border-brand-border-purple/45 hover:shadow-md transition-all duration-300">
-          <div className="flex justify-between items-center">
-            <h3 className="font-extrabold text-brand-heading text-sm flex items-center">
-              <Clock className="h-4.5 w-4.5 mr-2 text-brand-accent" />
-              <span>AI Models Latency (Inference Speed)</span>
-            </h3>
-            <span className="text-[9px] font-extrabold bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
-              Lower is Better
-            </span>
-          </div>
-
-          {/* Vertical Bar Chart (SVG) */}
-          <div className="relative h-48 w-full mt-4">
-            <svg className="w-full h-full" viewBox="0 0 350 180">
-              {/* Horizontal Gridlines */}
-              <line x1="10" y1="40" x2="330" y2="40" stroke="#7e8cf1" strokeOpacity="0.1" strokeWidth="1" />
-              <line x1="10" y1="90" x2="330" y2="90" stroke="#7e8cf1" strokeOpacity="0.1" strokeWidth="1" />
-              <line x1="10" y1="140" x2="330" y2="140" stroke="#7e8cf1" strokeOpacity="0.1" strokeWidth="1" />
-              <line x1="10" y1="170" x2="330" y2="170" stroke="#7e8cf1" strokeOpacity="0.2" strokeWidth="1.5" />
-
-              {/* Grid Latency Markers */}
-              <text x="332" y="44" className="text-[8px] font-bold fill-slate-400 tabular-nums">250ms</text>
-              <text x="332" y="94" className="text-[8px] font-bold fill-slate-400 tabular-nums">120ms</text>
-              <text x="332" y="144" className="text-[8px] font-bold fill-slate-400 tabular-nums">50ms</text>
-
-              {/* Draw Model Columns */}
-              {latencyModels.map((m, idx) => {
-                const colWidth = 40;
-                const colSpacing = 90;
-                const xPos = 40 + idx * colSpacing;
-                const yPos = 170 - m.height;
-                return (
-                  <g key={idx}>
-                    {/* Bar columns */}
-                    <rect 
-                      x={xPos} 
-                      y={yPos} 
-                      width={colWidth} 
-                      height={m.height} 
-                      rx="4" 
-                      fill={m.color} 
-                      className="hover:opacity-90 transition-opacity cursor-pointer"
-                    />
-                    {/* Latency Number Value Label */}
-                    <text 
-                      x={xPos + colWidth / 2} 
-                      y={yPos - 6} 
-                      textAnchor="middle" 
-                      className="text-[9px] font-black fill-brand-heading tabular-nums"
-                    >
-                      {m.latency}ms
-                    </text>
-                    {/* Model Name Axis Label */}
-                    <text 
-                      x={xPos + colWidth / 2} 
-                      y="180" 
-                      textAnchor="middle" 
-                      className="text-[8.5px] font-extrabold fill-slate-450"
-                    >
-                      {m.name}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-          </div>
-        </div>
-
-        {/* Integrations Monitor (Col 6) */}
-        <div className="col-span-12 lg:col-span-6 bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-4 hover:border-brand-border-purple/45 hover:shadow-md transition-all duration-300">
-          <h3 className="font-extrabold text-brand-heading text-sm flex items-center">
-            <Activity className="h-4.5 w-4.5 mr-2 text-brand-accent" />
-            <span>Integration Micro-Services Status</span>
-          </h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {integrations.map((item, idx) => (
-              <div key={idx} className="flex items-center justify-between p-3.5 border border-brand-border-purple/15 rounded-lg bg-slate-50/50 hover:bg-slate-50 transition-colors">
-                <div>
-                  <p className="text-xs font-extrabold text-brand-text">{item.name}</p>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase mt-0.5">{item.type}</p>
-                </div>
-                <span className={`px-2 py-0.5 rounded font-extrabold uppercase tracking-wide text-[8px] ${
-                  item.status === 'Healthy' 
-                    ? 'bg-emerald-50 text-emerald-700' 
-                    : 'bg-amber-50 text-amber-700'
-                }`}>
-                  {item.status}
+              
+              {/* Central Dynamic Donut Label */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                <span className="text-2xl font-black text-slate-900 leading-none font-sans">
+                  {hoveredTrafficIdx !== null ? trafficChannels[hoveredTrafficIdx].pct : "100%"}
+                </span>
+                <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider mt-1 truncate max-w-[100px]">
+                  {hoveredTrafficIdx !== null ? trafficChannels[hoveredTrafficIdx].name : "Total Traffic"}
                 </span>
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Bottom Percentage Channel Stats Row */}
+          <div className="grid grid-cols-3 gap-2 text-center mt-6 pt-4 border-t border-slate-100 select-none">
+            {trafficChannels.map((c, idx) => {
+              const isHovered = hoveredTrafficIdx === idx;
+              return (
+                <div 
+                  key={idx} 
+                  onMouseEnter={() => setHoveredTrafficIdx(idx)}
+                  onMouseLeave={() => setHoveredTrafficIdx(null)}
+                  className={`space-y-1 p-1.5 rounded-xl transition-all cursor-pointer ${
+                    isHovered ? 'bg-slate-100 shadow-2xs scale-105' : ''
+                  }`}
+                >
+                  <span className="text-xl font-black text-slate-900 block leading-none">{c.pct}</span>
+                  <div className="flex items-center justify-center space-x-1 text-[10px] font-semibold text-slate-500">
+                    <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: c.color }} />
+                    <span className="truncate">{c.name}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
+
       </div>
+
+      {/* 3. BOTTOM ROW: Full-Width Data Table ("New Arrivals / Recent Deals") */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs hover:shadow-md transition-all duration-300">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="font-extrabold text-slate-900 text-base">New Arrivals</h3>
+          <span className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 cursor-pointer transition-colors">
+            View All Transactions &rarr;
+          </span>
+        </div>
+
+        {/* Responsive Table */}
+        <div className="overflow-x-auto select-none">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider border-b border-slate-100 pb-3">
+                <th className="py-3 px-4">PRODUCTS</th>
+                <th className="py-3 px-4">PRICE</th>
+                <th className="py-3 px-4">DEPOSIT</th>
+                <th className="py-3 px-4">AGENT</th>
+                <th className="py-3 px-4">STATUS</th>
+                <th className="py-3 px-4 text-right">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
+              {newArrivals.map((row) => (
+                <tr key={row.id} className="hover:bg-slate-50/80 transition-colors group">
+                  
+                  {/* Products */}
+                  <td className="py-3.5 px-4">
+                    <div className="flex items-center space-x-3">
+                      <div className={`h-9 w-9 rounded-xl ${row.iconBg} flex items-center justify-center font-black text-sm shrink-0 shadow-2xs`}>
+                        {row.product.charAt(0)}
+                      </div>
+                      <div>
+                        <span className="font-bold text-slate-900 block text-xs">{row.product}</span>
+                        <span className="text-[10px] text-slate-400 font-medium block mt-0.5">{row.subtitle}</span>
+                      </div>
+                    </div>
+                  </td>
+
+                  {/* Price */}
+                  <td className="py-3.5 px-4">
+                    <span className="font-bold text-slate-900 tabular-nums block">{row.price}</span>
+                  </td>
+
+                  {/* Deposit */}
+                  <td className="py-3.5 px-4">
+                    <span className="font-bold text-slate-900 tabular-nums block">{row.deposit}</span>
+                  </td>
+
+                  {/* Agent */}
+                  <td className="py-3.5 px-4">
+                    <div>
+                      <span className="text-slate-400 font-normal text-[10px] block">Sophia</span>
+                      <span className="font-bold text-slate-900 block">{row.agentSub}</span>
+                    </div>
+                  </td>
+
+                  {/* Status */}
+                  <td className="py-3.5 px-4">
+                    <span className={`px-3 py-1 rounded-lg text-[10px] font-extrabold border inline-block ${row.statusClass}`}>
+                      {row.status}
+                    </span>
+                  </td>
+
+                  {/* Action Buttons */}
+                  <td className="py-3.5 px-4 text-right">
+                    <div className="flex items-center justify-end space-x-2">
+                      <button className="h-8 w-8 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center justify-center shadow-xs cursor-pointer border-0">
+                        <Bookmark className="h-3.5 w-3.5 fill-current" />
+                      </button>
+                      <button className="h-8 w-8 rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors flex items-center justify-center shadow-xs cursor-pointer border-0">
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   );
 }

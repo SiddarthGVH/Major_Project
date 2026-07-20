@@ -210,7 +210,7 @@ export default function ReportsView() {
               </div>
 
               {/* Chart Grid */}
-              <div className="h-56 w-full relative mt-6">
+              <div className="h-56 w-full relative mt-6 select-none">
                 <svg className="w-full h-full" viewBox="0 0 540 220" preserveAspectRatio="none">
                   {/* Grid Lines */}
                   {[0, 1, 2, 3, 4].map((idx) => (
@@ -233,80 +233,157 @@ export default function ReportsView() {
                   <text x="10" y="139" className="text-[9px] font-bold fill-slate-400 font-sans">₹200K</text>
                   <text x="10" y="174" className="text-[9px] font-bold fill-slate-400 font-sans">₹0</text>
 
-                  {/* Render Columns */}
+                  {/* Goal Connecting Line Layer */}
+                  {forecastData.map((d, idx) => {
+                    if (idx >= forecastData.length - 1) return null;
+                    const colWidth = 24;
+                    const spacing = 75;
+                    const x1 = 65 + idx * spacing + colWidth / 2;
+                    const y1 = 170 - (d.goal / maxForecastValue) * 140;
+                    const x2 = 65 + (idx + 1) * spacing + colWidth / 2;
+                    const y2 = 170 - (forecastData[idx + 1].goal / maxForecastValue) * 140;
+                    return (
+                      <line
+                        key={`line-${idx}`}
+                        x1={x1}
+                        y1={y1}
+                        x2={x2}
+                        y2={y2}
+                        stroke="#f59e0b"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                      />
+                    );
+                  })}
+
+                  {/* Render Columns & Bars */}
                   {forecastData.map((d, idx) => {
                     const colWidth = 24;
                     const spacing = 75;
                     const x = 65 + idx * spacing;
                     const expectedHeight = (d.expected / maxForecastValue) * 140;
                     const goalY = 170 - (d.goal / maxForecastValue) * 140;
-                    
                     const isHovered = forecastHovered === idx;
 
                     return (
-                      <g key={idx} className="group">
+                      <g key={idx}>
+                        {/* Hover Column Background Highlight */}
+                        {isHovered && (
+                          <rect
+                            x={x - 18}
+                            y={20}
+                            width={colWidth + 36}
+                            height={160}
+                            fill="#6366f1"
+                            fillOpacity="0.08"
+                            rx="8"
+                          />
+                        )}
+
                         {/* Expected Revenue Bar */}
                         <rect
                           x={x}
                           y={170 - expectedHeight}
                           width={colWidth}
                           height={expectedHeight}
-                          fill={isHovered ? "#6340df" : "#7957fb"}
+                          fill={isHovered ? "#4f46e5" : "#6366f1"}
                           rx="4"
-                          className="cursor-pointer transition-colors duration-150"
-                          onMouseEnter={() => setForecastHovered(idx)}
-                          onMouseLeave={() => setForecastHovered(null)}
+                          className="transition-all duration-200"
                         />
 
-                        {/* Goal line segment connecting points */}
-                        {idx < forecastData.length - 1 && (
-                          <line
-                            x1={x + colWidth / 2}
-                            y1={goalY}
-                            x2={x + spacing + colWidth / 2}
-                            y2={170 - (forecastData[idx + 1].goal / maxForecastValue) * 140}
-                            stroke="#f59e0b"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                          />
-                        )}
-
-                        {/* Goal Point */}
+                        {/* Goal Point Dot */}
                         <circle
                           cx={x + colWidth / 2}
                           cy={goalY}
-                          r="3.5"
+                          r={isHovered ? "5" : "3.5"}
                           fill="#FFFFFF"
                           stroke="#f59e0b"
-                          strokeWidth="2"
+                          strokeWidth={isHovered ? "3" : "2"}
+                          className="transition-all duration-200"
                         />
 
-                        {/* X Axis Labels */}
+                        {/* X Axis Month Label */}
                         <text
                           x={x + colWidth / 2}
-                          y="190"
+                          y="195"
                           textAnchor="middle"
-                          className="text-[9px] font-bold fill-slate-400 font-sans"
+                          className={`text-[9.5px] font-bold font-sans transition-colors ${
+                            isHovered ? 'fill-indigo-600 font-extrabold' : 'fill-slate-500'
+                          }`}
                         >
                           {d.month}
                         </text>
+
+                        {/* Full Column Hit Target Overlay */}
+                        <rect
+                          x={x - 25}
+                          y={0}
+                          width={75}
+                          height={210}
+                          fill="transparent"
+                          className="cursor-pointer"
+                          onMouseEnter={() => setForecastHovered(idx)}
+                          onMouseLeave={() => setForecastHovered(null)}
+                        />
                       </g>
                     );
                   })}
                 </svg>
 
-                {/* Forecast Tooltip */}
+                {/* Smooth Non-blocking Forecast Tooltip */}
                 {forecastHovered !== null && (
                   <div 
-                    className="absolute bg-slate-900 border border-slate-800 rounded-lg p-2 text-white shadow-xl text-xs space-y-1 transition-all z-20"
+                    className="absolute bg-slate-900 border border-slate-800 rounded-xl p-3 text-white shadow-2xl text-xs space-y-1.5 transition-all duration-150 z-30 pointer-events-none transform -translate-x-1/2 -translate-y-full"
                     style={{ 
-                      left: `${70 + forecastHovered * 73}px`, 
-                      bottom: '80px' 
+                      left: `${((65 + forecastHovered * 75 + 12) / 540) * 100}%`, 
+                      top: `${Math.min(
+                        170 - (forecastData[forecastHovered].expected / maxForecastValue) * 140,
+                        170 - (forecastData[forecastHovered].goal / maxForecastValue) * 140
+                      ) / 220 * 100 - 4}%`
                     }}
                   >
-                    <p className="font-bold text-[10px] text-slate-400">{forecastData[forecastHovered].month} 2025</p>
-                    <p className="font-extrabold flex justify-between gap-4"><span>Expected:</span> <span className="text-brand-light-blue">${(forecastData[forecastHovered].expected / 1000).toFixed(0)}K</span></p>
-                    <p className="font-extrabold flex justify-between gap-4"><span>Target Goal:</span> <span className="text-amber-455">${(forecastData[forecastHovered].goal / 1000).toFixed(0)}K</span></p>
+                    <div className="flex items-center justify-between border-b border-slate-800 pb-1 gap-4">
+                      <span className="font-extrabold text-[10px] text-slate-300 uppercase tracking-wider">
+                        {forecastData[forecastHovered].month} 2025
+                      </span>
+                      {forecastData[forecastHovered].expected >= forecastData[forecastHovered].goal ? (
+                        <span className="text-[9px] font-extrabold text-emerald-400 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-800/60">
+                          +{(
+                            ((forecastData[forecastHovered].expected - forecastData[forecastHovered].goal) /
+                              forecastData[forecastHovered].goal) *
+                            100
+                          ).toFixed(1)}% Goal
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-extrabold text-amber-400 bg-amber-950/80 px-1.5 py-0.5 rounded border border-amber-800/60">
+                          -{(
+                            ((forecastData[forecastHovered].goal - forecastData[forecastHovered].expected) /
+                              forecastData[forecastHovered].goal) *
+                            100
+                          ).toFixed(1)}% Goal
+                        </span>
+                      )}
+                    </div>
+                    <div className="space-y-1 pt-0.5 text-[11px]">
+                      <div className="flex justify-between items-center gap-5">
+                        <span className="text-slate-400 font-medium flex items-center space-x-1.5">
+                          <span className="h-2 w-2 rounded-sm bg-indigo-500 inline-block"/>
+                          <span>Expected:</span>
+                        </span>
+                        <span className="font-extrabold text-white">
+                          ₹{forecastData[forecastHovered].expected.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center gap-5">
+                        <span className="text-slate-400 font-medium flex items-center space-x-1.5">
+                          <span className="h-2 w-2 rounded-full bg-amber-500 inline-block"/>
+                          <span>Target Goal:</span>
+                        </span>
+                        <span className="font-extrabold text-amber-400">
+                          ₹{forecastData[forecastHovered].goal.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -430,18 +507,36 @@ export default function ReportsView() {
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pipeline Funnel Chart */}
-          <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 flex flex-col justify-between hover:border-brand-border-purple/40 hover:shadow-md transition-all duration-300">
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-brand-heading text-sm">Pipeline Conversion Funnel</h3>
-                <Layers className="h-4.5 w-4.5 text-slate-400" />
+          {/* Pipeline Funnel Chart - Full-Width Horizontal Card */}
+          <div className="bg-white border border-brand-border-purple/20 rounded-xl p-6 shadow-sm/5 lg:col-span-3 hover:border-brand-border-purple/40 hover:shadow-md transition-all duration-300">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b border-slate-100 pb-4">
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h3 className="font-extrabold text-brand-heading text-base">Pipeline Conversion Funnel</h3>
+                  <span title="Stage-by-stage conversion metrics and drop-off analysis">
+                    <Info className="h-4 w-4 text-slate-400 cursor-help" />
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">Stage-by-stage progression and conversion efficiency</p>
               </div>
+              
+              <div className="flex items-center space-x-4 bg-slate-50 border border-slate-200/80 px-4 py-2 rounded-xl">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Conversion</span>
+                  <span className="text-xs text-slate-600 font-semibold">23 of 120 Won</span>
+                </div>
+                <div className="text-right pl-3 border-l border-slate-200">
+                  <span className="text-lg font-black text-indigo-600 block leading-none">19.0%</span>
+                  <span className="text-[9px] font-bold text-emerald-600">High Velocity</span>
+                </div>
+              </div>
+            </div>
 
-              {/* Radial Progress Funnel Rings */}
-              <div className="flex flex-col items-center gap-5 mt-4">
-                {/* Left: SVG Radial Rings */}
-                <div className="w-44 h-44 shrink-0 relative flex items-center justify-center select-none">
+            {/* Main Horizontal Content Split */}
+            <div className="flex flex-col lg:flex-row items-center gap-8">
+              {/* Left: SVG Radial Rings Graph (Kept Exactly as is) */}
+              <div className="w-48 shrink-0 flex flex-col items-center justify-center select-none py-2 border-b lg:border-b-0 lg:border-r border-slate-100 lg:pr-8">
+                <div className="w-44 h-44 relative flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
                     {funnelStages.map((stage, idx) => {
                       const radius = 82 - idx * 12;
@@ -477,44 +572,59 @@ export default function ReportsView() {
                     })}
                   </svg>
                 </div>
+                <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mt-2">5 Stage Telemetry</span>
+              </div>
 
-                {/* Overall Summary Label */}
-                <div className="text-center select-none flex flex-col items-center -mt-1">
-                  <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide">Overall Conversion Rate</span>
-                  <span className="text-base font-black text-brand-heading mt-0.5">19.0%</span>
-                </div>
-
-                {/* Right: Detailed Legend list */}
-                <div className="flex-1 space-y-2.5 w-full select-none">
+              {/* Right: Horizontal 5-Stage Funnel Flow Cards */}
+              <div className="flex-1 w-full space-y-4">
+                {/* 5-Column Grid across the right */}
+                <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
                   {funnelStages.map((stage, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-[11px] font-semibold border-b border-brand-border-purple/10 pb-1.5 last:border-b-0 last:pb-0">
-                      <div className="flex items-center space-x-2.5 min-w-0">
-                        {/* Legend swatch */}
-                        <div 
-                          className="h-2.5 w-2.5 rounded-full shrink-0" 
-                          style={{ backgroundColor: stage.color }}
-                        />
-                        <span className="text-brand-heading truncate w-28 md:w-32" title={stage.name}>
+                    <div key={idx} className="bg-slate-50/80 border border-slate-200/70 rounded-xl p-3 flex flex-col justify-between space-y-3 hover:border-indigo-200 hover:bg-white transition-all shadow-2xs h-full min-h-[120px]">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="h-2.5 w-2.5 rounded-full shrink-0" style={{ backgroundColor: stage.color }} />
+                          <span className="text-[9.5px] font-bold text-slate-400">Step {idx + 1}</span>
+                        </div>
+                        <span className="text-[11px] font-bold text-slate-900 leading-snug tracking-tight block break-words">
                           {stage.name}
                         </span>
                       </div>
-                      <div className="text-right flex flex-col shrink-0">
-                        <span className="text-brand-text font-black tabular-nums">
-                          {stage.count} deals ({stage.pct}%)
-                        </span>
-                        <span className="text-[9.5px] text-rose-500 font-black mt-0.5 tabular-nums">
-                          {stage.dropoff === '0%' ? 'Baseline' : `${stage.dropoff} drop`}
-                        </span>
+
+                      <div>
+                        <div className="flex items-baseline justify-between pt-1">
+                          <span className="text-xs font-extrabold text-slate-900 tabular-nums">{stage.count} deals</span>
+                          <span className="text-[9.5px] font-extrabold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 tabular-nums">{stage.pct}%</span>
+                        </div>
+
+                        {/* Individual Stage Mini Bar */}
+                        <div className="w-full h-1.5 bg-slate-200/70 rounded-full overflow-hidden mt-1.5">
+                          <div 
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ width: `${stage.pct}%`, backgroundColor: stage.color }}
+                          />
+                        </div>
+
+                        <div className="flex justify-between items-center text-[9.5px] font-medium text-slate-400 mt-1.5">
+                          <span>{stage.dropoff === '0%' ? 'Baseline' : `${stage.dropoff} drop`}</span>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
+
+                {/* Stepped Conversion Flow Connection Line */}
+                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden flex">
+                  {funnelStages.map((stage, idx) => (
+                    <div 
+                      key={idx}
+                      className="h-full border-r border-white last:border-r-0 transition-all duration-500"
+                      style={{ width: `${100 / funnelStages.length}%`, backgroundColor: stage.color, opacity: 0.8 }}
+                      title={`${stage.name}: ${stage.pct}% conversion`}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-            
-            <div className="mt-5 pt-3 border-t border-slate-100 flex justify-between items-center text-xs font-bold text-slate-400">
-              <span>Overall Funnel Velocity</span>
-              <span className="text-brand-text">19.0% conversion</span>
             </div>
           </div>
 

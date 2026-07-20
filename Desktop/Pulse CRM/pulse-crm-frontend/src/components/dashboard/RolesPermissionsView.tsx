@@ -5,13 +5,16 @@ import {
   Shield, 
   Lock, 
   Check, 
+  Save,
+  Users,
   Info,
-  Save
+  Sparkles
 } from 'lucide-react';
 
 interface PermissionRow {
   key: string;
   category: string;
+  categoryBg: string;
   name: string;
   description: string;
   admin: boolean;
@@ -21,22 +24,94 @@ interface PermissionRow {
 
 export default function RolesPermissionsView() {
   const [matrix, setMatrix] = useState<PermissionRow[]>([
-    { key: "view_leads", category: "CRM Data", name: "View Leads/Contacts", description: "Read base client records and timelines", admin: true, manager: true, representative: true },
-    { key: "edit_leads", category: "CRM Data", name: "Write/Modify Leads", description: "Create or modify leads details and deals values", admin: true, manager: true, representative: true },
-    { key: "delete_leads", category: "CRM Data", name: "Delete Lead Records", description: "Permanently delete lead records", admin: true, manager: false, representative: false },
+    { 
+      key: "view_leads", 
+      category: "CRM Data", 
+      categoryBg: "bg-blue-50 text-blue-700 border-blue-200/60", 
+      name: "View Leads & Contacts", 
+      description: "Read base client records, activity logs, and interaction timelines", 
+      admin: true, 
+      manager: true, 
+      representative: true 
+    },
+    { 
+      key: "edit_leads", 
+      category: "CRM Data", 
+      categoryBg: "bg-blue-50 text-blue-700 border-blue-200/60", 
+      name: "Write & Modify Leads", 
+      description: "Create new leads or edit details and deal pipeline values", 
+      admin: true, 
+      manager: true, 
+      representative: true 
+    },
+    { 
+      key: "delete_leads", 
+      category: "CRM Data", 
+      categoryBg: "bg-blue-50 text-blue-700 border-blue-200/60", 
+      name: "Delete Lead Records", 
+      description: "Permanently purge lead profiles and historic activity logs", 
+      admin: true, 
+      manager: false, 
+      representative: false 
+    },
     
-    { key: "view_reports", category: "Analytics", name: "Access Standard Reports", description: "View pipeline and revenue reports", admin: true, manager: true, representative: true },
-    { key: "view_forecasts", category: "Analytics", name: "Access Team Forecasts", description: "Read forecasted projections and confidence indexes", admin: true, manager: true, representative: false },
+    { 
+      key: "view_reports", 
+      category: "Analytics", 
+      categoryBg: "bg-purple-50 text-purple-700 border-purple-200/60", 
+      name: "Access Standard Reports", 
+      description: "View overall pipeline velocity and monthly revenue performance", 
+      admin: true, 
+      manager: true, 
+      representative: true 
+    },
+    { 
+      key: "view_forecasts", 
+      category: "Analytics", 
+      categoryBg: "bg-purple-50 text-purple-700 border-purple-200/60", 
+      name: "Access Team Forecasts", 
+      description: "Read AI forecasted projections and confidence indexes", 
+      admin: true, 
+      manager: true, 
+      representative: false 
+    },
     
-    { key: "manage_users", category: "Administration", name: "Manage System Users", description: "Provision accounts, toggle status, reset credentials", admin: true, manager: false, representative: false },
-    { key: "edit_roles", category: "Administration", name: "Configure Roles Permissions", description: "Modify matrix mapping access bounds", admin: true, manager: false, representative: false },
-    { key: "system_settings", category: "Administration", name: "Modify System Settings", description: "Email configurations, API connection links, security keys", admin: true, manager: false, representative: false }
+    { 
+      key: "manage_users", 
+      category: "Administration", 
+      categoryBg: "bg-amber-50 text-amber-700 border-amber-200/60", 
+      name: "Manage System Users", 
+      description: "Provision team accounts, assign roles, and reset credentials", 
+      admin: true, 
+      manager: false, 
+      representative: false 
+    },
+    { 
+      key: "edit_roles", 
+      category: "Administration", 
+      categoryBg: "bg-amber-50 text-amber-700 border-amber-200/60", 
+      name: "Configure Permissions Matrix", 
+      description: "Modify role authorization mapping and access bounds", 
+      admin: true, 
+      manager: false, 
+      representative: false 
+    },
+    { 
+      key: "system_settings", 
+      category: "Administration", 
+      categoryBg: "bg-amber-50 text-amber-700 border-amber-200/60", 
+      name: "Modify System Settings", 
+      description: "Configure API connection keys, SSO integrations, and security policies", 
+      admin: true, 
+      manager: false, 
+      representative: false 
+    }
   ]);
 
   const [toast, setToast] = useState<string | null>(null);
 
   const togglePermission = (idx: number, role: 'admin' | 'manager' | 'representative') => {
-    // Admin permissions are locked to true for safety in this demo
+    // Admin permissions locked to true for safety
     if (role === 'admin') return;
     
     const updated = [...matrix];
@@ -45,16 +120,16 @@ export default function RolesPermissionsView() {
   };
 
   const handleSave = () => {
-    setToast("Authorization matrix configurations written successfully!");
+    setToast("Authorization matrix configurations saved successfully!");
     setTimeout(() => setToast(null), 3000);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       {/* Toast Alert */}
       {toast && (
-        <div className="fixed bottom-5 right-5 z-55 bg-slate-900 dark:bg-brand-accent text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-bold animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <Check className="h-4 w-4" />
+        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-2.5 text-xs font-bold animate-in fade-in slide-in-from-bottom-2 duration-300 border border-slate-800">
+          <Check className="h-4 w-4 text-emerald-400" />
           <span>{toast}</span>
         </div>
       )}
@@ -62,17 +137,17 @@ export default function RolesPermissionsView() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-sans text-brand-heading tracking-tight font-bold">
-            Roles & Permissions
+          <h1 className="text-3xl font-sans text-brand-heading tracking-tight font-extrabold">
+            Roles &amp; Permissions
           </h1>
-          <p className="text-xs md:text-sm text-brand-text/75 mt-1 font-medium tracking-wide">
-            Configure system authorization profiles and manage the permission access matrix.
+          <p className="text-xs md:text-sm text-slate-500 mt-1 font-medium tracking-wide">
+            Configure system authorization profiles and manage access bounds across all workspace roles.
           </p>
         </div>
 
         <button 
           onClick={handleSave}
-          className="inline-flex items-center space-x-1.5 px-3.5 py-2 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-sm self-start sm:self-center"
+          className="inline-flex items-center space-x-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md self-start sm:self-center"
         >
           <Save className="h-4 w-4" />
           <span>Save Changes</span>
@@ -82,88 +157,112 @@ export default function RolesPermissionsView() {
       {/* Roles Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { name: "Admin Role", usersCount: 2, desc: "Full root access permissions. Manage system configurations, users profiles, integrations, and core DB settings." },
-          { name: "Sales Manager", usersCount: 3, desc: "Manage team performance, review forecasted revenue metrics, sign off on deals stages, and generate audits." },
+          { name: "System Administrator", usersCount: 2, desc: "Full root access permissions. Manage system configurations, user profiles, integrations, and core database settings." },
+          { name: "Sales Manager", usersCount: 3, desc: "Manage team performance, review forecasted revenue metrics, sign off on deal stages, and generate audit logs." },
           { name: "Sales Representative", usersCount: 40, desc: "Standard workspace profile. Ingest leads, log activity calls, edit deals pipeline stages, and sync email accounts." }
         ].map((item, idx) => (
-          <div key={idx} className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-2">
+          <div 
+            key={idx} 
+            className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs space-y-2 hover:shadow-md hover:border-slate-300 transition-all duration-300"
+          >
             <div className="flex justify-between items-center">
-              <span className="text-xs font-extrabold text-brand-heading">{item.name}</span>
-              <span className="text-[9px] font-extrabold bg-slate-100 text-slate-800 px-2 py-0.5 rounded">
+              <span className="text-sm font-extrabold text-slate-900">{item.name}</span>
+              <span className="text-[10px] font-extrabold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-100">
                 {item.usersCount} Users
               </span>
             </div>
-            <p className="text-[11px] text-brand-text/75 leading-relaxed font-semibold">{item.desc}</p>
+            <p className="text-xs text-slate-500 leading-relaxed font-normal">{item.desc}</p>
           </div>
         ))}
       </div>
 
-      {/* Permission Matrix */}
-      <div className="bg-white border border-brand-border-purple/20 rounded-xl p-5 shadow-sm/5 space-y-4">
-        <h3 className="font-extrabold text-brand-heading text-sm flex items-center">
-          <Shield className="h-4.5 w-4.5 mr-2 text-brand-accent" />
-          <span>Permission matrix Grid</span>
-        </h3>
+      {/* Permission Matrix Table */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xs space-y-5">
+        <div className="flex items-center justify-between">
+          <h3 className="font-extrabold text-slate-900 text-base flex items-center">
+            <Shield className="h-5 w-5 mr-2 text-indigo-600" />
+            <span>Permission Access Matrix</span>
+          </h3>
+          <span className="text-xs font-medium text-slate-400">
+            8 Total System Policy Rules
+          </span>
+        </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto select-none">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-slate-100 text-[10px] uppercase font-extrabold text-slate-400">
-                <th className="py-2.5">Category</th>
-                <th className="py-2.5">Permission Name</th>
-                <th className="py-2.5">Description</th>
-                <th className="py-2.5 text-center w-24">Administrator</th>
-                <th className="py-2.5 text-center w-24">Sales Manager</th>
-                <th className="py-2.5 text-center w-24">Sales Rep</th>
+              <tr className="border-b border-slate-100 text-[10px] uppercase font-black text-slate-400 tracking-wider">
+                <th className="py-3 px-4">CATEGORY</th>
+                <th className="py-3 px-4">PERMISSION NAME</th>
+                <th className="py-3 px-4">DESCRIPTION</th>
+                <th className="py-3 px-4 text-center w-28">ADMINISTRATOR</th>
+                <th className="py-3 px-4 text-center w-28">SALES MANAGER</th>
+                <th className="py-3 px-4 text-center w-28">SALES REP</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs font-semibold text-brand-text">
+            <tbody className="divide-y divide-slate-100 text-xs font-medium text-slate-700">
               {matrix.map((row, idx) => (
-                <tr key={row.key} className="hover:bg-slate-50/50">
-                  <td className="py-3 font-extrabold text-slate-450 uppercase text-[9px] tracking-wide">{row.category}</td>
-                  <td className="py-3 font-extrabold">{row.name}</td>
-                  <td className="py-3 text-slate-450 text-[11px] font-medium leading-relaxed">{row.description}</td>
+                <tr key={row.key} className="hover:bg-slate-50/80 transition-colors group">
                   
+                  {/* Category Pill */}
+                  <td className="py-4 px-4">
+                    <span className={`inline-block px-2.5 py-1 rounded-md text-[10px] font-extrabold border ${row.categoryBg}`}>
+                      {row.category}
+                    </span>
+                  </td>
+
+                  {/* Permission Name */}
+                  <td className="py-4 px-4">
+                    <span className="font-bold text-slate-900 text-xs block">{row.name}</span>
+                  </td>
+
+                  {/* Description */}
+                  <td className="py-4 px-4">
+                    <span className="text-slate-500 text-xs leading-normal block max-w-md">{row.description}</span>
+                  </td>
+
                   {/* Admin Checkbox */}
-                  <td className="py-3 text-center">
+                  <td className="py-4 px-4 text-center">
                     <button 
                       type="button" 
                       disabled
-                      className="h-4.5 w-4.5 rounded border border-brand-border-purple bg-brand-accent/15 text-brand-accent flex items-center justify-center mx-auto cursor-not-allowed opacity-60"
+                      title="Admin access is permanently enabled"
+                      className="h-5 w-5 rounded-md border border-indigo-200 bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto cursor-not-allowed opacity-75"
                     >
-                      <Check className="h-3 w-3" strokeWidth={3} />
+                      <Check className="h-3.5 w-3.5" strokeWidth={3} />
                     </button>
                   </td>
 
                   {/* Manager Checkbox */}
-                  <td className="py-3 text-center">
+                  <td className="py-4 px-4 text-center">
                     <button 
                       type="button"
                       onClick={() => togglePermission(idx, 'manager')}
-                      className={`h-4.5 w-4.5 rounded border transition-all flex items-center justify-center mx-auto cursor-pointer ${
+                      className={`h-5 w-5 rounded-md border transition-all flex items-center justify-center mx-auto cursor-pointer ${
                         row.manager 
-                          ? 'border-brand-accent bg-brand-accent text-white' 
-                          : 'border-slate-300 hover:border-brand-accent'
+                          ? 'border-indigo-600 bg-indigo-600 text-white shadow-2xs hover:bg-indigo-700' 
+                          : 'border-slate-300 bg-white hover:border-indigo-400'
                       }`}
                     >
-                      {row.manager && <Check className="h-3 w-3" strokeWidth={3} />}
+                      {row.manager && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
                     </button>
                   </td>
 
                   {/* Representative Checkbox */}
-                  <td className="py-3 text-center">
+                  <td className="py-4 px-4 text-center">
                     <button 
                       type="button"
                       onClick={() => togglePermission(idx, 'representative')}
-                      className={`h-4.5 w-4.5 rounded border transition-all flex items-center justify-center mx-auto cursor-pointer ${
+                      className={`h-5 w-5 rounded-md border transition-all flex items-center justify-center mx-auto cursor-pointer ${
                         row.representative 
-                          ? 'border-brand-accent bg-brand-accent text-white' 
-                          : 'border-slate-300 hover:border-brand-accent'
+                          ? 'border-indigo-600 bg-indigo-600 text-white shadow-2xs hover:bg-indigo-700' 
+                          : 'border-slate-300 bg-white hover:border-indigo-400'
                       }`}
                     >
-                      {row.representative && <Check className="h-3 w-3" strokeWidth={3} />}
+                      {row.representative && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
                     </button>
                   </td>
+
                 </tr>
               ))}
             </tbody>

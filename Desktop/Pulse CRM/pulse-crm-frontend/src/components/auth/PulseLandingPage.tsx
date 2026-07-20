@@ -56,41 +56,45 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
     }, 1200);
   };
 
-  // Zoho-style product tabs definitions
+  // Premium product suites definitions with light-mode software mockups
   const productSuites = [
     {
       title: 'Sales & Pipeline',
       icon: LayoutDashboard,
       badge: 'Revenue Acceleration',
-      heading: 'Manage deals and automate your sales stages',
+      heading: 'Manage deals & automate sales stages',
       desc: 'Move deals through customizable funnel columns, coordinate sales reps on a live revenue leaderboard, and instantly log updates.',
       features: [
         'Interactive kanban deal pipeline boards',
         'Sales rep revenue leaderboards',
         'Win/loss analysis reason codes'
       ],
-      color: 'from-violet-500 to-indigo-600',
+      color: 'from-purple-600 to-indigo-600',
       mockup: (
-        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Sales Pipeline</span>
-            <div className="flex space-x-1">
-              <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
-              <span className="h-1.5 w-1.5 rounded-full bg-yellow-500"></span>
-              <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-white text-slate-900 rounded-xl shadow-md border border-slate-200/90">
+          <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+            <div className="flex items-center space-x-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500"></span>
+              <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Active Deals Board</span>
             </div>
+            <span className="text-[9px] text-slate-400 font-semibold">Updated just now</span>
           </div>
-          {/* Mock Kanban Board */}
+          {/* Light Kanban Board */}
           <div className="grid grid-cols-3 gap-2 flex-1 mt-3">
             {[
-              { col: 'Qualified', name: 'Acme Corp', val: '₹120K' },
-              { col: 'Proposal', name: 'Initech Inc', val: '₹85K' },
-              { col: 'Negotiation', name: 'Stark Ind.', val: '₹230K' }
+              { col: 'Qualified', name: 'Acme Corp', val: '$120,000', tag: 'High Priority' },
+              { col: 'Proposal', name: 'Initech Inc', val: '$85,000', tag: 'Under Review' },
+              { col: 'Negotiation', name: 'Stark Ind.', val: '$230,000', tag: 'Closing Soon' }
             ].map((card, i) => (
-              <div key={i} className="bg-slate-800/80 p-2.5 rounded-lg border border-slate-700/50 flex flex-col justify-between">
-                <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wide">{card.col}</span>
-                <span className="text-[10px] font-black text-white mt-1.5 block truncate">{card.name}</span>
-                <span className="text-[9px] text-brand-accent font-extrabold mt-1 block">{card.val}</span>
+              <div key={i} className="bg-slate-50/80 p-2.5 rounded-lg border border-slate-200/70 flex flex-col justify-between hover:border-slate-300 transition-colors">
+                <div>
+                  <span className="text-[8px] text-slate-400 font-bold uppercase tracking-wider">{card.col}</span>
+                  <span className="text-[10.5px] font-bold text-slate-800 mt-1 block truncate">{card.name}</span>
+                </div>
+                <div className="mt-2">
+                  <span className="text-[10px] text-indigo-600 font-extrabold block">{card.val}</span>
+                  <span className="text-[7.5px] font-semibold text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200 mt-1 inline-block">{card.tag}</span>
+                </div>
               </div>
             ))}
           </div>
@@ -101,32 +105,32 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       title: 'Smart Emails',
       icon: Mail,
       badge: 'Unified Communications',
-      heading: 'Integrated inbox syncing and automated drafts',
+      heading: 'Integrated inbox syncing & timeline logs',
       desc: 'Keep client communications linked natively to deals. Sync thread timelines automatically and utilize templates to reach contacts faster.',
       features: [
         'Real-time background Gmail syncing',
         'Thread timeline logging by deal and contact',
         'Templates and rapid-fire replies'
       ],
-      color: 'from-blue-500 to-sky-600',
+      color: 'from-blue-600 to-cyan-600',
       mockup: (
-        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Communication Timeline</span>
-            <span className="text-[9px] text-emerald-400 font-extrabold">Active Sync</span>
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-white text-slate-900 rounded-xl shadow-md border border-slate-200/90">
+          <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Communication Timeline</span>
+            <span className="text-[9px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">Live Sync</span>
           </div>
           <div className="space-y-2 mt-3 flex-1 overflow-hidden">
             {[
-              { from: 'Alex Johnson', sub: 'Proposal revisions finalized', time: '10m ago' },
-              { from: 'Initech Inc', sub: 'Inquiry regarding migration SLAs', time: '1h ago' },
-              { from: 'Acme Corp', sub: 'Contract signed & dispatched', time: '3h ago' }
+              { from: 'Alex Rivera', sub: 'Proposal revisions finalized & SLA approved', time: '10m ago' },
+              { from: 'Helena Troy', sub: 'Inquiry regarding custom enterprise tier', time: '1h ago' },
+              { from: 'Marcus Vance', sub: 'Contract signed & dispatched to team', time: '3h ago' }
             ].map((mail, i) => (
-              <div key={i} className="bg-slate-800/50 p-2 rounded-lg border border-slate-700/30 flex justify-between items-center text-[10px]">
+              <div key={i} className="bg-slate-50/70 p-2.5 rounded-lg border border-slate-200/60 flex justify-between items-center text-[10px]">
                 <div className="min-w-0 flex-1 pr-2">
-                  <span className="font-black text-white truncate block">{mail.from}</span>
-                  <span className="text-[9px] text-slate-400 truncate block mt-0.5">{mail.sub}</span>
+                  <span className="font-bold text-slate-800 truncate block">{mail.from}</span>
+                  <span className="text-[9px] text-slate-500 truncate block mt-0.5">{mail.sub}</span>
                 </div>
-                <span className="text-[8px] text-slate-500 shrink-0 font-extrabold">{mail.time}</span>
+                <span className="text-[8px] text-slate-400 shrink-0 font-medium">{mail.time}</span>
               </div>
             ))}
           </div>
@@ -137,26 +141,29 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       title: 'AI Co-pilot',
       icon: Sparkles,
       badge: 'Sales Intelligence',
-      heading: 'Automated deal forecasts and priority insights',
+      heading: 'Automated deal forecasts & priority insights',
       desc: 'Get smart suggestions, draft custom client responses, look up deal progress, and compute forecasting models with a floating Copilot.',
       features: [
         'Interactive AI chat prompt actions',
         'Automated priority rankings for leads',
         'Live summary generators for deals timeline'
       ],
-      color: 'from-purple-500 to-pink-600',
+      color: 'from-violet-600 to-purple-600',
       mockup: (
-        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-            <span className="text-[10px] text-slate-400 font-extrabold uppercase">PulseAI Copilot</span>
-            <Sparkles className="h-3.5 w-3.5 text-violet-400 animate-pulse" />
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-white text-slate-900 rounded-xl shadow-md border border-slate-200/90">
+          <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+            <div className="flex items-center space-x-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+              <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">PulseAI Assistant</span>
+            </div>
+            <span className="text-[8px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">GPT-4o Ready</span>
           </div>
           <div className="space-y-2 mt-3 flex-1 text-[9.5px]">
-            <div className="bg-slate-800/40 p-2 rounded-lg border border-slate-700/30 text-slate-300">
-              Draft a follow-up email to Acme Corp.
+            <div className="bg-slate-100/70 p-2.5 rounded-lg border border-slate-200/60 text-slate-600 font-medium">
+              Summarize the status of Acme Corp deal.
             </div>
-            <div className="bg-brand-accent/15 p-2.5 rounded-lg border border-brand-accent/20 text-white font-bold leading-normal">
-              ✨ Here is a draft: "Hi Sarah, following up on our proposal. We have slots open for professional migration next week..."
+            <div className="bg-indigo-50/70 p-2.5 rounded-lg border border-indigo-100 text-slate-800 font-medium leading-relaxed">
+              ✨ <span className="font-bold text-indigo-950">Acme Corp ($120k):</span> Security review passed. Next step: Final sign-off meeting scheduled for Thursday.
             </div>
           </div>
         </div>
@@ -166,47 +173,37 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
       title: 'Advanced Analytics',
       icon: Activity,
       badge: 'Real-time Telemetry',
-      heading: 'Git-style logs and conversion tracking',
-      desc: 'Visualize team contributions with contribution activity matrices. Trace conversion metrics across your pipeline step-by-step.',
+      heading: 'Pipeline telemetry & conversion tracking',
+      desc: 'Visualize team contributions with activity heatmaps. Trace conversion metrics across your pipeline step-by-step.',
       features: [
         'Sales rep activity heatmap widget',
         'Stepped radial progress rings chart',
         'Custom report builder dashboard grids'
       ],
-      color: 'from-emerald-500 to-teal-600',
+      color: 'from-emerald-600 to-teal-600',
       mockup: (
-        <div className="w-full h-full p-4 flex flex-col justify-between bg-slate-900 text-white rounded-xl shadow-lg border border-slate-700">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-            <span className="text-[10px] text-slate-400 font-extrabold uppercase">Analytics Matrix</span>
-            <Activity className="h-3.5 w-3.5 text-emerald-400" />
+        <div className="w-full h-full p-4 flex flex-col justify-between bg-white text-slate-900 rounded-xl shadow-md border border-slate-200/90">
+          <div className="flex justify-between items-center pb-2.5 border-b border-slate-100">
+            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">Conversion Analytics</span>
+            <Activity className="h-3.5 w-3.5 text-emerald-600" />
           </div>
           <div className="mt-3 flex-1 flex flex-col justify-between">
-            <div className="text-[9px] text-slate-400 font-extrabold">Qualified prospects conversion rings:</div>
-            {/* SVG Ring preview */}
-            <div className="flex items-center space-x-6 mt-2">
+            <div className="text-[9.5px] text-slate-500 font-medium">Funnel Conversion Rate:</div>
+            <div className="flex items-center space-x-6 mt-1">
               <svg className="h-16 w-16 transform -rotate-90 select-none shrink-0" viewBox="0 0 36 36">
-                {/* Background tracks */}
-                <circle cx="18" cy="18" r="14" fill="none" stroke="#1e293b" strokeWidth="2.5" />
-                <circle cx="18" cy="18" r="10.5" fill="none" stroke="#1e293b" strokeWidth="2.5" />
-                <circle cx="18" cy="18" r="7" fill="none" stroke="#1e293b" strokeWidth="2.5" />
-                
-                {/* Colored progress rings */}
-                <circle cx="18" cy="18" r="14" fill="none" stroke="#7957fb" strokeWidth="2.5" strokeDasharray="87.9" strokeDashoffset="25.5" strokeLinecap="round" />
-                <circle cx="18" cy="18" r="10.5" fill="none" stroke="#ec4899" strokeWidth="2.5" strokeDasharray="65.9" strokeDashoffset="34.3" strokeLinecap="round" />
-                <circle cx="18" cy="18" r="7" fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeDasharray="43.9" strokeDashoffset="30.7" strokeLinecap="round" />
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#f1f5f9" strokeWidth="3" />
+                <circle cx="18" cy="18" r="10.5" fill="none" stroke="#f1f5f9" strokeWidth="3" />
+                <circle cx="18" cy="18" r="14" fill="none" stroke="#6366f1" strokeWidth="3" strokeDasharray="87.9" strokeDashoffset="25.5" strokeLinecap="round" />
+                <circle cx="18" cy="18" r="10.5" fill="none" stroke="#10b981" strokeWidth="3" strokeDasharray="65.9" strokeDashoffset="34.3" strokeLinecap="round" />
               </svg>
-              <div className="space-y-1 text-[9px] text-left">
+              <div className="space-y-1.5 text-[9.5px] text-left">
                 <div className="flex items-center space-x-1.5">
-                  <span className="h-2 w-2 rounded-full bg-brand-accent shrink-0"></span>
-                  <span className="text-slate-300 font-bold">Analysis: 71%</span>
+                  <span className="h-2 w-2 rounded-full bg-indigo-600 shrink-0"></span>
+                  <span className="text-slate-700 font-bold">Qualified → Proposal: 71%</span>
                 </div>
                 <div className="flex items-center space-x-1.5">
-                  <span className="h-2 w-2 rounded-full bg-pink-500 shrink-0"></span>
-                  <span className="text-slate-300 font-bold">Proposal: 48%</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <span className="h-2 w-2 rounded-full bg-amber-500 shrink-0"></span>
-                  <span className="text-slate-300 font-bold">Negotiation: 30%</span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"></span>
+                  <span className="text-slate-700 font-bold">Proposal → Closed Won: 48%</span>
                 </div>
               </div>
             </div>
@@ -217,227 +214,288 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-[url('/pulse_3d_bg.png')] bg-cover bg-center bg-no-repeat bg-attachment-fixed flex flex-col overflow-x-hidden text-slate-950 font-sans relative">
-      {/* Soft overlay for legibility and theme mixing */}
-      <div className="absolute inset-0 bg-slate-900/5 backdrop-blur-xs z-0" />
-      <div className="absolute top-10 left-[10%] w-96 h-96 bg-brand-accent/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
-      <div className="absolute top-[40%] right-[5%] w-80 h-80 bg-brand-blue/5 blur-[100px] rounded-full pointer-events-none z-0"></div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 flex flex-col overflow-x-hidden text-white font-sans relative">
       
-      {/* 1. Header Navigation Bar */}
-      <header className="sticky top-0 bg-white/95 backdrop-blur-md border-b border-slate-200/80 z-40 h-16 w-full flex items-center justify-between px-6 md:px-12 select-none shadow-sm/5">
-        <div className="flex items-center space-x-2.5">
-          <div className="h-8 w-8 rounded-lg bg-brand-accent flex items-center justify-center shadow-md">
-            <svg className="h-4.5 w-4.5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <span className="font-sans font-black text-lg text-brand-heading tracking-wider uppercase">
-            PULSE
-          </span>
-        </div>
+      {/* Soft Decorative Ambient Lighting */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-400/30 blur-[140px] rounded-full pointer-events-none z-0" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-300/30 blur-[130px] rounded-full pointer-events-none z-0" />
+      
+      {/* 1. Top Navigation Bar with Pulse Brand Logo & Details */}
+      <header className="sticky top-0 bg-slate-900/20 backdrop-blur-xl z-40 h-20 w-full flex items-center justify-between px-6 md:px-12 select-none border-b border-white/10">
         
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-8 text-xs font-bold text-slate-500">
-          <a href="#metrics" className="hover:text-brand-accent transition-colors">Performance</a>
-          <a href="#suite" className="hover:text-brand-accent transition-colors">Unified Suite</a>
-          <a href="#features" className="hover:text-brand-accent transition-colors">Features</a>
-        </nav>
+        {/* Left: Pulse CRM Brand Logo & Navigation Links */}
+        <div className="flex items-center space-x-8 md:space-x-12">
+          
+          {/* 3D Pulse Logo Mark & Name */}
+          <div className="flex items-center space-x-3 cursor-pointer group select-none">
+            <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-pink-500 via-purple-600 to-cyan-400 p-0.5 shadow-lg shadow-pink-500/30 group-hover:scale-105 transition-transform flex items-center justify-center">
+              <div className="h-full w-full bg-slate-950/80 backdrop-blur-md rounded-[14px] flex items-center justify-center">
+                <Activity className="h-5 w-5 text-pink-400 group-hover:rotate-12 transition-transform" strokeWidth={2.5} />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center space-x-1">
+                <span className="text-xl font-black text-white tracking-tight font-sans">Pulse</span>
+                <span className="text-xl font-black text-pink-300 font-sans">CRM</span>
+              </div>
+              <span className="text-[9px] font-extrabold text-cyan-300 uppercase tracking-widest leading-none">
+                AI Revenue Engine
+              </span>
+            </div>
+          </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center space-x-4">
+          {/* Navigation Links */}
+          <div className="hidden lg:flex items-center space-x-7 text-xs font-bold tracking-wide">
+            <a href="#" className="text-pink-300 hover:text-white transition-colors font-extrabold">Home</a>
+            <a href="#suite" className="text-white/85 hover:text-white transition-colors">Read More</a>
+            <a href="#features" className="text-white/85 hover:text-white transition-colors">Contact</a>
+            <a href="#" onClick={() => setIsModalOpen(true)} className="text-white/85 hover:text-white transition-colors">Sign Up</a>
+          </div>
+        </div>
+
+        {/* Right Auth Action Pill Buttons */}
+        <div className="flex items-center space-x-3">
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="text-xs font-bold text-brand-heading hover:text-brand-accent transition-colors cursor-pointer bg-transparent border-0"
+            className="px-6 py-2 bg-white text-indigo-700 hover:bg-slate-100 rounded-full text-xs font-extrabold shadow-md hover:shadow-lg hover:scale-105 transition-all cursor-pointer"
           >
-            Sign In
+            Log in
           </button>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-lg text-xs font-bold shadow-sm transition-all cursor-pointer"
+            className="px-6 py-2 bg-pink-500/30 border border-pink-400/50 hover:bg-pink-500/50 text-white rounded-full text-xs font-extrabold transition-all cursor-pointer shadow-xs"
           >
-            Start Free Trial
+            Register
           </button>
         </div>
       </header>
 
-      {/* 2. Hero Section */}
-      <section className="relative w-full py-16 md:py-24 bg-transparent flex items-center justify-center px-6 md:px-12 border-b border-slate-200/5 z-10">
-        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      {/* 2. Main Hero Section (Matching image composition with 3D Figures) */}
+      <section className="relative w-full py-12 md:py-20 bg-transparent flex items-center justify-center px-8 md:px-16 z-10 flex-1">
+        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
-          {/* Left Column: Core Value Pitch */}
-          <div className="lg:col-span-7 space-y-6 text-left">
+          {/* Left Column: Core Value Pitch (Restored Original Text & CTAs) */}
+          <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
             
-            
-            <h1 className="text-4xl md:text-5xl font-sans font-black tracking-tight text-brand-heading leading-tight max-w-2xl">
-              The Operating System for{' '}
-              <span className="relative inline-block text-brand-accent">
-                Sales & CRM.
-                <svg className="absolute top-[90%] left-0 w-full h-2 text-brand-accent/50" viewBox="0 0 100 10" preserveAspectRatio="none" fill="none">
-                  <path d="M1 5C25 8 75 2 99 5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                </svg>
+            {/* Sleek Live Announcement Badge */}
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-white text-xs font-semibold shadow-xs">
+              <span className="h-2 w-2 rounded-full bg-pink-400 animate-pulse"></span>
+              <span>Pulse CRM 2.0 is now live</span>
+              <ChevronRight className="h-3.5 w-3.5 text-white/80" />
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.12] drop-shadow-md font-sans">
+              The intelligent CRM built for{' '}
+              <span className="text-pink-300 drop-shadow-sm font-black">
+                high-growth teams.
               </span>
             </h1>
 
-            <p className="text-xs md:text-sm text-slate-500 font-bold leading-relaxed max-w-xl">
-              Pulse brings your sales pipelines, client communications, activity grids, and real-time AI insights into a single unified workspace. Empower your team to close deals faster and automate daily workflows effortlessly.
+            <p className="text-base sm:text-lg text-white/90 font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Pulse unifies deal pipelines, automated email syncing, rep leaderboards, and real-time AI copilot assistance into one intuitive, high-performance workspace.
             </p>
 
-            {/* CTA action buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2">
+            {/* Restored CTA Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 pt-2 justify-center lg:justify-start">
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="px-6 py-3 bg-brand-accent hover:bg-brand-accent-hover text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                className="px-7 py-3.5 bg-pink-500 hover:bg-pink-600 text-white rounded-full text-xs font-extrabold shadow-lg shadow-pink-500/40 hover:shadow-pink-500/60 hover:scale-105 transition-all flex items-center justify-center space-x-2 cursor-pointer"
               >
-                <span>Activate Free Trial</span>
+                <span>Start 14-Day Free Trial</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="px-6 py-3 bg-white border border-slate-300 hover:border-slate-400 text-slate-600 rounded-xl text-xs font-bold shadow-sm/5 transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+                className="px-7 py-3.5 bg-white/15 backdrop-blur-md border border-white/40 hover:bg-white/25 text-white rounded-full text-xs font-extrabold shadow-sm hover:scale-105 transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
               >
-                <span>Watch Live Demo</span>
+                <span>Book Live Demo</span>
               </button>
             </div>
 
-            {/* Trust bullet parameters */}
-            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10.5px] font-black text-slate-400 select-none pt-2">
+            {/* Restored Trust Bullets */}
+            <ul className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-xs font-semibold text-white/90 select-none pt-2">
               <li className="flex items-center space-x-1.5">
-                <CheckCircle2 className="h-4 w-4 text-brand-accent" />
-                <span>Free for 14 Days</span>
+                <CheckCircle2 className="h-4 w-4 text-cyan-300" />
+                <span>14-day free trial</span>
               </li>
               <li className="flex items-center space-x-1.5">
-                <CheckCircle2 className="h-4 w-4 text-brand-accent" />
-                <span>No Credit Card Required</span>
+                <CheckCircle2 className="h-4 w-4 text-cyan-300" />
+                <span>No credit card required</span>
               </li>
               <li className="flex items-center space-x-1.5">
-                <CheckCircle2 className="h-4 w-4 text-brand-accent" />
-                <span>Instant Set-up</span>
+                <CheckCircle2 className="h-4 w-4 text-cyan-300" />
+                <span>2-minute setup</span>
               </li>
             </ul>
           </div>
 
-          {/* Right Column: Floating Interactive Dashboard Mockup */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <div className="w-full max-w-md bg-white border border-slate-200 p-4 rounded-3xl shadow-xl flex flex-col justify-between select-none relative group transition-transform hover:-translate-y-1 duration-300">
+          {/* Right Column: Dynamic 3D Figure Scene (No static images) */}
+          <div className="lg:col-span-6 flex justify-center items-center">
+            <div className="relative w-full max-w-lg h-[400px] flex items-center justify-center select-none perspective-[1000px]">
               
-              {/* Visual Mock Window header */}
-              <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-                <div className="flex space-x-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
-                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
-                  <span className="h-2.5 w-2.5 rounded-full bg-slate-200"></span>
-                </div>
-                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest">Workspace Dashboard</span>
-                <span className="h-3.5 w-3.5 rounded bg-brand-accent/15 border border-brand-accent/20"></span>
-              </div>
+              {/* Ambient Glow behind 3D figures */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-cyan-300/30 via-pink-400/20 to-purple-500/30 blur-3xl rounded-full transform -translate-y-4 pointer-events-none" />
 
-              {/* Inside Mock Layout */}
-              <div className="grid grid-cols-12 gap-3 mt-4 h-64">
-                {/* Mini Sidebar */}
-                <div className="col-span-3 bg-slate-50 border border-slate-100 rounded-xl p-2 flex flex-col space-y-2">
-                  <div className="h-4 w-full bg-brand-accent/10 border border-brand-accent/15 rounded flex items-center justify-center text-[7px] font-black text-brand-accent">CRM</div>
-                  <div className="space-y-1 flex-1">
-                    {[1, 2, 3, 4].map((item) => (
-                      <div key={item} className={`h-2.5 rounded ${item === 1 ? 'bg-slate-200/90' : 'bg-slate-200/40'} w-full`}></div>
-                    ))}
-                  </div>
-                </div>
+              {/* 3D Scene Assembly */}
+              <div className="relative w-full h-full flex items-center justify-center transform-style-3d group">
 
-                {/* Main Content Area */}
-                <div className="col-span-9 space-y-3 flex flex-col justify-between">
-                  {/* Cards Row */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { l: 'Revenue', n: '₹1.2M', c: 'border-brand-accent/15' },
-                      { l: 'Deals', n: '432', c: 'border-slate-100' },
-                      { l: 'AI Priority', n: '86%', c: 'border-slate-100' }
-                    ].map((card, i) => (
-                      <div key={i} className={`bg-white border ${card.c} p-2 rounded-xl text-left shadow-sm/5`}>
-                        <span className="text-[7px] text-slate-400 font-extrabold block uppercase tracking-wide">{card.l}</span>
-                        <span className="text-[11.5px] font-black text-brand-heading mt-0.5 block">{card.n}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Graph Area */}
-                  <div className="flex-1 bg-slate-50 border border-slate-100 rounded-2xl p-3 flex flex-col justify-between relative overflow-hidden">
-                    <span className="text-[7.5px] text-slate-400 font-extrabold uppercase">Monthly Performance</span>
-                    
-                    {/* SVG Line curve */}
-                    <svg className="w-full h-16 mt-2" viewBox="0 0 100 40">
+                {/* 1. Dual 3D Rotating Pink Gears (Left / Behind) */}
+                <div className="absolute left-6 bottom-20 z-10 transform -rotate-12 group-hover:rotate-0 transition-transform duration-700 ease-out">
+                  {/* Main Large 3D Pink Gear */}
+                  <div className="relative w-28 h-28 animate-[spin_25s_linear_infinite]">
+                    <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_15px_25px_rgba(225,29,72,0.4)]">
                       <defs>
-                        <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#7957fb" />
-                          <stop offset="50%" stopColor="#ec4899" />
-                          <stop offset="100%" stopColor="#f59e0b" />
-                        </linearGradient>
-                        <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#7957fb" stopOpacity="0.15" />
-                          <stop offset="100%" stopColor="#7957fb" stopOpacity="0" />
+                        <linearGradient id="pinkGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#fb7185" />
+                          <stop offset="50%" stopColor="#f43f5e" />
+                          <stop offset="100%" stopColor="#be123c" />
                         </linearGradient>
                       </defs>
-                      <path d="M 0 35 Q 25 38 40 20 T 80 10 T 100 5" fill="none" stroke="url(#strokeGrad)" strokeWidth="2.5" strokeLinecap="round" />
-                      <path d="M 0 35 Q 25 38 40 20 T 80 10 T 100 5 L 100 40 L 0 40 Z" fill="url(#grad)" />
-                      <circle cx="40" cy="20" r="2" fill="#f59e0b" stroke="#ffffff" strokeWidth="0.5" />
-                      <circle cx="80" cy="10" r="2" fill="#ec4899" stroke="#ffffff" strokeWidth="0.5" />
-                      <circle cx="100" cy="5" r="2" fill="#7957fb" stroke="#ffffff" strokeWidth="0.5" />
+                      <path
+                        fill="url(#pinkGearGrad)"
+                        d="M50,30 A20,20 0 1,0 50,70 A20,20 0 1,0 50,30 Z M50,0 L56,10 L68,6 L70,18 L82,18 L80,30 L90,36 L84,46 L92,54 L84,62 L90,72 L80,78 L82,90 L70,90 L68,102 L56,98 L50,108 L44,98 L32,102 L30,90 L18,90 L20,78 L10,72 L16,62 L8,54 L16,46 L6,36 L16,30 L14,18 L26,18 L28,6 L40,10 Z"
+                      />
+                      <circle cx="50" cy="50" r="14" fill="#67e8f9" opacity="0.9" />
                     </svg>
-                    
-                    {/* Animated Chat Prompt Bubble */}
-                    <div className="absolute bottom-2 right-2 bg-slate-900 text-white rounded-lg p-1.5 shadow-md flex items-center space-x-1 border border-slate-700/50 scale-90 group-hover:scale-95 transition-transform duration-300">
-                      <Sparkles className="h-2.5 w-2.5 text-violet-400 animate-pulse" />
-                      <span className="text-[7.5px] font-bold">Copilot Active</span>
-                    </div>
+                  </div>
+                  
+                  {/* Secondary Pink Gear */}
+                  <div className="absolute -top-10 -left-6 w-18 h-18 animate-[spin_18s_linear_infinite_reverse]">
+                    <svg viewBox="0 0 100 100" className="w-full h-full filter drop-shadow-[0_10px_20px_rgba(244,63,94,0.35)]">
+                      <path
+                        fill="url(#pinkGearGrad)"
+                        d="M50,30 A20,20 0 1,0 50,70 A20,20 0 1,0 50,30 Z M50,0 L56,10 L68,6 L70,18 L82,18 L80,30 L90,36 L84,46 L92,54 L84,62 L90,72 L80,78 L82,90 L70,90 L68,102 L56,98 L50,108 L44,98 L32,102 L30,90 L18,90 L20,78 L10,72 L16,62 L8,54 L16,46 L6,36 L16,30 L14,18 L26,18 L28,6 L40,10 Z"
+                      />
+                      <circle cx="50" cy="50" r="14" fill="#38bdf8" opacity="0.9" />
+                    </svg>
                   </div>
                 </div>
-              </div>
 
+                {/* 2. 3D Floating Profile Contact Badge (Top Left) */}
+                <div className="absolute top-10 left-16 z-30 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.18)] border border-white/80 flex items-center space-x-3 animate-[bounce_4s_easeInOut_infinite] transform hover:scale-105 transition-transform">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-md">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="h-2 w-14 bg-slate-300 rounded-full" />
+                    <div className="h-1.5 w-9 bg-cyan-500 rounded-full mt-1.5" />
+                  </div>
+                </div>
+
+                {/* 3. 3D SaaS Cloud Base (Center Bottom) */}
+                <div className="absolute bottom-4 z-20 w-80 sm:w-96 flex flex-col items-center justify-center filter drop-shadow-[0_25px_40px_rgba(30,58,138,0.4)] animate-[pulse_6s_easeInOut_infinite]">
+                  <div className="relative w-full h-32 bg-gradient-to-r from-sky-300 via-cyan-400 to-blue-500 rounded-[50px] flex items-center justify-center shadow-inner border border-white/50">
+                    
+                    {/* Volumetric Cloud Bubbles for 3D depth */}
+                    <div className="absolute -top-12 left-8 w-24 h-24 bg-gradient-to-tr from-sky-200 to-cyan-300 rounded-full border-t-2 border-white/80" />
+                    <div className="absolute -top-16 left-22 w-32 h-32 bg-gradient-to-tr from-cyan-300 to-blue-400 rounded-full border-t-2 border-white/80" />
+                    <div className="absolute -top-10 right-10 w-28 h-28 bg-gradient-to-tr from-blue-300 to-indigo-500 rounded-full border-t-2 border-white/70" />
+                    
+                    {/* Extruded White "SaaS" 3D Text */}
+                    <span className="relative z-10 text-5xl font-black text-white tracking-widest font-sans filter drop-shadow-[0_8px_16px_rgba(30,58,138,0.6)]">
+                      SaaS
+                    </span>
+                  </div>
+                </div>
+
+                {/* 4. 3D Character Sitting on SaaS Cloud with Laptop */}
+                <div className="absolute top-12 right-14 z-30 flex flex-col items-center select-none pointer-events-none transform group-hover:translate-y-[-4px] transition-transform duration-500">
+                  <svg viewBox="0 0 200 220" className="w-48 h-52 filter drop-shadow-[0_20px_30px_rgba(0,0,0,0.3)]">
+                    {/* Hair & Head */}
+                    <path d="M100 30 C 85 30 80 50 85 65 C 90 75 110 75 115 65 C 120 50 115 30 100 30 Z" fill="#7c2d12" />
+                    <circle cx="100" cy="50" r="16" fill="#fde047" opacity="0.95" />
+                    <circle cx="100" cy="50" r="14" fill="#fed7aa" />
+                    <path d="M92 40 C 95 32 105 32 108 40" fill="#7c2d12" />
+
+                    {/* White Shirt Torso */}
+                    <path d="M84 66 L116 66 L124 120 L76 120 Z" fill="#ffffff" />
+                    {/* Black Tie */}
+                    <polygon points="98,66 102,66 103,95 100,100 97,95" fill="#0f172a" />
+
+                    {/* Dark Trousers / Legs in sitting posture */}
+                    <path d="M76 120 L124 120 L135 155 L108 175 L98 140 L88 175 L65 155 Z" fill="#0f172a" />
+                    {/* Shoes */}
+                    <ellipse cx="60" cy="158" rx="8" ry="4" fill="#1e293b" />
+                    <ellipse cx="140" cy="158" rx="8" ry="4" fill="#1e293b" />
+
+                    {/* Laptop held on lap */}
+                    <rect x="78" y="105" width="44" height="26" rx="4" fill="#1e293b" stroke="#0f172a" strokeWidth="2" />
+                    <polygon points="72,131 128,131 122,137 78,137" fill="#475569" />
+                    <text x="100" y="122" textAnchor="middle" fill="#38bdf8" fontSize="7" fontWeight="bold" fontFamily="sans-serif">CRM</text>
+
+                    {/* Active Wi-Fi Signal Waves */}
+                    <path d="M126 98 A 10 10 0 0 1 136 108" fill="none" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" className="animate-pulse" />
+                    <path d="M129 93 A 15 15 0 0 1 143 108" fill="none" stroke="#38bdf8" strokeWidth="2.5" opacity="0.7" strokeLinecap="round" className="animate-pulse" />
+                  </svg>
+                </div>
+
+              </div>
             </div>
           </div>
 
         </div>
       </section>
 
-      {/* 3. Metrics Statistics Band (Adding real data & color variety) */}
-      <section id="metrics" className="py-12 bg-transparent border-b border-slate-200/5 relative overflow-hidden select-none z-10">
+      {/* Brand Social Trust Bar */}
+      <section className="py-10 bg-white/10 backdrop-blur-md border-y border-white/20 select-none z-10">
+        <div className="w-full max-w-6xl mx-auto px-6 md:px-12 text-center">
+          <p className="text-xs font-bold text-white/80 uppercase tracking-wider mb-6">
+            Trusted by fast-growing sales teams & enterprise organizations
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-90 transition-all duration-300">
+            {['TechCorp', 'Sparta Creative', 'Empiric Logistics', 'Acme Systems', 'Initech Global'].map((company, idx) => (
+              <span key={idx} className="font-black text-base text-white tracking-tight drop-shadow-sm hover:scale-105 transition-transform cursor-default">
+                {company}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Metrics Statistics Band */}
+      <section id="metrics" className="py-20 bg-transparent relative overflow-hidden select-none z-10">
         <div className="w-full max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { label: 'Active Business Seats', val: '14,820+', desc: '+18.4% this qtr', color: 'text-violet-600', bg: 'bg-violet-500/10', icon: Users },
-            { label: 'Deals Closed Natively', val: '432,050+', desc: '₹124M total value', color: 'text-blue-600', bg: 'bg-blue-500/10', icon: Award },
-            { label: 'AI Priority Accuracy', val: '98.4%', desc: '1.2s response latency', color: 'text-emerald-600', bg: 'bg-emerald-500/10', icon: Sparkles },
-            { label: 'Pipeline Velocity Boost', val: '3.4x', desc: 'Saves 8.2 hrs / rep / wk', color: 'text-pink-600', bg: 'bg-pink-500/10', icon: Zap }
+            { label: 'Active Business Seats', val: '14,820+', desc: '+18.4% quarterly growth', color: 'text-indigo-600', icon: Users },
+            { label: 'Deals Closed Natively', val: '432,050+', desc: '$124M total pipeline value', color: 'text-indigo-600', icon: Award },
+            { label: 'AI Prediction Accuracy', val: '98.4%', desc: '1.2s avg response latency', color: 'text-indigo-600', icon: Sparkles },
+            { label: 'Pipeline Velocity Boost', val: '3.4x', desc: 'Saves 8.2 hrs / rep / week', color: 'text-indigo-600', icon: Zap }
           ].map((stat, idx) => {
             const Icon = stat.icon;
             return (
-              <div key={idx} className="space-y-1.5 p-5 bg-slate-50 border border-slate-200/50 rounded-2xl relative group overflow-hidden transition-all hover:border-slate-300">
-                <div className={`absolute top-0 right-0 h-10 w-10 rounded-bl-3xl ${stat.bg} flex items-center justify-center text-slate-700`}>
-                  <Icon className="h-4 w-4 opacity-75" />
+              <div key={idx} className="p-6 bg-white/15 backdrop-blur-lg border border-white/30 rounded-2xl relative group overflow-hidden shadow-xl hover:bg-white/20 hover:border-white/50 hover:scale-[1.02] transition-all duration-300">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] text-white/80 font-bold uppercase tracking-wider">{stat.label}</span>
+                  <div className="h-9 w-9 rounded-xl bg-pink-500/20 border border-pink-400/40 flex items-center justify-center text-pink-200">
+                    <Icon className="h-4.5 w-4.5" />
+                  </div>
                 </div>
-                <span className="text-[10px] text-slate-400 font-extrabold uppercase tracking-wide block">{stat.label}</span>
-                <span className={`text-2xl md:text-3xl font-sans font-black ${stat.color} block tracking-tight`}>{stat.val}</span>
-                <span className="text-[9.5px] text-slate-500 font-bold block">{stat.desc}</span>
+                <span className="text-3xl sm:text-4xl font-black text-white block tracking-tight drop-shadow-sm">{stat.val}</span>
+                <span className="text-xs text-white/80 font-medium block mt-1.5">{stat.desc}</span>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* 4. Interactive Product Suite Grid (Zoho-style App Showcase) */}
-      <section id="suite" className="py-20 bg-transparent flex flex-col items-center justify-center px-6 md:px-12 border-b border-slate-200/5 z-10">
+      {/* 4. Interactive Product Suite Grid */}
+      <section id="suite" className="py-24 bg-transparent border-t border-white/20 flex flex-col items-center justify-center px-6 md:px-12 z-10">
         <div className="w-full max-w-6xl space-y-12">
           
           {/* Header Title */}
           <div className="text-center space-y-3">
-            <h2 className="text-3xl font-sans font-black tracking-tight text-brand-heading">
-              A Unified Suite to Run Your Entire Sales Cycle
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight drop-shadow-sm font-sans">
+              A complete platform to power your revenue engine
             </h2>
-            <p className="text-xs md:text-sm text-slate-500 font-bold max-w-xl mx-auto leading-relaxed">
-              Ditch the fragmented tools. Pulse unites everything in one seamless dashboard, from pipeline triggers to real-time AI assistance.
+            <p className="text-base sm:text-lg text-white/85 font-medium max-w-xl mx-auto leading-relaxed">
+              Consolidate your tools into one cohesive solution. Pulse connects every stage of your customer journey from lead intake to deal closing.
             </p>
           </div>
 
-          {/* Interactive tabs navigation */}
-          <div className="flex flex-wrap justify-center gap-2 pb-4 border-b border-slate-200/60 select-none">
+          {/* Interactive Tabs Navigation */}
+          <div className="flex flex-wrap justify-center gap-2.5 p-2 bg-black/20 backdrop-blur-md border border-white/25 rounded-2xl max-w-2xl mx-auto select-none">
             {productSuites.map((suite, idx) => {
               const Icon = suite.icon;
               const isActive = activeTab === idx;
@@ -445,13 +503,13 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                 <button
                   key={idx}
                   onClick={() => setActiveTab(idx)}
-                  className={`flex items-center space-x-2.5 px-4.5 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer border ${
+                  className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     isActive 
-                      ? 'bg-slate-900 border-slate-900 text-white shadow-md' 
-                      : 'bg-slate-50 border-slate-200 hover:border-slate-300 text-slate-600 hover:bg-slate-100'
+                      ? 'bg-white text-indigo-900 shadow-lg scale-105' 
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  <Icon className={`h-4.5 w-4.5 ${isActive ? 'text-brand-accent' : 'text-slate-400'}`} />
+                  <Icon className={`h-4 w-4 ${isActive ? 'text-indigo-600' : 'text-white/70'}`} />
                   <span>{suite.title}</span>
                 </button>
               );
@@ -459,43 +517,43 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
           </div>
 
           {/* Active Tab Preview Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center pt-4">
             
             {/* Left Column: Selected Feature Copy */}
             <div className="lg:col-span-6 space-y-6 text-left animate-in fade-in slide-in-from-left-2 duration-300">
-              <span className={`inline-block px-3 py-0.5 rounded text-[9.5px] font-black uppercase tracking-wide bg-gradient-to-r ${productSuites[activeTab].color} text-white`}>
+              <span className="inline-block px-3.5 py-1 rounded-full text-xs font-extrabold bg-pink-500/30 text-pink-200 border border-pink-400/50">
                 {productSuites[activeTab].badge}
               </span>
-              <h3 className="text-2xl font-sans font-black text-brand-heading">
+              <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-sm">
                 {productSuites[activeTab].heading}
               </h3>
-              <p className="text-xs text-slate-500 font-bold leading-relaxed">
+              <p className="text-base text-white/90 font-medium leading-relaxed">
                 {productSuites[activeTab].desc}
               </p>
               
-              {/* Feature bullet list */}
-              <ul className="space-y-3 pt-2 text-xs font-bold text-slate-600">
+              {/* Feature Bullet List */}
+              <ul className="space-y-3 pt-1 text-sm font-semibold text-white/95">
                 {productSuites[activeTab].features.map((feature, i) => (
                   <li key={i} className="flex items-center space-x-3">
-                    <CheckCircle2 className="h-4.5 w-4.5 text-brand-accent shrink-0" />
+                    <CheckCircle2 className="h-5 w-5 text-cyan-300 shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
 
-              {/* Activate button */}
+              {/* Activate Button */}
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="mt-4 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg flex items-center space-x-1.5 cursor-pointer shadow-sm"
+                className="mt-4 px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white text-xs font-extrabold rounded-full flex items-center space-x-2 cursor-pointer shadow-lg shadow-pink-500/30 hover:scale-105 transition-all"
               >
-                <span>Activate {productSuites[activeTab].title}</span>
+                <span>Explore {productSuites[activeTab].title}</span>
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
 
             {/* Right Column: Selected Dynamic Preview Mockup */}
             <div className="lg:col-span-6 flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-2 duration-300">
-              <div className="w-full max-w-md h-64 relative flex items-center justify-center p-1 bg-slate-50 border border-slate-200/80 rounded-2xl shadow-inner">
+              <div className="w-full max-w-md h-72 relative flex items-center justify-center p-1.5 bg-white/15 backdrop-blur-xl border border-white/30 rounded-3xl shadow-2xl">
                 {productSuites[activeTab].mockup}
               </div>
             </div>
@@ -505,79 +563,60 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         </div>
       </section>
 
-      {/* 5. Visual Features Showcase Grid (Adding color, graphs, and variety) */}
-      <section id="features" className="py-20 bg-transparent border-b border-slate-200/5 flex flex-col items-center justify-center px-6 md:px-12 relative overflow-hidden z-10">
-        
-        {/* Floating gradient blur background accent */}
-        <div className="absolute top-[40%] left-[5%] w-80 h-80 bg-brand-accent/5 blur-[90px] rounded-full pointer-events-none"></div>
+      {/* 5. Visual Features Showcase Grid (Bento Style) */}
+      <section id="features" className="py-24 bg-transparent border-t border-white/20 flex flex-col items-center justify-center px-6 md:px-12 relative overflow-hidden z-10">
         
         <div className="w-full max-w-6xl space-y-12 relative z-10">
           <div className="text-center space-y-3">
-            <h2 className="text-3xl font-sans font-black tracking-tight text-brand-heading">
-              Engineered for Hyper-Growth Sales Teams
+            <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight drop-shadow-sm font-sans">
+              Designed for modern sales execution
             </h2>
-            <p className="text-xs md:text-sm text-slate-500 font-bold max-w-xl mx-auto leading-relaxed">
-              Unlock maximum data visibility, automated pipelines, and intelligent assistant workflows with responsive graphing dashboards.
+            <p className="text-base sm:text-lg text-white/85 font-medium max-w-xl mx-auto leading-relaxed">
+              Every detail is crafted to increase rep efficiency, improve deal velocity, and provide clear management visibility.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 title: 'Visual Revenue Growth',
-                desc: 'Live financial forecasting and deal pacing charts dynamically updated from raw client touchpoints.',
-                color: 'from-violet-500/10 to-indigo-500/10 border-violet-500/20',
-                iconColor: 'text-violet-600',
-                badge: 'Pacing Analytics',
+                desc: 'Live financial forecasting and deal pacing charts dynamically updated from touchpoints.',
+                badge: 'Analytics',
                 chart: (
                   <svg className="w-full h-24 mt-4 select-none" viewBox="0 0 120 40">
                     <defs>
-                      <linearGradient id="barGrad1" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#8b5cf6" /><stop offset="100%" stopColor="#c084fc" /></linearGradient>
-                      <linearGradient id="barGrad2" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#3b82f6" /><stop offset="100%" stopColor="#60a5fa" /></linearGradient>
-                      <linearGradient id="barGrad3" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#10b981" /><stop offset="100%" stopColor="#34d399" /></linearGradient>
-                      <linearGradient id="barGrad4" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#f59e0b" /><stop offset="100%" stopColor="#fbbf24" /></linearGradient>
-                      <linearGradient id="barGrad5" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#f43f5e" /><stop offset="100%" stopColor="#fb7185" /></linearGradient>
-                      <linearGradient id="barGrad6" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#06b6d4" /><stop offset="100%" stopColor="#22d3ee" /></linearGradient>
-                      <linearGradient id="barGrad7" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#d946ef" /><stop offset="100%" stopColor="#f472b6" /></linearGradient>
+                      <linearGradient id="barGradA" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#ec4899" /><stop offset="100%" stopColor="#f472b6" /></linearGradient>
+                      <linearGradient id="barGradB" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#38bdf8" /><stop offset="100%" stopColor="#7dd3fc" /></linearGradient>
+                      <linearGradient id="barGradC" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stopColor="#34d399" /><stop offset="100%" stopColor="#6ee7b7" /></linearGradient>
                     </defs>
-                    <rect x="10" y="20" width="8" height="20" rx="1.5" fill="url(#barGrad1)" />
-                    <rect x="25" y="15" width="8" height="25" rx="1.5" fill="url(#barGrad2)" />
-                    <rect x="40" y="8" width="8" height="32" rx="1.5" fill="url(#barGrad3)" />
-                    <rect x="55" y="24" width="8" height="16" rx="1.5" fill="url(#barGrad4)" />
-                    <rect x="70" y="10" width="8" height="30" rx="1.5" fill="url(#barGrad5)" />
-                    <rect x="85" y="4" width="8" height="36" rx="1.5" fill="url(#barGrad6)" />
-                    <rect x="100" y="2" width="8" height="38" rx="1.5" fill="url(#barGrad7)" />
+                    <rect x="15" y="20" width="10" height="20" rx="2" fill="url(#barGradA)" />
+                    <rect x="35" y="12" width="10" height="28" rx="2" fill="url(#barGradB)" />
+                    <rect x="55" y="6" width="10" height="34" rx="2" fill="url(#barGradC)" />
+                    <rect x="75" y="16" width="10" height="24" rx="2" fill="url(#barGradA)" />
+                    <rect x="95" y="2" width="10" height="38" rx="2" fill="url(#barGradC)" />
                   </svg>
                 )
               },
               {
-                title: 'Priority Deal Probability',
-                desc: 'AI algorithms score leads and deals from 0 to 100 based on buyer engagement and response speed.',
-                color: 'from-emerald-500/10 to-teal-500/10 border-emerald-500/20',
-                iconColor: 'text-emerald-600',
-                badge: 'Predictive Scoring',
+                title: 'Predictive Lead Scoring',
+                desc: 'AI algorithms score leads and deals based on buyer engagement signals and velocity.',
+                badge: 'AI Scoring',
                 chart: (
                   <div className="flex items-center justify-center space-x-6 mt-4 h-24 select-none">
                     <div className="relative h-20 w-20 flex items-center justify-center">
                       <svg className="w-full h-full transform -rotate-90" viewBox="0 0 40 40">
-                        <defs>
-                          <linearGradient id="donutEmerald" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#059669" /><stop offset="100%" stopColor="#34d399" /></linearGradient>
-                          <linearGradient id="donutPink" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#db2777" /><stop offset="100%" stopColor="#f472b6" /></linearGradient>
-                        </defs>
-                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="#e2e8f0" strokeWidth="2.5" />
-                        <circle cx="20" cy="20" r="11.5" fill="transparent" stroke="#e2e8f0" strokeWidth="2.5" />
-                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="url(#donutEmerald)" strokeWidth="2.5" strokeDasharray="100.5" strokeDashoffset="14" strokeLinecap="round" />
-                        <circle cx="20" cy="20" r="11.5" fill="transparent" stroke="url(#donutPink)" strokeWidth="2.5" strokeDasharray="72.2" strokeDashoffset="34.6" strokeLinecap="round" />
+                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="rgba(255,255,255,0.2)" strokeWidth="3" />
+                        <circle cx="20" cy="20" r="16" fill="transparent" stroke="#ec4899" strokeWidth="3" strokeDasharray="100.5" strokeDashoffset="14" strokeLinecap="round" />
                       </svg>
-                      <span className="absolute text-[10px] font-black text-slate-800">86%</span>
+                      <span className="absolute text-xs font-black text-white">86%</span>
                     </div>
-                    <div className="space-y-1 text-[9px] font-bold text-slate-500 text-left">
+                    <div className="space-y-1.5 text-xs font-bold text-white/90 text-left">
                       <div className="flex items-center space-x-1.5">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span className="h-2 w-2 rounded-full bg-pink-400 shrink-0"></span>
                         <span>Priority A: 86%</span>
                       </div>
                       <div className="flex items-center space-x-1.5">
-                        <span className="h-2 w-2 rounded-full bg-pink-500 shrink-0"></span>
+                        <span className="h-2 w-2 rounded-full bg-cyan-300 shrink-0"></span>
                         <span>Priority B: 52%</span>
                       </div>
                     </div>
@@ -585,89 +624,78 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
                 )
               },
               {
-                title: 'Rep Performance Tracking',
-                desc: 'Leaderboards monitor reps revenue milestones and logs in real-time, encouraging friendly competition.',
-                color: 'from-pink-500/10 to-rose-500/10 border-pink-500/20',
-                iconColor: 'text-pink-600',
-                badge: 'Milestone Tracking',
+                title: 'Leaderboards & Milestones',
+                desc: 'Track sales rep milestones and activity logs in real time to drive sales productivity.',
+                badge: 'Motivation',
                 chart: (
-                  <div className="space-y-2 mt-4 h-24 flex flex-col justify-center select-none">
+                  <div className="space-y-2 mt-4 h-24 flex flex-col justify-center select-none text-xs font-bold text-white/90">
                     {[
-                      { name: 'Alex J.', val: 'w-[90%]', rev: '₹1.2M', bg: 'bg-gradient-to-r from-violet-500 to-fuchsia-500' },
-                      { name: 'Sarah J.', val: 'w-[75%]', rev: '₹980K', bg: 'bg-gradient-to-r from-emerald-400 to-teal-500' },
-                      { name: 'David W.', val: 'w-[55%]', rev: '₹750K', bg: 'bg-gradient-to-r from-amber-400 to-orange-500' }
+                      { name: 'Alex R.', val: 'w-[90%]', rev: '$120K' },
+                      { name: 'Helena T.', val: 'w-[75%]', rev: '$98K' },
+                      { name: 'Marcus V.', val: 'w-[55%]', rev: '$75K' }
                     ].map((rep, i) => (
-                      <div key={i} className="flex items-center justify-between text-[9px] font-extrabold text-slate-600">
-                        <span className="w-12 truncate text-left">{rep.name}</span>
-                        <div className="flex-1 mx-2.5 bg-slate-200/80 h-2 rounded-full overflow-hidden">
-                          <div className={`h-full ${rep.val} ${rep.bg} rounded-full`}></div>
+                      <div key={i} className="flex items-center justify-between">
+                        <span className="w-16 truncate text-left">{rep.name}</span>
+                        <div className="flex-1 mx-2.5 bg-white/20 h-2 rounded-full overflow-hidden">
+                          <div className={`h-full ${rep.val} bg-pink-400 rounded-full`}></div>
                         </div>
-                        <span className="w-8 text-right font-black">{rep.rev}</span>
+                        <span className="w-10 text-right font-black text-white">{rep.rev}</span>
                       </div>
                     ))}
                   </div>
                 )
               },
               {
-                title: 'Tailored Workspace Roles',
-                desc: 'Log in as Sales Rep, Sales Manager, or System Admin to dynamically load custom views, permission grids, and workflows.',
-                color: 'from-blue-500/10 to-indigo-500/10 border-blue-500/20',
-                iconColor: 'text-blue-600',
-                badge: 'Role RBAC Security',
+                title: 'Role-Based Access Control',
+                desc: 'Tailored permissions and custom workspace views for Reps, Managers, and System Admins.',
+                badge: 'Security',
                 chart: (
                   <div className="flex items-center justify-center space-x-2 mt-6 h-24 select-none">
-                    <span className="px-2 py-1 rounded text-[8px] font-black uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-150 shadow-sm/5">Admin</span>
-                    <span className="px-2 py-1 rounded text-[8px] font-black uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-150 shadow-sm/5">Manager</span>
-                    <span className="px-2 py-1 rounded text-[8px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-150 shadow-sm/5">Sales Rep</span>
+                    <span className="px-3 py-1.5 rounded-lg text-xs font-bold bg-white/20 text-white border border-white/30">System Admin</span>
+                    <span className="px-3 py-1.5 rounded-lg text-xs font-bold bg-pink-500/30 text-pink-200 border border-pink-400/50">Sales Manager</span>
                   </div>
                 )
               },
               {
-                title: 'Visual Automation Designer',
-                desc: 'Build complex automations inside an interactive builder canvas. Bind trigger actions, criteria conditions, and webhook notifications.',
-                color: 'from-amber-500/10 to-orange-500/10 border-amber-500/20',
-                iconColor: 'text-amber-600',
-                badge: 'No-Code Pipelines',
+                title: 'No-Code Automation Builder',
+                desc: 'Construct automated lead routing, follow-up tasks, and webhook notifications visually.',
+                badge: 'Automation',
                 chart: (
                   <div className="flex items-center justify-center space-x-2 mt-6 h-24 select-none">
-                    <div className="bg-white border border-slate-200 p-2 rounded-lg text-[8px] font-black text-slate-800 shadow-sm flex items-center space-x-1.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"/>
-                      <span>Trigger Event</span>
+                    <div className="bg-white/20 border border-white/30 p-2.5 rounded-lg text-[9px] font-bold text-white shadow-2xs flex items-center space-x-1.5">
+                      <span className="h-2 w-2 rounded-full bg-emerald-400"/>
+                      <span>Lead Form Event</span>
                     </div>
-                    <div className="h-0.5 w-5 bg-slate-200 relative">
-                      <div className="absolute right-0 top-1/2 -translate-y-1/2 border-y-3 border-l-3 border-y-transparent border-l-slate-350"/>
+                    <div className="h-0.5 w-6 bg-white/40 relative">
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 border-y-3 border-l-3 border-y-transparent border-l-white/70"/>
                     </div>
-                    <div className="bg-white border border-slate-200 p-2 rounded-lg text-[8px] font-black text-slate-800 shadow-sm flex items-center space-x-1.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-blue-500"/>
-                      <span>Execute Action</span>
+                    <div className="bg-white/20 border border-white/30 p-2.5 rounded-lg text-[9px] font-bold text-white shadow-2xs flex items-center space-x-1.5">
+                      <span className="h-2 w-2 rounded-full bg-pink-400"/>
+                      <span>Assign Sales Rep</span>
                     </div>
                   </div>
                 )
               },
               {
-                title: 'ML Feature Engineering',
-                desc: 'Compute leads engagement levels, reply velocity rates, touchpoint recency days, and quality indexes in real-time.',
-                color: 'from-purple-500/10 to-fuchsia-500/10 border-purple-500/20',
-                iconColor: 'text-purple-600',
-                badge: 'Feature Profiling',
+                title: 'Engagement Telemetry',
+                desc: 'Analyze reply velocities, touchpoint recency, and customer engagement metrics dynamically.',
+                badge: 'Insights',
                 chart: (
-                  <div className="space-y-1.5 mt-4 h-24 flex flex-col justify-center select-none text-[8px] font-bold text-slate-500 px-1">
-                    <div className="flex justify-between border-b border-slate-100 pb-0.5"><span>Engagement Level</span><span className="text-emerald-600 font-extrabold uppercase">High (55 pts)</span></div>
-                    <div className="flex justify-between border-b border-slate-100 pb-0.5"><span>Response Velocity</span><span className="text-blue-600 font-extrabold uppercase">Fast (82%)</span></div>
-                    <div className="flex justify-between border-b border-slate-100 pb-0.5"><span>Interaction Recency</span><span className="text-purple-600 font-extrabold uppercase">2 Days Ago</span></div>
+                  <div className="space-y-2 mt-4 h-24 flex flex-col justify-center select-none text-xs font-semibold text-white/90 px-1">
+                    <div className="flex justify-between border-b border-white/15 pb-1"><span>Buyer Engagement</span><span className="text-emerald-300 font-extrabold">High (85/100)</span></div>
+                    <div className="flex justify-between border-b border-white/15 pb-1"><span>Reply Velocity</span><span className="text-cyan-300 font-extrabold">12 mins avg</span></div>
+                    <div className="flex justify-between border-b border-white/15 pb-1"><span>Touchpoint Recency</span><span className="text-white font-extrabold">Today</span></div>
                   </div>
                 )
               }
             ].map((feature, idx) => (
-              <div key={idx} className={`bg-gradient-to-br ${feature.color} border border-slate-200/60 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between h-[300px]`}>
+              <div key={idx} className="bg-white/15 backdrop-blur-lg border border-white/30 rounded-3xl p-6 shadow-xl hover:bg-white/25 hover:border-white/50 hover:scale-[1.02] transition-all duration-300 flex flex-col justify-between h-[300px]">
                 <div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className={`text-[9px] font-black uppercase tracking-wider ${feature.iconColor} px-2.5 py-0.5 rounded-full bg-white border border-slate-200/50`}>
-                      {feature.badge}
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-black text-brand-heading text-left">{feature.title}</h3>
-                  <p className="text-[11px] text-slate-500 font-bold leading-normal mt-2 text-left">{feature.desc}</p>
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-pink-200 px-3 py-1 rounded-full bg-pink-500/30 border border-pink-400/50 inline-block mb-3">
+                    {feature.badge}
+                  </span>
+                  <h3 className="text-lg font-bold text-white text-left">{feature.title}</h3>
+                  <p className="text-xs text-white/85 font-medium leading-relaxed mt-1.5 text-left">{feature.desc}</p>
                 </div>
                 <div className="w-full shrink-0">
                   {feature.chart}
@@ -678,31 +706,56 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
         </div>
       </section>
 
+      {/* Footer with Pulse Logo & Details */}
+      <footer className="bg-slate-950/80 backdrop-blur-xl text-white/80 py-12 px-6 md:px-12 select-none border-t border-white/20 z-10">
+        <div className="w-full max-w-6xl mx-auto space-y-8">
+          
+          {/* Top Footer Row: Logo, Title & Brand Details */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-white/10">
+            <div className="flex items-center space-x-3">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-pink-500 to-indigo-600 p-0.5 shadow-md flex items-center justify-center">
+                <div className="h-full w-full bg-slate-950/80 rounded-[10px] flex items-center justify-center">
+                  <Activity className="h-4 w-4 text-pink-400" strokeWidth={2.5} />
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center space-x-1">
+                  <span className="text-lg font-black text-white tracking-tight font-sans">Pulse</span>
+                  <span className="text-lg font-black text-pink-300 font-sans">CRM</span>
+                </div>
+                <p className="text-[11px] text-white/70 font-medium">
+                  Next-Generation AI Revenue Copilot &amp; Enterprise Deal Telemetry.
+                </p>
+              </div>
+            </div>
 
-      {/* 7. Footer */}
-      <footer className="bg-slate-950 text-slate-500 py-10 px-6 md:px-12 select-none border-t border-slate-900 z-10">
-        <div className="w-full max-w-6xl flex flex-col md:flex-row items-center justify-between gap-6 text-[10px] font-bold">
-          <span>&copy; {new Date().getFullYear()} Pulse CRM Inc. All rights reserved.</span>
-          <div className="flex space-x-6">
-            <a href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Security Standards</a>
+            <div className="flex flex-wrap gap-6 text-xs font-semibold text-white/80">
+              <a href="#" className="hover:text-pink-300 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-pink-300 transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-pink-300 transition-colors">Security Standards</a>
+            </div>
           </div>
-          <span>Powered by <span className="text-brand-heading">Kalnet</span></span>
+
+          {/* Bottom Copyright Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-white/60">
+            <span>&copy; {new Date().getFullYear()} Pulse CRM Inc. All rights reserved.</span>
+            <span>Powered by <span className="text-white font-extrabold">Kalnet</span></span>
+          </div>
+
         </div>
       </footer>
 
-      {/* 8. Authentic Glassmorphic Login Modal Dialog */}
+      {/* 8. Light-Mode Auth Login Modal Dialog */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop blur overlay */}
           <div 
             onClick={() => setIsModalOpen(false)}
-            className="absolute inset-0 bg-slate-950/40 backdrop-blur-sm cursor-pointer"
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs cursor-pointer"
           />
           
           {/* Modal Container Card */}
-          <div className="w-full max-w-md bg-white border border-brand-border-purple/20 rounded-3xl p-8 shadow-2xl flex flex-col justify-between text-brand-text relative z-10 animate-in zoom-in-95 duration-200">
+          <div className="w-full max-w-md bg-white border border-slate-200/90 rounded-2xl p-8 shadow-2xl flex flex-col justify-between text-slate-900 relative z-10 animate-in zoom-in-95 duration-150">
             {/* Close trigger */}
             <button 
               onClick={() => setIsModalOpen(false)}
@@ -714,41 +767,41 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
 
             {/* Header titles */}
             <div className="text-left mb-6">
-              <h2 className="font-sans text-2xl font-black text-brand-heading">Welcome back!</h2>
-              <p className="text-[12px] text-slate-400 mt-1.5 font-bold">Login to continue to your Pulse account</p>
+              <h2 className="font-sans text-2xl font-extrabold text-slate-900 tracking-tight">Welcome back</h2>
+              <p className="text-xs text-slate-500 mt-1 font-medium">Log in to access your Pulse workspace</p>
             </div>
 
             {/* Email form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-[10px] font-extrabold text-brand-heading uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                   Email address
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-400">
-                    <Mail className="h-4.5 w-4.5" strokeWidth={1.75} />
+                    <Mail className="h-4 w-4" strokeWidth={2} />
                   </div>
                   <input
                     type="email"
                     required
                     disabled={isLoading}
-                    placeholder="Enter your email"
+                    placeholder="name@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-brand-border-purple/35 rounded-xl text-xs text-brand-text bg-slate-50/50 placeholder-slate-400 focus:outline-none focus:border-brand-accent transition-colors shadow-sm/5"
+                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-slate-50/50 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:bg-white transition-colors shadow-2xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-extrabold text-brand-heading uppercase tracking-wider mb-2">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                   Workspace Access Role
                 </label>
                 <select
                   disabled={isLoading}
                   value={selectedRole}
                   onChange={(e) => setSelectedRole(e.target.value as any)}
-                  className="w-full px-3.5 py-2 border border-brand-border-purple/35 rounded-xl text-xs text-brand-text bg-slate-50/50 focus:outline-none focus:border-brand-accent transition-colors shadow-sm/5 font-extrabold cursor-pointer"
+                  className="w-full px-3.5 py-2.5 border border-slate-200 rounded-xl text-xs text-slate-900 bg-slate-50/50 focus:outline-none focus:border-indigo-600 focus:bg-white transition-colors shadow-2xs font-semibold cursor-pointer"
                 >
                   <option value="representative">Sales Representative</option>
                   <option value="manager">Sales Manager</option>
@@ -760,37 +813,37 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
               <button
                 type="submit"
                 disabled={isLoading || !email.trim()}
-                className="w-full flex items-center justify-center space-x-2 py-2.5 bg-brand-accent hover:bg-brand-accent-hover disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+                className="w-full flex items-center justify-center space-x-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer"
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-4.5 w-4.5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     <span>Signing in...</span>
                   </>
                 ) : (
                   <>
-                    <span>Login</span>
-                    <ArrowRight className="h-4.5 w-4.5" />
+                    <span>Continue to Workspace</span>
+                    <ArrowRight className="h-4 w-4" />
                   </>
                 )}
               </button>
             </form>
 
             {/* Divider line */}
-            <div className="relative flex items-center my-6">
-              <div className="flex-grow border-t border-brand-border-purple/15"></div>
-              <span className="flex-shrink mx-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">or</span>
-              <div className="flex-grow border-t border-brand-border-purple/15"></div>
+            <div className="relative flex items-center my-5">
+              <div className="flex-grow border-t border-slate-200"></div>
+              <span className="flex-shrink mx-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">or</span>
+              <div className="flex-grow border-t border-slate-200"></div>
             </div>
 
             {/* Continue with Google */}
             <button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full flex items-center justify-center space-x-2.5 py-2.5 border border-brand-border-purple/25 hover:border-brand-border-purple hover:bg-slate-50 rounded-xl text-xs font-bold text-brand-text/80 transition-all cursor-pointer shadow-sm/5 bg-white"
+              className="w-full flex items-center justify-center space-x-2.5 py-2.5 border border-slate-200/90 hover:border-slate-300 hover:bg-slate-50 rounded-xl text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs bg-white"
             >
               {/* Google SVG Logo */}
-              <svg className="h-4.5 w-4.5" viewBox="0 0 24 24">
+              <svg className="h-4 w-4" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -812,15 +865,9 @@ export default function PulseLandingPage({ onLogin }: PulseLandingPageProps) {
             </button>
 
             {/* Security shield badge */}
-            <div className="flex items-center justify-center space-x-1.5 mt-6 text-[10px] font-bold text-slate-400">
+            <div className="flex items-center justify-center space-x-1.5 mt-5 text-xs font-medium text-slate-500">
               <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>Your data is safe and secure</span>
-            </div>
-
-            {/* Footer tag */}
-            <div className="text-center mt-4 text-[9.5px] font-bold text-slate-400 select-none">
-              <span>Powered by </span>
-              <span className="text-brand-heading">Kalnet</span>
+              <span>SOC2 compliant & 256-bit encrypted</span>
             </div>
 
           </div>
