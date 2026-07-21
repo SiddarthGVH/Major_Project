@@ -1,4 +1,4 @@
-from functools import lru_cache
+﻿from functools import lru_cache
 from typing import List, Optional
 
 import secrets
@@ -31,9 +31,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     PASSWORD_RESET_TOKEN_EXPIRE_MINUTES: int = 15
 
-    # Database (loaded from .env)
     DATABASE_URL: str
-
     DATABASE_POOL_SIZE: int = 10
     DATABASE_MAX_OVERFLOW: int = 20
     DATABASE_POOL_TIMEOUT: int = 30
@@ -61,6 +59,7 @@ class Settings(BaseSettings):
     SMTP_FROM_EMAIL: str = "noreply@kalnet-pulse.com"
     SMTP_FROM_NAME: str = "KALNET PULSE CRM"
     SMTP_TLS: bool = True
+    FRONTEND_BASE_URL: str = "http://localhost:3000"
 
     GOOGLE_CLIENT_ID: Optional[str] = None
     GOOGLE_CLIENT_SECRET: Optional[str] = None

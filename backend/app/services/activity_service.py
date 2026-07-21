@@ -18,6 +18,7 @@ from app.repositories.email_repository import EmailRepository
 from app.repositories.lead_repository import LeadRepository
 from app.repositories.pipeline_repository import PipelineRepository
 from app.schemas.activity import ActivityTimelineCreateRequest
+from app.services.event_service import EventService
 from app.utils.enums import ActivityEntityType, ActivityType, SortOrder
 
 
@@ -31,6 +32,7 @@ class ActivityService:
         self.company_repo = CompanyRepository(db)
         self.email_repo = EmailRepository(db)
         self.pipeline_repo = PipelineRepository(db)
+        self.events = EventService(db)
 
     async def create(
         self,
@@ -39,7 +41,7 @@ class ActivityService:
         payload: ActivityTimelineCreateRequest,
     ) -> ActivityTimeline:
         await self._validate_entity(organization_id, payload.entity_type, payload.entity_id)
-        return await self.repo.create(
+        record = await self.repo.create(
             organization_id=organization_id,
             created_by=created_by,
             entity_type=payload.entity_type,
@@ -49,6 +51,22 @@ class ActivityService:
             description=payload.description,
             payload=payload.payload,
         )
+        await self.events.record_event(
+            "ACTIVITY_CREATED",
+            organization_id=organization_id,
+            actor_id=created_by,
+            aggregate_type=payload.entity_type,
+            aggregate_id=str(payload.entity_id),
+            source="activity_service",
+            payload={
+                "activity_id": str(record.id),
+                "entity_type": payload.entity_type,
+                "entity_id": str(payload.entity_id),
+                "action": payload.action,
+                "title": payload.title,
+            },
+        )
+        return record
 
     async def list(
         self,
@@ -128,7 +146,7 @@ class ActivityService:
         description: Optional[str] = None,
         payload: Optional[dict] = None,
     ) -> ActivityTimeline:
-        return await self.repo.create(
+        record = await self.repo.create(
             organization_id=organization_id,
             created_by=created_by,
             entity_type=entity_type,
@@ -138,3 +156,19 @@ class ActivityService:
             description=description,
             payload=payload,
         )
+        await self.events.record_event(
+            "ACTIVITY_CREATED",
+            organization_id=organization_id,
+            actor_id=created_by,
+            aggregate_type=entity_type,
+            aggregate_id=str(entity_id),
+            source="activity_service",
+            payload={
+                "activity_id": str(record.id),
+                "entity_type": entity_type,
+                "entity_id": str(entity_id),
+                "action": action.value,
+                "title": title,
+            },
+        )
+        return record

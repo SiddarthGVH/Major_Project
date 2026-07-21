@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID, uuid4
 
-from sqlalchemy import DateTime, Index, String, func
+from sqlalchemy import DateTime, Index, String, JSON, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -29,7 +29,7 @@ class EventOutbox(Base):
     aggregate_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     source: Mapped[str | None] = mapped_column(String(120), nullable=True)
     correlation_id: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False, default=dict)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON().with_variant(JSONB, "postgresql"), nullable=False, default=dict)
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
 

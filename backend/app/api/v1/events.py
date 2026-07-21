@@ -20,7 +20,7 @@ except ImportError:  # pragma: no cover
         from app.database.connection import get_async_session as get_session  # type: ignore
 
 
-router = APIRouter(prefix="/events", tags=["Events"])
+router = APIRouter(tags=["Events"])
 
 
 def get_event_service(session: AsyncSession = Depends(get_session)) -> EventService:

@@ -4,7 +4,50 @@ Aggregates all domain routers under /api/v1.
 """
 from __future__ import annotations
 
+from typing import Any, Callable, Sequence
+
 from fastapi import APIRouter
+from starlette.routing import Router as StarletteRouter
+
+# FastAPI 0.115.x expects router startup/shutdown attributes, while the
+# installed Starlette router constructor does not accept those keywords.
+# This compatibility shim keeps router imports and include_router() working.
+if not getattr(StarletteRouter.__init__, "__pulse_compat__", False):
+    _starlette_router_init = StarletteRouter.__init__
+
+    def _compat_router_init(
+        self,
+        routes: Sequence[Any] | None = None,
+        redirect_slashes: bool = True,
+        default: Any | None = None,
+        lifespan: Any | None = None,
+        *,
+        middleware: Sequence[Any] | None = None,
+        on_startup: Sequence[Callable[[], Any]] | None = None,
+        on_shutdown: Sequence[Callable[[], Any]] | None = None,
+        **kwargs: Any,
+    ) -> None:
+        _starlette_router_init(
+            self,
+            routes=routes,
+            redirect_slashes=redirect_slashes,
+            default=default,
+            lifespan=lifespan,
+            middleware=middleware,
+            **kwargs,
+        )
+        # Recreate the older FastAPI router attributes that include_router reads.
+        self.on_startup = list(on_startup or [])
+        self.on_shutdown = list(on_shutdown or [])
+
+    _compat_router_init.__pulse_compat__ = True  # type: ignore[attr-defined]
+    StarletteRouter.__init__ = _compat_router_init  # type: ignore[assignment]
+
+# Keep APIRouter instances compatible with older include_router expectations.
+if not hasattr(APIRouter, "on_startup"):
+    APIRouter.on_startup = []  # type: ignore[attr-defined]
+if not hasattr(APIRouter, "on_shutdown"):
+    APIRouter.on_shutdown = []  # type: ignore[attr-defined]
 
 from app.api.v1.activities import router as activities_router
 from app.api.v1.ai import router as ai_router
