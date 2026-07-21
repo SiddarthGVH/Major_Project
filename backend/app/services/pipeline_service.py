@@ -25,6 +25,7 @@ from app.schemas.pipeline import (
     PipelineStageUpdateRequest,
     PipelineStatisticsResponse,
 )
+from app.services.event_service import EventService
 from app.services.timeline_engine_service import TimelineEngineService
 from app.utils.enums import ActivityType, DealStatus, PipelineStageSlug
 
@@ -45,6 +46,7 @@ class PipelineService:
         self.repo = PipelineRepository(db)
         self.deal_repo = DealRepository(db)
         self.timeline = TimelineEngineService(db)
+        self.events = EventService(db)
 
     async def ensure_default_stages(self, organization_id: UUID, created_by: Optional[UUID]) -> List[PipelineStage]:
         stages = await self.repo.list_by_organization(organization_id, include_inactive=True)
@@ -64,8 +66,17 @@ class PipelineService:
                         is_active=True,
                         updated_by=created_by,
                     )
+                    await self.events.record_event(
+                        "PIPELINE_STAGE_UPDATED",
+                        organization_id=organization_id,
+                        actor_id=created_by,
+                        aggregate_type="pipeline_stage",
+                        aggregate_id=str(existing.id),
+                        source="pipeline_service",
+                        payload={"pipeline_stage_id": str(existing.id), "slug": slug, "reactivated": True},
+                    )
             else:
-                await self.repo.create(
+                stage = await self.repo.create(
                     organization_id=organization_id,
                     created_by=created_by,
                     name=name,
@@ -74,6 +85,15 @@ class PipelineService:
                     probability=probability,
                     color=None,
                     is_default=True,
+                )
+                await self.events.record_event(
+                    "PIPELINE_STAGE_CREATED",
+                    organization_id=organization_id,
+                    actor_id=created_by,
+                    aggregate_type="pipeline_stage",
+                    aggregate_id=str(stage.id),
+                    source="pipeline_service",
+                    payload={"pipeline_stage_id": str(stage.id), "slug": slug, "name": name},
                 )
 
         return await self.repo.list_by_organization(organization_id)
@@ -204,6 +224,15 @@ class PipelineService:
                 is_active=True,
                 updated_by=created_by,
             )
+            await self.events.record_event(
+                "PIPELINE_STAGE_UPDATED",
+                organization_id=organization_id,
+                actor_id=created_by,
+                aggregate_type="pipeline_stage",
+                aggregate_id=str(stage.id),
+                source="pipeline_service",
+                payload={"pipeline_stage_id": str(stage.id), "changes": ["reactivated", "name", "slug"]},
+            )
         else:
             stage = await self.repo.create(
                 organization_id=organization_id,
@@ -214,6 +243,15 @@ class PipelineService:
                 sort_order=sort_order,
                 probability=payload.probability,
                 is_default=payload.is_default,
+            )
+            await self.events.record_event(
+                "PIPELINE_STAGE_CREATED",
+                organization_id=organization_id,
+                actor_id=created_by,
+                aggregate_type="pipeline_stage",
+                aggregate_id=str(stage.id),
+                source="pipeline_service",
+                payload={"pipeline_stage_id": str(stage.id), "slug": payload.slug, "name": payload.name},
             )
 
         if payload.is_default:
@@ -242,6 +280,16 @@ class PipelineService:
         stage = await self.repo.update(stage, **update_data)
         if update_data.get("is_default"):
             await self._unset_other_defaults(organization_id, stage.id)
+        if update_data:
+            await self.events.record_event(
+                "PIPELINE_STAGE_UPDATED",
+                organization_id=organization_id,
+                actor_id=created_by,
+                aggregate_type="pipeline_stage",
+                aggregate_id=str(stage.id),
+                source="pipeline_service",
+                payload={"pipeline_stage_id": str(stage.id), "changes": list(update_data.keys())},
+            )
         return stage
 
     async def delete_stage(self, organization_id: UUID, stage_id: UUID) -> None:
@@ -254,6 +302,14 @@ class PipelineService:
             raise BusinessRuleException("Move or close deals before deleting this pipeline stage.")
 
         await self.repo.update(stage, is_active=False)
+        await self.events.record_event(
+            "PIPELINE_STAGE_DELETED",
+            organization_id=organization_id,
+            aggregate_type="pipeline_stage",
+            aggregate_id=str(stage.id),
+            source="pipeline_service",
+            payload={"pipeline_stage_id": str(stage.id), "slug": stage.slug},
+        )
 
     async def move_deal(
         self,

@@ -1,4 +1,4 @@
-"""
+﻿"""
 Authentication Service
 All authentication business logic lives here - never in route handlers.
 """
@@ -43,6 +43,8 @@ from app.schemas.auth import (
     ResetPasswordRequest,
     TokenResponse,
 )
+from app.services.email_service import EmailService
+from app.services.event_service import EventService
 
 logger = get_logger(__name__)
 
@@ -60,6 +62,8 @@ class AuthService:
         self.user_repo = UserRepository(db)
         self.org_repo = OrganizationRepository(db)
         self.role_repo = RoleRepository(db)
+        self.email_service = EmailService(db)
+        self.events = EventService(db)
 
     async def register(self, payload: RegisterRequest, client_ip: str = "") -> TokenResponse:
         """Create a new Organization + Admin user."""
@@ -97,6 +101,21 @@ class AuthService:
             user = await self.user_repo.get_by_id_with_roles(user.id)
 
         logger.info("New user registered", extra={"user_id": str(user.id), "org": org_name})
+        await self.events.record_event(
+            "USER_REGISTERED",
+            organization_id=organization.id,
+            actor_id=user.id,
+            aggregate_type="user",
+            aggregate_id=str(user.id),
+            source="auth",
+            payload={
+                "user_id": str(user.id),
+                "organization_id": str(organization.id),
+                "email": user.email,
+                "organization_name": org_name,
+            },
+        )
+        await self.email_service.send_welcome_email(user, organization_name=org_name)
         return await self._build_tokens(user)
 
     async def login(self, payload: LoginRequest, client_ip: str = "") -> TokenResponse:
@@ -115,6 +134,15 @@ class AuthService:
         )
 
         logger.info("User logged in", extra={"user_id": str(user.id)})
+        await self.events.record_event(
+            "USER_LOGGED_IN",
+            organization_id=user.organization_id,
+            actor_id=user.id,
+            aggregate_type="user",
+            aggregate_id=str(user.id),
+            source="auth",
+            payload={"user_id": str(user.id), "email": user.email, "client_ip": client_ip},
+        )
         return await self._build_tokens(user)
 
     async def refresh_token(self, refresh_token: str) -> TokenResponse:
@@ -146,6 +174,20 @@ class AuthService:
         )
 
         logger.info("Password reset token generated", extra={"user_id": str(user.id)})
+        await self.events.record_event(
+            "PASSWORD_RESET_REQUESTED",
+            organization_id=user.organization_id,
+            actor_id=user.id,
+            aggregate_type="user",
+            aggregate_id=str(user.id),
+            source="auth",
+            payload={
+                "user_id": str(user.id),
+                "email": user.email,
+                "expires_at": expires_at.isoformat(),
+            },
+        )
+        await self.email_service.send_password_reset_email(user, token, expires_at)
         return token
 
     async def reset_password(self, payload: ResetPasswordRequest) -> None:
@@ -169,6 +211,15 @@ class AuthService:
             password_reset_expires_at=None,
         )
         logger.info("Password reset complete", extra={"user_id": str(user.id)})
+        await self.events.record_event(
+            "PASSWORD_RESET_COMPLETED",
+            organization_id=user.organization_id,
+            actor_id=user.id,
+            aggregate_type="user",
+            aggregate_id=str(user.id),
+            source="auth",
+            payload={"user_id": str(user.id), "email": user.email},
+        )
 
     async def change_password(self, user: User, payload: ChangePasswordRequest) -> None:
         if not verify_password(payload.current_password, user.hashed_password):
@@ -183,6 +234,15 @@ class AuthService:
             hashed_password=hash_password(payload.new_password),
         )
         logger.info("Password changed", extra={"user_id": str(user.id)})
+        await self.events.record_event(
+            "PASSWORD_CHANGED",
+            organization_id=user.organization_id,
+            actor_id=user.id,
+            aggregate_type="user",
+            aggregate_id=str(user.id),
+            source="auth",
+            payload={"user_id": str(user.id), "email": user.email},
+        )
 
     async def _build_tokens(self, user: User) -> TokenResponse:
         """Build access + refresh token pair from user entity."""

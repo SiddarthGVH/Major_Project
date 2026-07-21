@@ -10,6 +10,7 @@ from app.models.contact import Contact  # noqa: F401
 from app.models.deal import Deal  # noqa: F401
 from app.models.email import GmailConnection, Email  # noqa: F401
 from app.models.event import DomainEvent  # noqa: F401
+from app.models.event_outbox import EventOutbox  # noqa: F401
 from app.models.lead import Lead  # noqa: F401
 from app.models.organization import Organization  # noqa: F401
 from app.models.pipeline import PipelineStage  # noqa: F401

@@ -1,10 +1,15 @@
-﻿"""
-Gmail integration service.
-"""
+﻿"""Gmail integration service plus transactional SMTP email helpers."""
 from __future__ import annotations
 
+import asyncio
 import secrets
+import smtplib
+import ssl
 from datetime import datetime, timedelta, timezone
+from email.message import EmailMessage
+from html import escape
+from pathlib import Path
+from string import Template
 from typing import Optional, Sequence, Tuple
 from uuid import UUID, uuid4
 
@@ -12,7 +17,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.exceptions import ConflictException, NotFoundException
+from app.core.logging import get_logger
 from app.models.email import Email, GmailConnection
+from app.models.user import User
 from app.repositories.email_repository import EmailRepository, GmailConnectionRepository
 from app.schemas.email import (
     EmailDetailResponse,
@@ -28,8 +35,12 @@ from app.schemas.email import (
     GmailTokenRefreshRequest,
     GmailWebhookRequest,
 )
+from app.schemas.event_outbox import EventType
+from app.services.event_service import EventService
 from app.services.timeline_engine_service import TimelineEngineService
 from app.utils.enums import EmailDirection, EmailSyncStatus, SortOrder
+
+logger = get_logger(__name__)
 
 
 class EmailService:
@@ -38,6 +49,157 @@ class EmailService:
         self.connection_repo = GmailConnectionRepository(db)
         self.email_repo = EmailRepository(db)
         self.timeline = TimelineEngineService(db)
+        self.events = EventService(db)
+
+    async def _render_template(self, template_name: str, context: dict[str, object]) -> str:
+        template_path = Path(__file__).resolve().parents[1] / "templates" / template_name
+        template = Template(template_path.read_text(encoding="utf-8"))
+        safe_context = {key: escape(str(value)) for key, value in context.items()}
+        return template.safe_substitute(safe_context)
+
+    async def _send_smtp_message(self, message: EmailMessage) -> None:
+        if not settings.SMTP_HOST:
+            raise RuntimeError("SMTP_HOST is not configured")
+
+        def _deliver() -> None:
+            if settings.SMTP_TLS:
+                context = ssl.create_default_context()
+                with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=20) as smtp:
+                    smtp.ehlo()
+                    smtp.starttls(context=context)
+                    smtp.ehlo()
+                    if settings.SMTP_USER and settings.SMTP_PASSWORD:
+                        smtp.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+                    smtp.send_message(message)
+            else:
+                with smtplib.SMTP(settings.SMTP_HOST, settings.SMTP_PORT, timeout=20) as smtp:
+                    smtp.ehlo()
+                    if settings.SMTP_USER and settings.SMTP_PASSWORD:
+                        smtp.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
+                    smtp.send_message(message)
+
+        await asyncio.to_thread(_deliver)
+
+    def _build_message(self, subject: str, to_email: str, html_body: str, text_body: str) -> EmailMessage:
+        msg = EmailMessage()
+        msg["Subject"] = subject
+        msg["From"] = f"{settings.SMTP_FROM_NAME} <{settings.SMTP_FROM_EMAIL}>"
+        msg["To"] = to_email
+        msg.set_content(text_body)
+        msg.add_alternative(html_body, subtype="html")
+        return msg
+
+    def _reset_url(self, token: str) -> str:
+        base = settings.FRONTEND_BASE_URL.rstrip("/")
+        return f"{base}/reset-password?token={token}"
+
+    async def send_password_reset_email(self, user: User, reset_token: str, expires_at: datetime) -> bool:
+        reset_url = self._reset_url(reset_token)
+        logger.info("Password reset email queued for %s", user.email)
+        html_body = await self._render_template(
+            "password_reset.html",
+            {
+                "user_name": user.full_name or user.email,
+                "reset_url": reset_url,
+                "expires_minutes": settings.PASSWORD_RESET_TOKEN_EXPIRE_MINUTES,
+            },
+        )
+        text_body = (
+            f"Hi {user.full_name or user.email},\n\n"
+            f"Reset your password here: {reset_url}\n\n"
+            f"This link expires at {expires_at.isoformat()}."
+        )
+        message = self._build_message("Reset your KALNET PULSE CRM password", user.email, html_body, text_body)
+        try:
+            await self._send_smtp_message(message)
+            logger.info("Email delivered", extra={"email": user.email, "type": "password_reset"})
+            await self.events.record_event(
+                EventType.EMAIL_SENT,
+                organization_id=user.organization_id,
+                actor_id=user.id,
+                aggregate_type="user",
+                aggregate_id=str(user.id),
+                source="smtp",
+                payload={
+                    "email": user.email,
+                    "subject": "Reset your KALNET PULSE CRM password",
+                    "template": "password_reset.html",
+                    "reset_url": reset_url,
+                },
+            )
+            return True
+        except smtplib.SMTPAuthenticationError as exc:
+            logger.error("SMTP authentication failed", extra={"email": user.email, "error": str(exc)})
+        except Exception as exc:  # pragma: no cover - network/runtime dependent
+            logger.error("Password reset email failed", extra={"email": user.email, "error": str(exc)})
+        return False
+
+    async def send_welcome_email(self, user: User, organization_name: Optional[str] = None) -> bool:
+        subject = f"Welcome to {settings.APP_NAME}"
+        greeting = user.full_name or user.email
+        html_body = """
+        <html>
+          <body style="font-family:Arial,sans-serif;background:#f8fafc;padding:24px;color:#111827;">
+            <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:18px;padding:32px;">
+              <h1 style="margin-top:0;">Welcome to ${app_name}</h1>
+              <p>Hi ${user_name}, your account is ready${org_text}.</p>
+            </div>
+          </body>
+        </html>
+        """
+        html_body = Template(html_body).safe_substitute(
+            app_name=escape(settings.APP_NAME),
+            user_name=escape(greeting),
+            org_text=f" for {escape(organization_name)}" if organization_name else "",
+        )
+        message = self._build_message(subject, user.email, html_body, f"Welcome to {settings.APP_NAME}!")
+        try:
+            await self._send_smtp_message(message)
+            logger.info("Email delivered", extra={"email": user.email, "type": "welcome"})
+            await self.events.record_event(
+                EventType.EMAIL_SENT,
+                organization_id=user.organization_id,
+                actor_id=user.id,
+                aggregate_type="user",
+                aggregate_id=str(user.id),
+                source="smtp",
+                payload={"email": user.email, "subject": subject, "template": "welcome"},
+            )
+            return True
+        except Exception as exc:  # pragma: no cover - network/runtime dependent
+            logger.error("Welcome email failed", extra={"email": user.email, "error": str(exc)})
+            return False
+
+    async def send_verification_email(self, user: User, verification_url: str) -> bool:
+        subject = f"Verify your {settings.APP_NAME} account"
+        html_body = f"""
+        <html>
+          <body style="font-family:Arial,sans-serif;background:#f8fafc;padding:24px;color:#111827;">
+            <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:18px;padding:32px;">
+              <h1 style="margin-top:0;">Verify your email</h1>
+              <p>Hi {escape(user.full_name or user.email)}, click the link below to verify your account.</p>
+              <p><a href="{escape(verification_url)}">Verify email</a></p>
+            </div>
+          </body>
+        </html>
+        """
+        message = self._build_message(subject, user.email, html_body, f"Verify your account: {verification_url}")
+        try:
+            await self._send_smtp_message(message)
+            logger.info("Email delivered", extra={"email": user.email, "type": "verification"})
+            await self.events.record_event(
+                EventType.EMAIL_SENT,
+                organization_id=user.organization_id,
+                actor_id=user.id,
+                aggregate_type="user",
+                aggregate_id=str(user.id),
+                source="smtp",
+                payload={"email": user.email, "subject": subject, "template": "verification"},
+            )
+            return True
+        except Exception as exc:  # pragma: no cover - network/runtime dependent
+            logger.error("Verification email failed", extra={"email": user.email, "error": str(exc)})
+            return False
 
     async def connect_gmail(
         self,
@@ -245,6 +407,21 @@ class EmailService:
             },
             topic="gmail",
         )
+        if is_read:
+            await self.events.record_event(
+                EventType.EMAIL_READ,
+                organization_id=organization_id,
+                actor_id=created_by,
+                aggregate_type="email",
+                aggregate_id=str(email.id),
+                source="gmail",
+                payload={
+                    "email_id": str(email.id),
+                    "gmail_message_id": gmail_message_id,
+                    "thread_id": thread_id,
+                    "subject": subject,
+                },
+            )
         return email, True
 
     async def fetch_from_gmail(self, organization_id: UUID, connection_id: UUID, created_by: Optional[UUID]) -> EmailSyncResultResponse:
